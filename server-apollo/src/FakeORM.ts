@@ -18,22 +18,30 @@ export class FakeORM<T extends DBModel> {
     return this.data.filter((item) => ids.includes(item.id));
   }
 
-  findMany(filter?: Partial<T> | Partial<T>[]): T[] {
-    console.log("findMany", this.modelName, filter);
-    if (!filter) return this.data;
+  findMany(
+    filter?: Partial<T> | Partial<T>[],
+    options?: { limit?: number; offset?: number },
+    hideLog?: boolean
+  ): T[] {
+    if (!hideLog) console.log("findMany", this.modelName, filter);
+    const limit = options?.limit || 100;
+    const offset = options?.offset || 0;
+    if (!filter) return this.data.slice(offset, offset + limit);
 
     if (!Array.isArray(filter)) filter = [filter];
 
-    return this.data.filter((item) => {
-      return filter.some((filter) =>
-        Object.keys(filter).every((key) => {
-          return (
-            !filter[key as keyof T] ||
-            item[key as keyof T] === filter[key as keyof T]
-          );
-        })
-      );
-    });
+    return this.data
+      .filter((item) => {
+        return filter.some((filter) =>
+          Object.keys(filter).every((key) => {
+            return (
+              !filter[key as keyof T] ||
+              item[key as keyof T] === filter[key as keyof T]
+            );
+          })
+        );
+      })
+      .slice(offset, offset + limit);
   }
 
   create(input: Omit<T, "id">): T {
@@ -59,7 +67,7 @@ export class FakeORM<T extends DBModel> {
   }
 
   count(filter?: Partial<T> | Partial<T>[]): number {
-    return this.findMany(filter).length;
+    return this.findMany(filter, undefined, true).length;
   }
 }
 
