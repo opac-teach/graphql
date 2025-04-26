@@ -1,4 +1,4 @@
-A demonstation of a music app using a GraphQL API using Next.js and Apollo.
+A demonstration of a music app using a GraphQL API using Next.js and Apollo.
 
 ## Development
 

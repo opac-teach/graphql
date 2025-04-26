@@ -1,4 +1,4 @@
-A demonstation of a music GraphQL API server.
+A demonstration of a music GraphQL API server.
 
 ## Development
 
