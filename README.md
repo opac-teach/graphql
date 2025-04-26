@@ -7,4 +7,4 @@ A music app as a demonstration of GraphQL.
 
 ### Course content
 
-https://teach.opac.me/cours/dev-backend/graphql/project-example
+https://teach.opac.me/cours/dev-backend/graphql
