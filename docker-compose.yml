@@ -1,0 +1,13 @@
+services:
+  server-apollo:
+    build:
+      context: ./server-apollo
+      dockerfile: Dockerfile
+    ports:
+      - 4000:4000
+  client-next:
+    build:
+      context: ./client-next
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
