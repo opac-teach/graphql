@@ -1,0 +1,20 @@
+type Song {
+  id: ID!
+  name: String!
+}
+
+type Query {
+  songs: [Song!]!
+}
+
+type Mutation {
+  createSong(input: CreateSongInput!): CreateSongResponse!
+}
+
+input CreateSongInput {
+  name: String!
+}
+type CreateSongResponse {
+  success: Boolean!
+  song: Song!
+}

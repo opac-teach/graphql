@@ -1,0 +1,22 @@
+type User {
+  id: ID!
+  name: String!
+  songs: [Song!]!
+}
+
+type Query {
+  users: [User!]!
+  user(id: ID!): User!
+}
+
+type Mutation {
+  createUser(input: CreateUserInput!): CreateUserResponse!
+}
+
+input CreateUserInput {
+  name: String!
+}
+type CreateUserResponse {
+  success: Boolean!
+  user: User!
+}
