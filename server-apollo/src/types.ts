@@ -19,29 +19,40 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
+/** The input for creating a new song */
 export type CreateSongInput = {
+  /** The name of the song */
   name: Scalars['String']['input'];
 };
 
+/** The response for creating a new song */
 export type CreateSongResponse = {
   __typename?: 'CreateSongResponse';
+  /** The created song */
   song: Song;
+  /** Whether the song was created successfully */
   success: Scalars['Boolean']['output'];
 };
 
+/** The input for creating a new user */
 export type CreateUserInput = {
+  /** The name of the user */
   name: Scalars['String']['input'];
 };
 
 export type CreateUserResponse = {
   __typename?: 'CreateUserResponse';
+  /** Whether the user was created successfully */
   success: Scalars['Boolean']['output'];
+  /** The created user */
   user: User;
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
+  /** Create a new song */
   createSong: CreateSongResponse;
+  /** Create a new user */
   createUser: CreateUserResponse;
 };
 
@@ -57,8 +68,11 @@ export type MutationCreateUserArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  /** Get all songs */
   songs: Array<Song>;
+  /** Get a user by ID */
   user: User;
+  /** Get all users */
   users: Array<User>;
 };
 
@@ -69,14 +83,19 @@ export type QueryUserArgs = {
 
 export type Song = {
   __typename?: 'Song';
+  /** The ID of the song */
   id: Scalars['ID']['output'];
+  /** The name of the song */
   name: Scalars['String']['output'];
 };
 
 export type User = {
   __typename?: 'User';
+  /** The ID of the user */
   id: Scalars['ID']['output'];
+  /** The name of the user */
   name: Scalars['String']['output'];
+  /** The songs of the user */
   songs: Array<Song>;
 };
 
