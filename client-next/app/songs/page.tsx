@@ -1,15 +1,18 @@
 "use client";
 
-import { useQuery, gql } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import Link from "next/link";
-const GET_SONGS = gql`
+import { gql } from "@/lib/graphql";
+
+const GET_SONGS = gql(`
   query Songs {
     songs {
       id
       name
     }
   }
-`;
+`);
+
 export default function Songs() {
   const { data, loading, error } = useQuery(GET_SONGS);
 
@@ -20,7 +23,7 @@ export default function Songs() {
     <div>
       <h1>Songs</h1>
       <div>
-        {data.songs.map((song: any) => (
+        {data?.songs.map((song) => (
           <div key={song.id} className="flex gap-2">
             <div>
               <Link href={`/songs/${song.id}`}>{song.name}</Link>
