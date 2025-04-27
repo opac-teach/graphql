@@ -16,21 +16,6 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
-/** The input for creating a new song */
-export type CreateSongInput = {
-  /** The name of the song */
-  name: Scalars['String']['input'];
-};
-
-/** The response for creating a new song */
-export type CreateSongResponse = {
-  __typename?: 'CreateSongResponse';
-  /** The created song */
-  song: Song;
-  /** Whether the song was created successfully */
-  success: Scalars['Boolean']['output'];
-};
-
 /** The input for creating a new user */
 export type CreateUserInput = {
   /** The name of the user */
@@ -47,15 +32,8 @@ export type CreateUserResponse = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  /** Create a new song */
-  createSong: CreateSongResponse;
   /** Create a new user */
   createUser: CreateUserResponse;
-};
-
-
-export type MutationCreateSongArgs = {
-  input: CreateSongInput;
 };
 
 
