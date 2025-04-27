@@ -3,14 +3,14 @@ import { startStandaloneServer } from "@apollo/server/standalone";
 import DataLoader from "dataloader";
 
 import { typeDefs, resolvers } from "./schemas";
-import { DBUser, DBSong, fakeDataSource, DBDataSource } from "./datasource";
+import { DBUser, DBSong, Database, database } from "./datasource";
 
 import { getDataLoader, getForeignDataLoader } from "./FakeORM";
 
 export type ResolversContext = {
   userId: string | null;
   dataSources: {
-    db: DBDataSource;
+    db: Database;
   };
   loaders: {
     users: DataLoader<string, DBUser>;
@@ -25,7 +25,7 @@ async function startApolloServer() {
     resolvers,
   });
 
-  const db = fakeDataSource;
+  const db: Database = database;
 
   const { url } = await startStandaloneServer(server, {
     context: async ({ req }): Promise<ResolversContext> => {

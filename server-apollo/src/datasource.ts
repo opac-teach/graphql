@@ -6,17 +6,16 @@ export interface DBUser extends DBModel {
 }
 
 export interface DBSong extends DBModel {
-  id: string;
   name: string;
   userId: string;
 }
 
-export interface DBDataSource extends FakeDataSource {
+export interface Database extends FakeDataSource {
   user: FakeORM<DBUser>;
   song: FakeORM<DBSong>;
 }
 
-export const fakeDataSource: DBDataSource = {
+export const database: Database = {
   user: new FakeORM<DBUser>("user", users),
   song: new FakeORM<DBSong>("song", songs),
 };
