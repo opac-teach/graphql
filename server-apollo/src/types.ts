@@ -19,21 +19,6 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
-/** The input for creating a new song */
-export type CreateSongInput = {
-  /** The name of the song */
-  name: Scalars['String']['input'];
-};
-
-/** The response for creating a new song */
-export type CreateSongResponse = {
-  __typename?: 'CreateSongResponse';
-  /** The created song */
-  song: Song;
-  /** Whether the song was created successfully */
-  success: Scalars['Boolean']['output'];
-};
-
 /** The input for creating a new user */
 export type CreateUserInput = {
   /** The name of the user */
@@ -50,15 +35,8 @@ export type CreateUserResponse = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  /** Create a new song */
-  createSong: CreateSongResponse;
   /** Create a new user */
   createUser: CreateUserResponse;
-};
-
-
-export type MutationCreateSongArgs = {
-  input: CreateSongInput;
 };
 
 
@@ -172,8 +150,6 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
-  CreateSongInput: CreateSongInput;
-  CreateSongResponse: ResolverTypeWrapper<Omit<CreateSongResponse, 'song'> & { song: ResolversTypes['Song'] }>;
   CreateUserInput: CreateUserInput;
   CreateUserResponse: ResolverTypeWrapper<Omit<CreateUserResponse, 'user'> & { user: ResolversTypes['User'] }>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
@@ -187,8 +163,6 @@ export type ResolversTypes = ResolversObject<{
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
   Boolean: Scalars['Boolean']['output'];
-  CreateSongInput: CreateSongInput;
-  CreateSongResponse: Omit<CreateSongResponse, 'song'> & { song: ResolversParentTypes['Song'] };
   CreateUserInput: CreateUserInput;
   CreateUserResponse: Omit<CreateUserResponse, 'user'> & { user: ResolversParentTypes['User'] };
   ID: Scalars['ID']['output'];
@@ -199,12 +173,6 @@ export type ResolversParentTypes = ResolversObject<{
   User: DBUser;
 }>;
 
-export type CreateSongResponseResolvers<ContextType = ResolversContext, ParentType extends ResolversParentTypes['CreateSongResponse'] = ResolversParentTypes['CreateSongResponse']> = ResolversObject<{
-  song?: Resolver<ResolversTypes['Song'], ParentType, ContextType>;
-  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
 export type CreateUserResponseResolvers<ContextType = ResolversContext, ParentType extends ResolversParentTypes['CreateUserResponse'] = ResolversParentTypes['CreateUserResponse']> = ResolversObject<{
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
@@ -212,7 +180,6 @@ export type CreateUserResponseResolvers<ContextType = ResolversContext, ParentTy
 }>;
 
 export type MutationResolvers<ContextType = ResolversContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
-  createSong?: Resolver<ResolversTypes['CreateSongResponse'], ParentType, ContextType, RequireFields<MutationCreateSongArgs, 'input'>>;
   createUser?: Resolver<ResolversTypes['CreateUserResponse'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'input'>>;
 }>;
 
@@ -236,7 +203,6 @@ export type UserResolvers<ContextType = ResolversContext, ParentType extends Res
 }>;
 
 export type Resolvers<ContextType = ResolversContext> = ResolversObject<{
-  CreateSongResponse?: CreateSongResponseResolvers<ContextType>;
   CreateUserResponse?: CreateUserResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;

@@ -9,26 +9,3 @@ type Query {
   "Get all songs"
   songs: [Song!]!
 }
-
-type Mutation {
-  "Create a new song"
-  createSong(input: CreateSongInput!): CreateSongResponse!
-}
-
-"""
-The input for creating a new song
-"""
-input CreateSongInput {
-  "The name of the song"
-  name: String!
-}
-
-"""
-The response for creating a new song
-"""
-type CreateSongResponse {
-  "Whether the song was created successfully"
-  success: Boolean!
-  "The created song"
-  song: Song!
-}
