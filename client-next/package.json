@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"npm run compile:watch\" \"next dev\"",
-    "build": "npm run compile && next build",
+    "dev": "concurrently \"npm run generate:watch\" \"next dev\"",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "compile": "graphql-codegen",
-    "compile:watch": "graphql-codegen -w"
+    "generate": "graphql-codegen",
+    "generate:watch": "graphql-codegen -w"
   },
   "dependencies": {
     "@apollo/client": "^3.13.8",
