@@ -1,4 +1,5 @@
 import { Resolvers } from "../types";
+import {GraphQLError} from "graphql";
 
 export const userResolvers: Resolvers = {
   Query: {
@@ -25,5 +26,48 @@ export const userResolvers: Resolvers = {
         user,
       };
     },
+    updateUser: (_, { id, input }, { dataSources, userId }) => {
+      if (!userId) {
+        throw new GraphQLError("Unauthorized", { extensions: { code: "UNAUTHORIZED" } });
+      }
+
+      const user = dataSources.db.user.findById(id);
+
+      if (!user) {
+        throw new GraphQLError("User not found", { extensions: { code: "NOT_FOUND" } });
+      }
+
+      if (user.id !== userId) {
+        throw new GraphQLError("Forbidden", { extensions: { code: "FORBIDDEN" } });
+      }
+
+      const userUpdated = dataSources.db.user.update(id, input);
+
+      return {
+        success: true,
+        user: userUpdated
+      };
+    },
+    deleteUser: (_, { id }, { dataSources, userId }) => {
+      if (!userId) {
+        throw new GraphQLError("Unauthorized", { extensions: { code: "UNAUTHORIZED" } });
+      }
+
+      const user = dataSources.db.user.findById(id);
+
+      if (!user) {
+        throw new GraphQLError("User not found", { extensions: { code: "NOT_FOUND" } });
+      }
+
+      if (user.id !== userId) {
+        throw new GraphQLError("Forbidden", { extensions: { code: "FORBIDDEN" } });
+      }
+
+      dataSources.db.user.delete(id);
+
+      return {
+        success: true
+      };
+    }
   },
 };
