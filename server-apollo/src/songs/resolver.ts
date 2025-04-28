@@ -7,4 +7,9 @@ export const songResolvers: Resolvers = {
       return dataSources.db.song.findMany();
     },
   },
+  Song: {
+    user: async (parent, _, { dataSources }) => {
+      return dataSources.db.user.findById(parent.userId);
+    },
+  },
 };

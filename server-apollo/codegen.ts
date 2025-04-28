@@ -8,6 +8,7 @@ const config: CodegenConfig = {
       config: {
         contextType: "./index#ResolversContext",
         mappers: {
+          // retourne le type DBUser pour avoir les songs en plus
           User: "./datasource#DBUser",
           Song: "./datasource#DBSong",
         },
