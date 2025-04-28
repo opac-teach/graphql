@@ -1,5 +1,6 @@
 import { GraphQLError } from "graphql";
 import { Resolvers } from "../types";
+import DataLoader from "dataloader";
 
 export const songResolvers: Resolvers = {
   Query: {
@@ -19,6 +20,18 @@ export const songResolvers: Resolvers = {
         });
       }
       return song;
+    },
+    songsWithUsers: async (_, __, { dataSources, loaders }) => {
+      const songs = dataSources.db.song.findMany();
+      return Promise.all(
+        songs.map(async (song) => {
+          const user = await loaders.users.load(song.userId);
+          return {
+            ...song,
+            user,
+          };
+        })
+      );
     },
   },
   Song: {

@@ -14,6 +14,8 @@ type Query {
   songs(page: Int!, limit: Int!): [Song!]!
   "Get a song by ID"
   songById(id: ID!): Song!
+  "Get all songs with users"
+  songsWithUsers: [Song!]!
 }
 
 type Mutation {

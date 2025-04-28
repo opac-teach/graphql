@@ -117,6 +117,8 @@ export type Query = {
   songById: Song;
   /** Get all songs */
   songs: Array<Song>;
+  /** Get all songs with users */
+  songsWithUsers: Array<Song>;
   /** Get a user by ID */
   user: User;
   /** Get all users */
@@ -319,6 +321,7 @@ export type QueryResolvers<ContextType = ResolversContext, ParentType extends Re
   genres?: Resolver<Array<ResolversTypes['Genre']>, ParentType, ContextType>;
   songById?: Resolver<ResolversTypes['Song'], ParentType, ContextType, RequireFields<QuerySongByIdArgs, 'id'>>;
   songs?: Resolver<Array<ResolversTypes['Song']>, ParentType, ContextType, RequireFields<QuerySongsArgs, 'limit' | 'page'>>;
+  songsWithUsers?: Resolver<Array<ResolversTypes['Song']>, ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUsersArgs, 'limit' | 'page'>>;
 }>;
