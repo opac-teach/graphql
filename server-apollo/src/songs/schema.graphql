@@ -15,3 +15,25 @@ type Query {
   "Get a song by ID"
   song(id: ID!): Song!
 }
+
+type Mutation {
+  "Create a new song"
+  createSong(input: CreateSongInput!): CreateSongResponse!
+}
+
+"""
+The input for creating a new song
+"""
+input CreateSongInput {
+  "The name of the song"
+  name: String!
+  "The genreId of the song"
+  genreId: String!
+}
+
+type CreateSongResponse {
+  "Whether the song was created successfully"
+  success: Boolean!
+  "The created song"
+  song: Song!
+}

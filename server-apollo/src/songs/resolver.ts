@@ -18,4 +18,25 @@ export const songResolvers: Resolvers = {
       return dataSources.db.genre.findById(parent.genreId);
     },
   },
+  Mutation: {
+    createSong: (_, { input }, { dataSources, userId }) => {
+      if (!userId) {
+        throw new GraphQLError("Unauthorized", {
+          extensions: {
+            code: "UNAUTHORIZED",
+          },
+        });
+      }
+
+      const song = dataSources.db.song.create({
+        ...input,
+        userId,
+      });
+
+      return {
+        success: true,
+        song,
+      };
+    },
+  },
 };
