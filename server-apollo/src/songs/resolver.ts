@@ -18,13 +18,4 @@ export const songResolvers: Resolvers = {
       return dataSources.db.genre.findById(parent.genreId);
     },
   },
-  Mutation: {
-    createGenre: (_, { input }, { dataSources }) => {
-      const genre = dataSources.db.genre.create(input);
-      return {
-        success: true,
-        genre,
-      };
-    },
-  },
 };
