@@ -1,5 +1,6 @@
 # Ignore the compiled output.
 dist/
+.idea/
 
 # TypeScript incremental compilation cache
 *.tsbuildinfo
