@@ -19,6 +19,21 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
+export type CreateSongInput = {
+  /** The id of the genre of the song */
+  genreId: Scalars['ID']['input'];
+  /** The name of the song */
+  name: Scalars['String']['input'];
+};
+
+export type CreateSongResponse = {
+  __typename?: 'CreateSongResponse';
+  /** The error message if the creation failed */
+  error?: Maybe<Scalars['String']['output']>;
+  /** The created song */
+  song: Song;
+};
+
 /** The input for creating a new user */
 export type CreateUserInput = {
   /** The name of the user */
@@ -47,8 +62,15 @@ export type Genre = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  /** Create a new song */
+  createSong: CreateSongResponse;
   /** Create a new user */
   createUser: CreateUserResponse;
+};
+
+
+export type MutationCreateSongArgs = {
+  input: CreateSongInput;
 };
 
 
@@ -184,6 +206,8 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  CreateSongInput: CreateSongInput;
+  CreateSongResponse: ResolverTypeWrapper<Omit<CreateSongResponse, 'song'> & { song: ResolversTypes['Song'] }>;
   CreateUserInput: CreateUserInput;
   CreateUserResponse: ResolverTypeWrapper<Omit<CreateUserResponse, 'user'> & { user: ResolversTypes['User'] }>;
   Genre: ResolverTypeWrapper<DBGenre>;
@@ -199,6 +223,8 @@ export type ResolversTypes = ResolversObject<{
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
   Boolean: Scalars['Boolean']['output'];
+  CreateSongInput: CreateSongInput;
+  CreateSongResponse: Omit<CreateSongResponse, 'song'> & { song: ResolversParentTypes['Song'] };
   CreateUserInput: CreateUserInput;
   CreateUserResponse: Omit<CreateUserResponse, 'user'> & { user: ResolversParentTypes['User'] };
   Genre: DBGenre;
@@ -209,6 +235,12 @@ export type ResolversParentTypes = ResolversObject<{
   Song: DBSong;
   String: Scalars['String']['output'];
   User: DBUser;
+}>;
+
+export type CreateSongResponseResolvers<ContextType = ResolversContext, ParentType extends ResolversParentTypes['CreateSongResponse'] = ResolversParentTypes['CreateSongResponse']> = ResolversObject<{
+  error?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  song?: Resolver<ResolversTypes['Song'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type CreateUserResponseResolvers<ContextType = ResolversContext, ParentType extends ResolversParentTypes['CreateUserResponse'] = ResolversParentTypes['CreateUserResponse']> = ResolversObject<{
@@ -226,6 +258,7 @@ export type GenreResolvers<ContextType = ResolversContext, ParentType extends Re
 }>;
 
 export type MutationResolvers<ContextType = ResolversContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
+  createSong?: Resolver<ResolversTypes['CreateSongResponse'], ParentType, ContextType, RequireFields<MutationCreateSongArgs, 'input'>>;
   createUser?: Resolver<ResolversTypes['CreateUserResponse'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'input'>>;
 }>;
 
@@ -255,6 +288,7 @@ export type UserResolvers<ContextType = ResolversContext, ParentType extends Res
 }>;
 
 export type Resolvers<ContextType = ResolversContext> = ResolversObject<{
+  CreateSongResponse?: CreateSongResponseResolvers<ContextType>;
   CreateUserResponse?: CreateUserResponseResolvers<ContextType>;
   Genre?: GenreResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;

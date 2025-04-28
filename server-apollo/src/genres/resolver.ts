@@ -20,15 +20,16 @@ export const genreResolvers: Resolvers = {
   },
   Genre: {
     songs: async (parent, _, { dataSources }) => {
-      // as findByGenreId method doesnt exists
-      const allSongs = dataSources.db.song.findMany();
-      const songs = allSongs.filter((song) => song.genreId === parent.id);
+      const songs = dataSources.db.song.findMany({
+        genreId: parent.id,
+      });
       return songs;
     },
     songsCount: async (parent, _, { dataSources }) => {
-      const allSongs = dataSources.db.song.findMany();
-      const songs = allSongs.filter((song) => song.genreId === parent.id);
-      return songs.length;
+      const allSongs = dataSources.db.song.count({
+        genreId: parent.id,
+      });
+      return allSongs;
     },
   },
 };

@@ -24,4 +24,35 @@ export const songResolvers: Resolvers = {
       return user;
     },
   },
+  Mutation: {
+    createSong: (__, { input }, { dataSources, userId }) => {
+      try {
+        const { name, genreId } = input;
+
+        if (!userId) {
+          return {
+            song: null,
+            error: "User ID not provided in headers",
+          };
+        }
+
+        const song = dataSources.db.song.create({
+          name,
+          genreId,
+          userId,
+        });
+
+        return {
+          song,
+          error: null,
+        };
+      } catch (error) {
+        return {
+          song: null,
+          error:
+            error instanceof Error ? error.message : "Unknown error occurred",
+        };
+      }
+    },
+  },
 };
