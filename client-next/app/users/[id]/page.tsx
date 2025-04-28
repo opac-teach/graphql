@@ -14,6 +14,10 @@ const GET_USER = gql(`
       songs {
         id
         name
+        genre {
+          id
+          name
+        }
       }
     }
   }
@@ -43,9 +47,15 @@ return (
   <h2>Songs</h2>
   <div>
     {data?.user.songs.map((song) => (
-      <div key={song.id} className="flex gap-2">
-        <Link href={`/songs/${song.id}`}>{song.name}</Link>
-      </div>
+        <div key={song.id} className="flex gap-2">
+          <div>
+            <Link href={`/songs/${song.id}`}>{song.name}</Link>
+          </div>
+          -
+          <div>
+            <Link href={`/genres/${song.genre.id}`}>{song.genre.name}</Link>
+          </div>
+        </div>
     ))}
   </div>
 

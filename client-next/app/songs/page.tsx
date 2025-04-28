@@ -13,6 +13,10 @@ const GET_SONGS = gql(`
         id
         name
       }
+      genre {
+          id
+          name
+        }
     }
   }
 `);
@@ -41,6 +45,12 @@ export default function Songs() {
               <div>
                   <Link href={`/users/${song?.user?.id}`}>
                       { song?.user?.name }
+                  </Link>
+              </div>
+              -
+              <div>
+                  <Link href={`/genres/${song?.genre?.id}`}>
+                      { song?.genre?.name }
                   </Link>
               </div>
           </div>

@@ -14,7 +14,7 @@ export const genreResolvers: Resolvers = {
         songs: async (parent, { pagination }, { dataSources }) => {
             return dataSources.db.song.findMany(
                 { genreId: parent.id },
-                { limit: pagination.pageSize, offset: pagination.page }
+                { limit: pagination?.pageSize, offset: pagination?.page }
             );
         },
         songsCount: async (parent, _: {}, { dataSources }) => {
