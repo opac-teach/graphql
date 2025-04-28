@@ -13,7 +13,10 @@ export const songResolvers: Resolvers = {
 
   Song: {
     user: async (parent, _, { dataSources }) => {
-      return dataSources.db.user.findById(parent.id);
+      return dataSources.db.user.findById(parent.userId);
+    },
+    genre: async (parent, _, { dataSources }) => {
+      return dataSources.db.genre.findById(parent.genreId);
     },
   },
 };

@@ -1,0 +1,12 @@
+type Genre {
+  "The ID of the genre"
+  id: ID!
+  "The genre"
+  name: String!
+
+}
+
+type Query {
+  "Get all genre"
+  genres: [Genre!]!
+}
