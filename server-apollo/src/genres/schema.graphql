@@ -1,0 +1,15 @@
+type Genre {
+  "The ID of the genre"
+  id: ID!
+  "The name of the genre"
+  name: String!
+  "The songs in this genre"
+  songs: [Song!]!
+}
+
+type Query {
+  "Get all genres"
+  genres: [Genre!]!
+  "Get a genre by ID"
+  genreById(id: ID!): Genre!
+}
