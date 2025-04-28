@@ -4,8 +4,11 @@ import {DBSong} from "../datasource";
 
 export const songResolvers: Resolvers = {
   Query: {
-    songs: (_, { genreId }, { dataSources }) => {
-      return dataSources.db.song.findMany({ genreId });
+    songs: (_, { genreId, pagination }, { dataSources }) => {
+      return dataSources.db.song.findMany(
+          { genreId },
+          { offset: pagination.page, limit: pagination.pageSize }
+      );
     },
     song: (_: {}, { id }, { dataSources }) => {
       return dataSources.db.song.findById(id)

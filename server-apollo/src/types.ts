@@ -86,6 +86,11 @@ export type Genre = {
   songsCount?: Maybe<Scalars['Int']['output']>;
 };
 
+
+export type GenreSongsArgs = {
+  pagination?: InputMaybe<PaginationInput>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   /** Create a new Genre */
@@ -141,6 +146,12 @@ export type MutationUpdateUserArgs = {
   input?: InputMaybe<CreateUserInput>;
 };
 
+/** The input for paginate user */
+export type PaginationInput = {
+  page?: InputMaybe<Scalars['Int']['input']>;
+  pageSize?: InputMaybe<Scalars['Int']['input']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   /** Get genre by ID */
@@ -170,11 +181,17 @@ export type QuerySongArgs = {
 
 export type QuerySongsArgs = {
   genreId?: InputMaybe<Scalars['ID']['input']>;
+  pagination?: InputMaybe<PaginationInput>;
 };
 
 
 export type QueryUserArgs = {
   id: Scalars['ID']['input'];
+};
+
+
+export type QueryUsersArgs = {
+  pagination?: InputMaybe<PaginationInput>;
 };
 
 export type Song = {
@@ -199,6 +216,11 @@ export type User = {
   songs: Array<Song>;
   /** Count song of the user */
   songsCount?: Maybe<Scalars['Int']['output']>;
+};
+
+
+export type UserSongsArgs = {
+  pagination?: InputMaybe<PaginationInput>;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -286,6 +308,7 @@ export type ResolversTypes = ResolversObject<{
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Mutation: ResolverTypeWrapper<{}>;
+  PaginationInput: PaginationInput;
   Query: ResolverTypeWrapper<{}>;
   Song: ResolverTypeWrapper<DBSong>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
@@ -307,6 +330,7 @@ export type ResolversParentTypes = ResolversObject<{
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
   Mutation: {};
+  PaginationInput: PaginationInput;
   Query: {};
   Song: DBSong;
   String: Scalars['String']['output'];
@@ -344,7 +368,7 @@ export type DeleteUserResponseResolvers<ContextType = ResolversContext, ParentTy
 export type GenreResolvers<ContextType = ResolversContext, ParentType extends ResolversParentTypes['Genre'] = ResolversParentTypes['Genre']> = ResolversObject<{
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  songs?: Resolver<Maybe<Array<ResolversTypes['Song']>>, ParentType, ContextType>;
+  songs?: Resolver<Maybe<Array<ResolversTypes['Song']>>, ParentType, ContextType, Partial<GenreSongsArgs>>;
   songsCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
@@ -365,7 +389,7 @@ export type QueryResolvers<ContextType = ResolversContext, ParentType extends Re
   song?: Resolver<ResolversTypes['Song'], ParentType, ContextType, RequireFields<QuerySongArgs, 'id'>>;
   songs?: Resolver<Array<ResolversTypes['Song']>, ParentType, ContextType, Partial<QuerySongsArgs>>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
-  users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
+  users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, Partial<QueryUsersArgs>>;
 }>;
 
 export type SongResolvers<ContextType = ResolversContext, ParentType extends ResolversParentTypes['Song'] = ResolversParentTypes['Song']> = ResolversObject<{
@@ -379,7 +403,7 @@ export type SongResolvers<ContextType = ResolversContext, ParentType extends Res
 export type UserResolvers<ContextType = ResolversContext, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  songs?: Resolver<Array<ResolversTypes['Song']>, ParentType, ContextType>;
+  songs?: Resolver<Array<ResolversTypes['Song']>, ParentType, ContextType, Partial<UserSongsArgs>>;
   songsCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;

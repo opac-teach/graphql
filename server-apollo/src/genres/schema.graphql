@@ -4,7 +4,7 @@ type Genre {
     "The name of the genre"
     name: String!
     "All songs of the genre"
-    songs: [Song!]
+    songs(pagination: PaginationInput): [Song!]
     "Count song of the genre"
     songsCount: Int
 }

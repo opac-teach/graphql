@@ -4,14 +4,14 @@ type User {
   "The name of the user"
   name: String!
   "The songs of the user"
-  songs: [Song!]!
+  songs(pagination: PaginationInput): [Song!]!
   "Count song of the user"
   songsCount: Int
 }
 
 type Query {
   "Get all users"
-  users: [User!]!
+  users(pagination: PaginationInput): [User!]!
   "Get a user by ID"
   user(id: ID!): User!
 }
@@ -31,6 +31,13 @@ The input for creating a new user
 input CreateUserInput {
   "The name of the user"
   name: String!
+}
+"""
+The input for paginate user
+"""
+input PaginationInput {
+  page: Int = 1
+  pageSize: Int = 5
 }
 
 type CreateUserResponse {
