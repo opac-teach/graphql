@@ -5,6 +5,10 @@ export const songResolvers: Resolvers = {
     songs: (_, __, { dataSources }) => {
       return dataSources.db.song.findMany();
     },
+    
+    song: (_, {id}, { dataSources }) => {
+      return dataSources.db.song.findById(id);
+    },
   },
 
   Song: {

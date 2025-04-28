@@ -46,12 +46,19 @@ export type MutationCreateUserArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  /** Get song by id */
+  song: Song;
   /** Get all songs */
   songs: Array<Song>;
   /** Get a user by ID */
   user: User;
   /** Get all users */
   users: Array<User>;
+};
+
+
+export type QuerySongArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
@@ -186,6 +193,7 @@ export type MutationResolvers<ContextType = ResolversContext, ParentType extends
 }>;
 
 export type QueryResolvers<ContextType = ResolversContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
+  song?: Resolver<ResolversTypes['Song'], ParentType, ContextType, RequireFields<QuerySongArgs, 'id'>>;
   songs?: Resolver<Array<ResolversTypes['Song']>, ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
