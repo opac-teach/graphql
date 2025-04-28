@@ -12,6 +12,9 @@ export const genreResolvers: Resolvers = {
     Genre: {
         songs: async (parent, _: {}, { dataSources }) => {
             return dataSources.db.song.findMany({ genreId: parent.id });
+        },
+        songsCount: async (parent, _: {}, { dataSources }) => {
+            return dataSources.db.song.count({ genreId: parent.id });
         }
     },
     Mutation: {

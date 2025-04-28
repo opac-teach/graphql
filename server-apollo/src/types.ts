@@ -55,6 +55,8 @@ export type Genre = {
   name: Scalars['String']['output'];
   /** All songs of the genre */
   songs?: Maybe<Array<Song>>;
+  /** Count song of the genre */
+  songsCount?: Maybe<Scalars['Int']['output']>;
 };
 
 export type Mutation = {
@@ -131,6 +133,8 @@ export type User = {
   name: Scalars['String']['output'];
   /** The songs of the user */
   songs: Array<Song>;
+  /** Count song of the user */
+  songsCount?: Maybe<Scalars['Int']['output']>;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -212,6 +216,7 @@ export type ResolversTypes = ResolversObject<{
   CreateUserResponse: ResolverTypeWrapper<Omit<CreateUserResponse, 'user'> & { user: ResolversTypes['User'] }>;
   Genre: ResolverTypeWrapper<Omit<Genre, 'songs'> & { songs?: Maybe<Array<ResolversTypes['Song']>> }>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
+  Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   Song: ResolverTypeWrapper<DBSong>;
@@ -228,6 +233,7 @@ export type ResolversParentTypes = ResolversObject<{
   CreateUserResponse: Omit<CreateUserResponse, 'user'> & { user: ResolversParentTypes['User'] };
   Genre: Omit<Genre, 'songs'> & { songs?: Maybe<Array<ResolversParentTypes['Song']>> };
   ID: Scalars['ID']['output'];
+  Int: Scalars['Int']['output'];
   Mutation: {};
   Query: {};
   Song: DBSong;
@@ -251,6 +257,7 @@ export type GenreResolvers<ContextType = ResolversContext, ParentType extends Re
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   songs?: Resolver<Maybe<Array<ResolversTypes['Song']>>, ParentType, ContextType>;
+  songsCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -280,6 +287,7 @@ export type UserResolvers<ContextType = ResolversContext, ParentType extends Res
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   songs?: Resolver<Array<ResolversTypes['Song']>, ParentType, ContextType>;
+  songsCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
