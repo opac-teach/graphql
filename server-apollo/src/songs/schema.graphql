@@ -3,9 +3,13 @@ type Song {
   id: ID!
   "The name of the song"
   name: String!
+  "The artist of the song"
+  user: User!
 }
 
 type Query {
   "Get all songs"
   songs: [Song!]!
+  "Get a song by ID"
+  song(id: ID!): Song!
 }
