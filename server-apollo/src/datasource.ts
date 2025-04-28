@@ -8,6 +8,7 @@ export interface DBUser extends DBModel {
 export interface DBSong extends DBModel {
   name: string;
   userId: string;
+  genreId?: string;
 }
 
 export interface DBGenre extends DBModel {

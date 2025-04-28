@@ -3,6 +3,8 @@ type Song {
   id: ID!
   "The name of the song"
   name: String!
+  "The id of the genre of the song"
+  genreId: ID!
   "user who created the song"
   user: User!
 }

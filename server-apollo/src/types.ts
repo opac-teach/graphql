@@ -41,6 +41,8 @@ export type Genre = {
   name: Scalars['String']['output'];
   /** The songs in this genre */
   songs: Array<Song>;
+  /** The count of songs in this genre */
+  songsCount: Scalars['Int']['output'];
 };
 
 export type Mutation = {
@@ -87,6 +89,8 @@ export type QueryUserArgs = {
 
 export type Song = {
   __typename?: 'Song';
+  /** The id of the genre of the song */
+  genreId: Scalars['ID']['output'];
   /** The ID of the song */
   id: Scalars['ID']['output'];
   /** The name of the song */
@@ -217,6 +221,7 @@ export type GenreResolvers<ContextType = ResolversContext, ParentType extends Re
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   songs?: Resolver<Array<ResolversTypes['Song']>, ParentType, ContextType>;
+  songsCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -234,6 +239,7 @@ export type QueryResolvers<ContextType = ResolversContext, ParentType extends Re
 }>;
 
 export type SongResolvers<ContextType = ResolversContext, ParentType extends ResolversParentTypes['Song'] = ResolversParentTypes['Song']> = ResolversObject<{
+  genreId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
