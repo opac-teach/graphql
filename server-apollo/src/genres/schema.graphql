@@ -3,7 +3,7 @@ type Genre {
   id: ID!
   "The genre"
   name: String!
-
+  songsCount: Int! 
 }
 
 type Query {
