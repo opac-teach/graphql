@@ -54,5 +54,49 @@ export const songResolvers: Resolvers = {
         };
       }
     },
+    editSong: (__, { id, input }, { dataSources, userId }) => {
+      try {
+        const { name, genreId } = input;
+
+        if (!userId) {
+          return {
+            song: null,
+            error: "User ID not provided in headers",
+          };
+        }
+
+        const existingSong = dataSources.db.song.findById(id);
+
+        if (!existingSong) {
+          return {
+            song: null,
+            error: "Song not found",
+          };
+        }
+
+        if (existingSong.userId !== userId) {
+          return {
+            song: null,
+            error: "You are not authorized to edit this song",
+          };
+        }
+
+        const song = dataSources.db.song.update(id, {
+          name,
+          genreId,
+        });
+
+        return {
+          song,
+          error: null,
+        };
+      } catch (error) {
+        return {
+          song: null,
+          error:
+            error instanceof Error ? error.message : "Unknown error occurred",
+        };
+      }
+    },
   },
 };

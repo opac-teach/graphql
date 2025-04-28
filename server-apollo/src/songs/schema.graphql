@@ -19,6 +19,8 @@ type Query {
 type Mutation {
   "Create a new song"
   createSong(input: CreateSongInput!): CreateSongResponse!
+  "edit a song"
+  editSong(id: ID!, input: EditSongInput!): EditSongResponse!
 }
 
 input CreateSongInput {
@@ -27,9 +29,21 @@ input CreateSongInput {
   "The id of the genre of the song"
   genreId: ID!
 }
+input EditSongInput {
+  "The name of the song"
+  name: String
+  "The id of the genre of the song"
+  genreId: ID
+}
 
 type CreateSongResponse {
   "The created song"
+  song: Song!
+  "The error message if the creation failed"
+  error: String
+}
+type EditSongResponse {
+  "The edited song"
   song: Song!
   "The error message if the creation failed"
   error: String
