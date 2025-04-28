@@ -11,6 +11,7 @@ const config: CodegenConfig = {
           // retourne le type DBUser pour avoir les songs en plus
           User: "./datasource#DBUser",
           Song: "./datasource#DBSong",
+          Genre: "./datasource#DBGenre",
         },
         useIndexSignature: true,
       },
