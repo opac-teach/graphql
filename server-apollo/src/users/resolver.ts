@@ -5,8 +5,8 @@ export const userResolvers: Resolvers = {
   Query: {
     users: (_, { pagination }, { dataSources }) => {
       return dataSources.db.user.findMany(_, {
-        limit: pagination.pageSize,
-        offset: pagination.page
+        limit: pagination?.pageSize,
+        offset: pagination?.page
       });
     },
     user: (_, { id }, { dataSources }) => {
@@ -17,7 +17,7 @@ export const userResolvers: Resolvers = {
     songs: async (parent, { pagination }, { dataSources }) => {
       return dataSources.db.song.findMany(
           { userId: parent.id },
-          { limit: pagination.pageSize, offset: pagination.page }
+          { limit: pagination?.pageSize, offset: pagination?.page }
       );
     },
     songsCount: async (parent, _: {}, { dataSources }) => {

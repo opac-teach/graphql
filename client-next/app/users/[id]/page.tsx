@@ -36,24 +36,24 @@ export default function User() {
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
-  return (
-    <div>
-      <h1>User</h1>
-      <h3>{data?.user.name}</h3>
-      <h2>Songs</h2>
-      <div>
-        {data?.user.songs.map((song) => (
-          <div key={song.id} className="flex gap-2">
-            <Link href={`/songs/${song.id}`}>{song.name}</Link>
-          </div>
-        ))}
+return (
+<div>
+  <h1>User</h1>
+  <h3>{data?.user.name}</h3>
+  <h2>Songs</h2>
+  <div>
+    {data?.user.songs.map((song) => (
+      <div key={song.id} className="flex gap-2">
+        <Link href={`/songs/${song.id}`}>{song.name}</Link>
       </div>
+    ))}
+  </div>
 
-      <div className="mt-4">
-        <Button onClick={() => loginAs(data?.user.id ?? "")}>
-          Login as {data?.user.name}
-        </Button>
-      </div>
-    </div>
-  );
+  <div className="mt-4">
+    <Button onClick={() => loginAs(data?.user.id ?? "")}>
+      Login as {data?.user.name}
+    </Button>
+  </div>
+</div>
+);
 }

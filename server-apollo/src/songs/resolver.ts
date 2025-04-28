@@ -7,7 +7,7 @@ export const songResolvers: Resolvers = {
     songs: (_, { genreId, pagination }, { dataSources }) => {
       return dataSources.db.song.findMany(
           { genreId },
-          { offset: pagination.page, limit: pagination.pageSize }
+          { offset: pagination?.page, limit: pagination?.pageSize }
       );
     },
     song: (_: {}, { id }, { dataSources }) => {
