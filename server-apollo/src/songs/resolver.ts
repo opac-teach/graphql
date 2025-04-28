@@ -15,11 +15,11 @@ export const songResolvers: Resolvers = {
     }
   },
   Song: {
-    user: async (parent: DBSong, _ : {}, { dataSources }): Promise<any> => {
-      return dataSources.db.user.findById(parent.userId)
+    user: async (parent: DBSong, _ : {}, { loaders }): Promise<any> => {
+      return loaders.users.load(parent.userId)
     },
-    genre: async (parent: DBSong, _ : {}, { dataSources }): Promise<any> => {
-      return dataSources.db.genre.findById(parent.genreId)
+    genre: async (parent: DBSong, _ : {}, { loaders }): Promise<any> => {
+      return loaders.genres.load(parent.genreId)
     }
   },
   Mutation: {
