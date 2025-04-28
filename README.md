@@ -18,7 +18,7 @@ https://teach.opac.me/cours/dev-backend/graphql
 To test the requests, you can use the playground that you will find on the url: http://localhost:4000/
 
 - Create a query that returns all users
-- Create a query that returns all songs with the user who created it
+- Create a query that returns all users with their songs
 - Create a query that returns a user by their id and the songs they have created
 - Create a mutation that creates a user
 
