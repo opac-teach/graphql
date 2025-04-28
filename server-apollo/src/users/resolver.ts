@@ -13,6 +13,9 @@ export const userResolvers: Resolvers = {
     songs: async (parent, _, { dataSources }) => {
       return dataSources.db.song.findMany({ userId: parent.id });
     },
+    songsCount: async (parent, _, { dataSources }) => {
+      return dataSources.db.song.count({ userId: parent.id });
+    },
   },
   Mutation: {
     createUser: (_, { input }, { dataSources }) => {
