@@ -3,8 +3,8 @@ import { Resolvers } from "../types";
 
 export const userResolvers: Resolvers = {
   Query: {
-    users: (_, __, { dataSources }) => {
-      return dataSources.db.user.findMany();
+    users: (_, { limit = 100, offset = 0 }, { dataSources }) => {
+      return dataSources.db.user.findMany({}, { limit, offset });
     },
     user: (_, { id }, { dataSources }) => {
       return dataSources.db.user.findById(id);

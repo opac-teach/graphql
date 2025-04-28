@@ -3,8 +3,8 @@ import { Resolvers } from "../types";
 
 export const songResolvers: Resolvers = {
   Query: {
-    songs: (_, { genreId }, { dataSources }) => {
-      return dataSources.db.song.findMany({ genreId });
+    songs: (_, { genreId, limit = 100, offset = 0 }, { dataSources }) => {
+      return dataSources.db.song.findMany({ genreId }, { limit, offset });
     },
     song: (_, { id }, { dataSources }) => {
       return dataSources.db.song.findById(id);

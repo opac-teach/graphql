@@ -11,7 +11,7 @@ type Song {
 
 type Query {
   "Get all songs"
-  songs(genreId: ID): [Song!]!
+  songs(genreId: ID, limit: Int, offset: Int): [Song!]!
   "Get a song by ID"
   song(id: ID!): Song!
 }

@@ -23,3 +23,5 @@ node_modules/
 
 # Always regenerate new types before running project
 /src/types.ts
+
+*.md
