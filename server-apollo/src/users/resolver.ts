@@ -1,3 +1,4 @@
+import { GraphQLError } from "graphql";
 import { Resolvers } from "../types";
 
 export const userResolvers: Resolvers = {
@@ -23,6 +24,41 @@ export const userResolvers: Resolvers = {
       return {
         success: true,
         user,
+      };
+    },
+    updateUser: (_, { input, id }, { dataSources, userId }) => {
+      const user = dataSources.db.user.findById(id);
+
+      if (user.id !== userId) {
+        throw new GraphQLError("Unauthorized", {
+          extensions: {
+            code: "UNAUTHORIZED",
+          },
+        });
+      }
+
+      const updatedUser = dataSources.db.user.update(id, input);
+      return {
+        success: true,
+        user: updatedUser,
+      };
+    },
+    deleteUser: (_, { id }, { dataSources, userId }) => {
+      const user = dataSources.db.user.findById(id);
+
+      if (user.id !== userId) {
+        throw new GraphQLError("Unauthorized", {
+          extensions: {
+            code: "UNAUTHORIZED",
+          },
+        });
+      }
+
+      dataSources.db.user.delete(id);
+
+      return {
+        success: true,
+        id: user.id,
       };
     },
   },
