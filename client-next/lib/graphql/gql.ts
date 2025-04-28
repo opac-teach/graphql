@@ -15,21 +15,21 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  */
 type Documents = {
     "\n    query Genre($genreId: ID!) {\n      genre(id: $genreId) {\n        id\n        name\n        songs {\n          id\n          name\n          user {\n            id\n            name\n          }\n        }\n      }\n    }\n": typeof types.GenreDocument,
-    "\n    query Genres {\n      genres {\n        id\n        name\n      }\n    }\n": typeof types.GenresDocument,
+    "\n    query Genres {\n      genres {\n        id\n        name\n        songsCount\n      }\n    }\n": typeof types.GenresDocument,
     "\n    query Song($songId: ID!) {\n      song(id: $songId) {\n        id\n        name\n        user {\n          id\n          name\n        }\n        genre {\n          id\n          name\n        }\n      }\n    }\n": typeof types.SongDocument,
     "\n  query Songs($pagination: PaginationInput!) {\n    songs(pagination: $pagination) {\n      id\n      name\n      user {\n        id\n        name\n      }\n      genre {\n          id\n          name\n        }\n    }\n  }\n": typeof types.SongsDocument,
     "\n  mutation CreateUser($input: CreateUserInput!) {\n    createUser(input: $input) {\n      success\n      user {\n        id\n        name\n      }\n    }\n  }\n": typeof types.CreateUserDocument,
     "\n  query User($id: ID!) {\n    user(id: $id) {\n      id\n      name\n      songs {\n        id\n        name\n        genre {\n          id\n          name\n        }\n      }\n    }\n  }\n": typeof types.UserDocument,
-    "\n  query Users {\n    users {\n      id\n      name\n    }\n  }\n": typeof types.UsersDocument,
+    "\n  query Users {\n    users {\n      id\n      name\n      songsCount\n    }\n  }\n": typeof types.UsersDocument,
 };
 const documents: Documents = {
     "\n    query Genre($genreId: ID!) {\n      genre(id: $genreId) {\n        id\n        name\n        songs {\n          id\n          name\n          user {\n            id\n            name\n          }\n        }\n      }\n    }\n": types.GenreDocument,
-    "\n    query Genres {\n      genres {\n        id\n        name\n      }\n    }\n": types.GenresDocument,
+    "\n    query Genres {\n      genres {\n        id\n        name\n        songsCount\n      }\n    }\n": types.GenresDocument,
     "\n    query Song($songId: ID!) {\n      song(id: $songId) {\n        id\n        name\n        user {\n          id\n          name\n        }\n        genre {\n          id\n          name\n        }\n      }\n    }\n": types.SongDocument,
     "\n  query Songs($pagination: PaginationInput!) {\n    songs(pagination: $pagination) {\n      id\n      name\n      user {\n        id\n        name\n      }\n      genre {\n          id\n          name\n        }\n    }\n  }\n": types.SongsDocument,
     "\n  mutation CreateUser($input: CreateUserInput!) {\n    createUser(input: $input) {\n      success\n      user {\n        id\n        name\n      }\n    }\n  }\n": types.CreateUserDocument,
     "\n  query User($id: ID!) {\n    user(id: $id) {\n      id\n      name\n      songs {\n        id\n        name\n        genre {\n          id\n          name\n        }\n      }\n    }\n  }\n": types.UserDocument,
-    "\n  query Users {\n    users {\n      id\n      name\n    }\n  }\n": types.UsersDocument,
+    "\n  query Users {\n    users {\n      id\n      name\n      songsCount\n    }\n  }\n": types.UsersDocument,
 };
 
 /**
@@ -53,7 +53,7 @@ export function gql(source: "\n    query Genre($genreId: ID!) {\n      genre(id:
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n    query Genres {\n      genres {\n        id\n        name\n      }\n    }\n"): (typeof documents)["\n    query Genres {\n      genres {\n        id\n        name\n      }\n    }\n"];
+export function gql(source: "\n    query Genres {\n      genres {\n        id\n        name\n        songsCount\n      }\n    }\n"): (typeof documents)["\n    query Genres {\n      genres {\n        id\n        name\n        songsCount\n      }\n    }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -73,7 +73,7 @@ export function gql(source: "\n  query User($id: ID!) {\n    user(id: $id) {\n  
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query Users {\n    users {\n      id\n      name\n    }\n  }\n"): (typeof documents)["\n  query Users {\n    users {\n      id\n      name\n    }\n  }\n"];
+export function gql(source: "\n  query Users {\n    users {\n      id\n      name\n      songsCount\n    }\n  }\n"): (typeof documents)["\n  query Users {\n    users {\n      id\n      name\n      songsCount\n    }\n  }\n"];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};

@@ -9,6 +9,7 @@ const GET_GENRES = gql(`
       genres {
         id
         name
+        songsCount
       }
     }
 `)
@@ -26,10 +27,13 @@ export default function Genres() {
                 {data?.genres.map((genre) => (
                     <div key={genre.id} className="flex gap-2">
                         <Link href={`/genres/${genre.id}`}>{genre.name}</Link>
+                        -
+                         <div>
+                             { genre.songsCount } songs
+                         </div>
                     </div>
                 ))}
             </div>
-
         </div>
     );
 }
