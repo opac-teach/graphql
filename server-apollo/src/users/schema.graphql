@@ -5,6 +5,8 @@ type User {
   name: String!
   "The songs of the user"
   songs: [Song!]!
+  "The count of songs of the user"
+  songCount: Int!
 }
 
 type Query {

@@ -10,8 +10,12 @@ export const userResolvers: Resolvers = {
     },
   },
   User: {
-    songs: async (parent, _, { dataSources }) => {
+    songs: (parent, _, { dataSources }) => {
       return dataSources.db.song.findMany({ userId: parent.id });
+    },
+    songCount: (parent, _, { dataSources }) => {
+      const songs = dataSources.db.song.findMany({ userId: parent.id });
+      return songs.length;
     },
   },
   Mutation: {
