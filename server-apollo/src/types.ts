@@ -128,8 +128,20 @@ export type QuerySongByIdArgs = {
 };
 
 
+export type QuerySongsArgs = {
+  limit: Scalars['Int']['input'];
+  page: Scalars['Int']['input'];
+};
+
+
 export type QueryUserArgs = {
   id: Scalars['ID']['input'];
+};
+
+
+export type QueryUsersArgs = {
+  limit: Scalars['Int']['input'];
+  page: Scalars['Int']['input'];
 };
 
 export type Song = {
@@ -300,9 +312,9 @@ export type QueryResolvers<ContextType = ResolversContext, ParentType extends Re
   genreById?: Resolver<ResolversTypes['Genre'], ParentType, ContextType, RequireFields<QueryGenreByIdArgs, 'id'>>;
   genres?: Resolver<Array<ResolversTypes['Genre']>, ParentType, ContextType>;
   songById?: Resolver<ResolversTypes['Song'], ParentType, ContextType, RequireFields<QuerySongByIdArgs, 'id'>>;
-  songs?: Resolver<Array<ResolversTypes['Song']>, ParentType, ContextType>;
+  songs?: Resolver<Array<ResolversTypes['Song']>, ParentType, ContextType, RequireFields<QuerySongsArgs, 'limit' | 'page'>>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
-  users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
+  users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUsersArgs, 'limit' | 'page'>>;
 }>;
 
 export type SongResolvers<ContextType = ResolversContext, ParentType extends ResolversParentTypes['Song'] = ResolversParentTypes['Song']> = ResolversObject<{

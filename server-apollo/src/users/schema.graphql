@@ -11,7 +11,7 @@ type User {
 
 type Query {
   "Get all users"
-  users: [User!]!
+  users(page: Int!, limit: Int!): [User!]!
   "Get a user by ID"
   user(id: ID!): User!
 }

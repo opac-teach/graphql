@@ -2,8 +2,11 @@ import { Resolvers } from "../types";
 
 export const userResolvers: Resolvers = {
   Query: {
-    users: (_, __, { dataSources }) => {
-      return dataSources.db.user.findMany();
+    users: (_, { limit, page }, { dataSources }) => {
+      return dataSources.db.user.findMany(undefined, {
+        limit: limit,
+        offset: page,
+      });
     },
     user: (_, { id }, { dataSources }) => {
       return dataSources.db.user.findById(id);
