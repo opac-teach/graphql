@@ -75,6 +75,12 @@ export type Genre = {
   songsCount: Scalars['Int']['output'];
 };
 
+
+export type GenreSongsArgs = {
+  limit: Scalars['Int']['input'];
+  page: Scalars['Int']['input'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   /** Create a new song */
@@ -297,7 +303,7 @@ export type EditSongResponseResolvers<ContextType = ResolversContext, ParentType
 export type GenreResolvers<ContextType = ResolversContext, ParentType extends ResolversParentTypes['Genre'] = ResolversParentTypes['Genre']> = ResolversObject<{
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  songs?: Resolver<Array<ResolversTypes['Song']>, ParentType, ContextType>;
+  songs?: Resolver<Array<ResolversTypes['Song']>, ParentType, ContextType, RequireFields<GenreSongsArgs, 'limit' | 'page'>>;
   songsCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;

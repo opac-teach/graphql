@@ -4,7 +4,7 @@ type Genre {
   "The name of the genre"
   name: String!
   "The songs in this genre"
-  songs: [Song!]!
+  songs(limit: Int!, page: Int!): [Song!]!
   "The count of songs in this genre"
   songsCount: Int!
 }

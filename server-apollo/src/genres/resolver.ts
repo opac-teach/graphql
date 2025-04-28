@@ -19,10 +19,16 @@ export const genreResolvers: Resolvers = {
     },
   },
   Genre: {
-    songs: async (parent, _, { dataSources }) => {
-      const songs = dataSources.db.song.findMany({
-        genreId: parent.id,
-      });
+    songs: async (parent, { limit, page }, { dataSources }) => {
+      const songs = dataSources.db.song.findMany(
+        {
+          genreId: parent.id,
+        },
+        {
+          limit,
+          offset: page,
+        }
+      );
       return songs;
     },
     songsCount: async (parent, _, { dataSources }) => {
