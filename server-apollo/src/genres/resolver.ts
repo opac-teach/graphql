@@ -6,5 +6,13 @@ export const genreResolvers: Resolvers = {
         return dataSources.db.genre.findMany();
     },
   },
-
+  Mutation: {
+    createGenre: (_, { input }, { dataSources }) => {
+      const genre = dataSources.db.genre.create(input);
+      return {
+        success: true,
+        genre,
+      };
+    },
+  },
 };

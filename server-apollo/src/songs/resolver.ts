@@ -2,8 +2,8 @@ import { Resolvers } from "../types";
 
 export const songResolvers: Resolvers = {
   Query: {
-    songs: (_, __, { dataSources }) => {
-      return dataSources.db.song.findMany();
+    songs: (_, { genreId }, { dataSources }) => {
+      return dataSources.db.song.findMany({ genreId });
     },
     
     song: (_, {id}, { dataSources }) => {
