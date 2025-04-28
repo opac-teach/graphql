@@ -67,6 +67,12 @@ export type Song = {
   name: Scalars['String']['output'];
 };
 
+export type Subscription = {
+  __typename?: 'Subscription';
+  /** A new user was created */
+  userCreated: User;
+};
+
 export type User = {
   __typename?: 'User';
   /** The ID of the user */
@@ -157,6 +163,7 @@ export type ResolversTypes = ResolversObject<{
   Query: ResolverTypeWrapper<{}>;
   Song: ResolverTypeWrapper<DBSong>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  Subscription: ResolverTypeWrapper<{}>;
   User: ResolverTypeWrapper<DBUser>;
 }>;
 
@@ -170,6 +177,7 @@ export type ResolversParentTypes = ResolversObject<{
   Query: {};
   Song: DBSong;
   String: Scalars['String']['output'];
+  Subscription: {};
   User: DBUser;
 }>;
 
@@ -195,6 +203,10 @@ export type SongResolvers<ContextType = ResolversContext, ParentType extends Res
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type SubscriptionResolvers<ContextType = ResolversContext, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = ResolversObject<{
+  userCreated?: SubscriptionResolver<ResolversTypes['User'], "userCreated", ParentType, ContextType>;
+}>;
+
 export type UserResolvers<ContextType = ResolversContext, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -207,6 +219,7 @@ export type Resolvers<ContextType = ResolversContext> = ResolversObject<{
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Song?: SongResolvers<ContextType>;
+  Subscription?: SubscriptionResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 }>;
 

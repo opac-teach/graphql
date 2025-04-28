@@ -1,4 +1,7 @@
 import { Resolvers } from "../types";
+import { PubSub } from "graphql-subscriptions";
+
+const pubSub = new PubSub();
 
 export const userResolvers: Resolvers = {
   Query: {
@@ -17,10 +20,17 @@ export const userResolvers: Resolvers = {
   Mutation: {
     createUser: (_, { input }, { dataSources }) => {
       const user = dataSources.db.user.create(input);
+      pubSub.publish("USER_CREATED", { userCreated: user });
+
       return {
         success: true,
         user,
       };
+    },
+  },
+  Subscription: {
+    userCreated: {
+      subscribe: () => pubSub.asyncIterableIterator("USER_CREATED"),
     },
   },
 };

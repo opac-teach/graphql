@@ -1,11 +1,19 @@
 import { ApolloServer } from "@apollo/server";
-import { startStandaloneServer } from "@apollo/server/standalone";
 import DataLoader from "dataloader";
 
 import { typeDefs, resolvers } from "./schemas";
 import { DBUser, DBSong, Database, database } from "./datasource";
 
 import { getDataLoader, getForeignDataLoader } from "./FakeORM";
+
+import { expressMiddleware } from "@apollo/server/express4";
+import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
+import express from "express";
+import { createServer } from "http";
+import { makeExecutableSchema } from "@graphql-tools/schema";
+import { WebSocketServer } from "ws";
+import { useServer } from "graphql-ws/dist/use/ws";
+import bodyParser from "body-parser";
 
 export type ResolversContext = {
   userId: string | null;
@@ -20,37 +28,71 @@ export type ResolversContext = {
 };
 
 async function startApolloServer() {
-  const server = new ApolloServer<ResolversContext>({
-    typeDefs,
-    resolvers,
-  });
-
   const db: Database = database;
 
-  const { url } = await startStandaloneServer(server, {
-    context: async ({ req }): Promise<ResolversContext> => {
-      console.log("-- New request");
+  const schema = makeExecutableSchema({ typeDefs, resolvers });
 
-      const userId = Array.isArray(req.headers.user_id)
-        ? req.headers.user_id[0] || ""
-        : req.headers.user_id || "";
+  // Create an Express app and HTTP server; we will attach the WebSocket
+  // server and the ApolloServer to this HTTP server.
+  const app = express();
+  const httpServer = createServer(app);
 
-      return {
-        userId,
-        dataSources: { db },
-        loaders: {
-          users: getDataLoader<DBUser>(db.user),
-          songs: getDataLoader<DBSong>(db.song),
-          songsByUser: getForeignDataLoader<DBSong>(db.song, "userId"),
-        },
-      };
+  // Set up WebSocket server.
+  const wsServer = new WebSocketServer({
+    server: httpServer,
+    path: "/graphql",
+  });
+  const serverCleanup = useServer(
+    {
+      schema,
+      context: async (): Promise<ResolversContext> => {
+        console.log("-- New request");
+
+        const userId = "";
+
+        return {
+          userId,
+          dataSources: { db },
+          loaders: {
+            users: getDataLoader<DBUser>(db.user),
+            songs: getDataLoader<DBSong>(db.song),
+            songsByUser: getForeignDataLoader<DBSong>(db.song, "userId"),
+          },
+        };
+      },
     },
+    wsServer
+  );
+
+  // Set up ApolloServer.
+  const server = new ApolloServer({
+    schema,
+    plugins: [
+      // Proper shutdown for the HTTP server.
+      ApolloServerPluginDrainHttpServer({ httpServer }),
+
+      // Proper shutdown for the WebSocket server.
+      {
+        async serverWillStart() {
+          return {
+            async drainServer() {
+              await serverCleanup.dispose();
+            },
+          };
+        },
+      },
+    ],
   });
 
-  console.log(`
-    🚀  Server is running!
-    📭  Query at ${url}
-  `);
+  await server.start();
+  app.use("/graphql", bodyParser.json(), expressMiddleware(server));
+
+  app.listen(4000, () => {
+    console.log(`
+      🚀  Server is running!
+      📭  Query at http://localhost:4000/graphql
+    `);
+  });
 }
 
 startApolloServer();

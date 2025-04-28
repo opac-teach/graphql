@@ -33,3 +33,8 @@ type CreateUserResponse {
   "The created user"
   user: User!
 }
+
+type Subscription {
+  "A new user was created"
+  userCreated: User!
+}
