@@ -11,16 +11,17 @@ export const songResolvers: Resolvers = {
     },
   },
   Song: {
-    user: async (parent, _, { dataSources }) => {
-      return dataSources.db.user.findById(parent.userId);
+    user: async (parent, _, { loaders }) => {
+      // return dataSources.db.user.findById(parent.userId);
+      return loaders.users.load(parent.userId);
     },
-    genre: async (parent, _, { dataSources }) => {
-      return dataSources.db.genre.findById(parent.genreId);
+    genre: async (parent, _, { loaders }) => {
+      // return dataSources.db.genre.findById(parent.genreId);
+      return loaders.genres.load(parent.genreId);
     },
   },
   Mutation: {
     createSong: (_, { input }, { dataSources, userId }) => {
-      console.log("userId", userId);
       if (!userId) {
         throw new GraphQLError("Unauthorized", {
           extensions: {

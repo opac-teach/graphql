@@ -1,9 +1,10 @@
+import { genres } from "./mock-data";
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import DataLoader from "dataloader";
 
 import { typeDefs, resolvers } from "./schemas";
-import { DBUser, DBSong, Database, database } from "./datasource";
+import { DBUser, DBSong, Database, database, DBGenre } from "./datasource";
 
 import { getDataLoader, getForeignDataLoader } from "./FakeORM";
 
@@ -14,6 +15,7 @@ export type ResolversContext = {
   };
   loaders: {
     users: DataLoader<string, DBUser>;
+    genres: DataLoader<string, DBGenre>;
     songs: DataLoader<string, DBSong>;
     songsByUser: DataLoader<string, DBSong[]>;
   };
@@ -40,6 +42,7 @@ async function startApolloServer() {
         dataSources: { db },
         loaders: {
           users: getDataLoader<DBUser>(db.user),
+          genres: getDataLoader<DBGenre>(db.genre),
           songs: getDataLoader<DBSong>(db.song),
           songsByUser: getForeignDataLoader<DBSong>(db.song, "userId"),
         },

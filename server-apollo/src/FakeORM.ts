@@ -15,7 +15,6 @@ export class FakeORM<T extends DBModel> {
     if (!d) {
       throw new GraphQLError("Not Found");
     }
-    console.log("useeeeer", d);
     return d;
   }
 
