@@ -13,11 +13,20 @@ export const genreResolvers: Resolvers = {
   Genre: {
     songs: async (parent, _, { dataSources }) => {
       const genreId = parent.id;
+
       if (!genreId) {
         throw new Error("Genre does not have an id");
       }
       return dataSources.db.song.findMany({ genreId });
     },
+    songCount: async (parent, _, { dataSources }) => {
+      const genreId = parent.id;
+
+      if (!genreId) {
+        throw new Error("Genre does not have an id");
+      }
+      return dataSources.db.song.count({ genreId });
+    }
   },
 
   Mutation: {

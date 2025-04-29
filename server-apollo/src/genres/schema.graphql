@@ -5,6 +5,8 @@ type Genre {
   name: String!
   "The songs of the genre"
   songs: [Song!]!
+  "Count of songs by genre"
+  songCount: Int!
 }
 
 extend type Query {
