@@ -14,14 +14,14 @@ export class ApisConnect implements IApisConnect {
   }
 
   public async searchSongs(query: string): Promise<Song[]> {
-    return [];
+    return await this.api.searchSongs(query);
   }
 
   public async searchArtists(query: string): Promise<Artist[]> {
-    return [];
+    return await this.api.searchArtists(query);
   }
 
   public async searchPlaylists(query: string): Promise<Playlist[]> {
-    return [];
+    return await this.api.searchPlaylists(query);
   }
 }
