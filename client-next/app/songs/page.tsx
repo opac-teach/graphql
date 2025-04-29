@@ -51,7 +51,6 @@ export default function Songs() {
 
   const handleGenreChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedGenre = e.target.value;
-    console.log("Selected genre:", selectedGenre);
     setGenre(selectedGenre === "" ? null : selectedGenre);
   };
 
@@ -62,19 +61,12 @@ export default function Songs() {
   return (
     <div>
       <div className="flex justify-between">
-        <h1>Songs</h1>
-        <select
-          className="border rounded-md p-2"
+        <h2>Songs</h2>
+        <SelectGenre
+          genres={genresData?.genres}
           onChange={handleGenreChange}
-          defaultValue={genre || ""}
-        >
-          <option value="">All Genres</option>
-          {genresData?.genres.map((genre) => (
-            <option key={genre.id} value={genre.id}>
-              {genre.name}
-            </option>
-          ))}
-        </select>
+          defaultValue={genre}
+        />
       </div>
 
       <div className="flex gap-2 flex-wrap justify-center mt-4">
@@ -83,5 +75,30 @@ export default function Songs() {
         ))}
       </div>
     </div>
+  );
+}
+
+function SelectGenre({
+  genres,
+  onChange,
+  defaultValue = null,
+}: {
+  genres: { id: string; name: string }[] | undefined;
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  defaultValue?: string | null;
+}) {
+  return (
+    <select
+      className="border rounded-md p-2 cursor-pointer"
+      onChange={onChange}
+      defaultValue={defaultValue || ""}
+    >
+      <option value="">All Genres</option>
+      {genres?.map((genre) => (
+        <option key={genre.id} value={genre.id}>
+          {genre.name}
+        </option>
+      ))}
+    </select>
   );
 }

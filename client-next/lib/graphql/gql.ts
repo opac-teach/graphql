@@ -14,7 +14,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 type Documents = {
-    "\n  query Song($id: ID!) {\n  song(id: $id) {\n    name\n  }\n}\n": typeof types.SongDocument,
+    "\n  query Song($id: ID!) {\n  song(id: $id) {\n    name\n    user {\n      id\n      name \n    }\n  }\n}\n": typeof types.SongDocument,
     "\n  query Songs($limit: Int, $offset: Int, $genreId: ID) {\n  songs(limit: $limit, offset: $offset, genreId: $genreId) {\n    id\n    name\n    user {\n      id\n      name\n    }\n    genre {\n      id\n      name\n    }\n  }\n}\n": typeof types.SongsDocument,
     "\n  query Genres {\n  genres {\n    id\n    name\n  }\n}\n": typeof types.GenresDocument,
     "\n  mutation CreateUser($input: CreateUserInput!) {\n    createUser(input: $input) {\n      success\n      user {\n        id\n        name\n      }\n    }\n  }\n": typeof types.CreateUserDocument,
@@ -22,7 +22,7 @@ type Documents = {
     "\n  query Users {\n    users {\n      id\n      name\n    }\n  }\n": typeof types.UsersDocument,
 };
 const documents: Documents = {
-    "\n  query Song($id: ID!) {\n  song(id: $id) {\n    name\n  }\n}\n": types.SongDocument,
+    "\n  query Song($id: ID!) {\n  song(id: $id) {\n    name\n    user {\n      id\n      name \n    }\n  }\n}\n": types.SongDocument,
     "\n  query Songs($limit: Int, $offset: Int, $genreId: ID) {\n  songs(limit: $limit, offset: $offset, genreId: $genreId) {\n    id\n    name\n    user {\n      id\n      name\n    }\n    genre {\n      id\n      name\n    }\n  }\n}\n": types.SongsDocument,
     "\n  query Genres {\n  genres {\n    id\n    name\n  }\n}\n": types.GenresDocument,
     "\n  mutation CreateUser($input: CreateUserInput!) {\n    createUser(input: $input) {\n      success\n      user {\n        id\n        name\n      }\n    }\n  }\n": types.CreateUserDocument,
@@ -47,7 +47,7 @@ export function gql(source: string): unknown;
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query Song($id: ID!) {\n  song(id: $id) {\n    name\n  }\n}\n"): (typeof documents)["\n  query Song($id: ID!) {\n  song(id: $id) {\n    name\n  }\n}\n"];
+export function gql(source: "\n  query Song($id: ID!) {\n  song(id: $id) {\n    name\n    user {\n      id\n      name \n    }\n  }\n}\n"): (typeof documents)["\n  query Song($id: ID!) {\n  song(id: $id) {\n    name\n    user {\n      id\n      name \n    }\n  }\n}\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
