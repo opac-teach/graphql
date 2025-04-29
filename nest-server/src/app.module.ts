@@ -6,6 +6,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'node:path';
 import { SongsModule } from './songs/songs.module';
 import { ArtistsModule } from './artists/artists.module';
+import { PlaylistsModule } from './playlists/playlists.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ArtistsModule } from './artists/artists.module';
     }),
     SongsModule,
     ArtistsModule,
+    PlaylistsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

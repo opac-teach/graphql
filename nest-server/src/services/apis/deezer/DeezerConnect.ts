@@ -23,4 +23,7 @@ export class DeezerConnect implements IApisConnect {
   public async searchPlaylists(query: string): Promise<Playlist[]> {
     return [];
   }
+  public async getPlaylistTracks(query: string): Promise<Song[]> {
+    return [];
+  }
 }

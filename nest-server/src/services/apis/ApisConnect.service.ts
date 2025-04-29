@@ -24,4 +24,8 @@ export class ApisConnect implements IApisConnect {
   public async searchPlaylists(query: string): Promise<Playlist[]> {
     return await this.api.searchPlaylists(query);
   }
+
+  public async getPlaylistTracks(query: string): Promise<Song[]> {
+    return await this.api.getPlaylistTracks(query);
+  }
 }

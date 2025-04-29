@@ -139,8 +139,37 @@ export class SpotifyConnect implements IApisConnect {
     const playlists: Playlist[] = filteredItems.map((item: any) => ({
       id: item?.id,
       name: item?.name,
-      imageUrl: item?.images[0].url,
+      coverImageUrl: item?.images[0].url,
     }));
     return playlists;
+  }
+
+  public async getPlaylistTracks(
+    playlistId: string,
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<Song[]> {
+    const url = `${this.baseUrl}/playlists/${playlistId}/tracks?limit=${limit}&offset=${
+      (page - 1) * limit
+    }`;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: this.setHeaders(),
+    });
+    if (!response.ok) {
+      throw new Error(
+        `Error fetching data from Spotify: ${response.statusText}`,
+      );
+    }
+    const data = await response.json();
+    const songs: Song[] = data.items.map((item: any) => ({
+      id: item.track.id,
+      name: item.track.name,
+      artist: item.track.artists[0].name,
+      album: item.track.album.name,
+      duration: item.track.duration_ms,
+      imageUrl: item.track.album.images[0].url,
+    }));
+    return songs;
   }
 }
