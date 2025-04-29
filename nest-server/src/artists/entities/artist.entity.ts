@@ -1,19 +1,13 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
 
 @ObjectType()
-export class Song {
+export class Artist {
   @Field(ID)
   id: string;
 
   @Field()
   name: string;
 
-  @Field()
-  artist: string;
-
   @Field({ nullable: true })
-  album?: string;
-
-  @Field({ nullable: true })
-  imageUrl: string;
+  avatarUrl: string;
 }

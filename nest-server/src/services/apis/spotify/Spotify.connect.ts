@@ -110,7 +110,7 @@ export class SpotifyConnect implements IApisConnect {
     const artists: Artist[] = data.artists.items.map((item: any) => ({
       id: item.id,
       name: item.name,
-      imageUrl: item.images[0]?.url,
+      avatarUrl: item.images[0]?.url,
     }));
     return artists;
   }
