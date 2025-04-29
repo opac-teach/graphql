@@ -30,6 +30,14 @@ export type CreateUserResponse = {
   user: User;
 };
 
+export type Genre = {
+  __typename?: 'Genre';
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  songs: Array<Song>;
+  songsCount: Scalars['Int']['output'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   /** Create a new user */
@@ -43,6 +51,12 @@ export type MutationCreateUserArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  /** Get a Genre by ID */
+  genre: Genre;
+  /** Get all genres */
+  genres: Array<Genre>;
+  /** Get a song by ID */
+  song: Song;
   /** Get all songs */
   songs: Array<Song>;
   /** Get a user by ID */
@@ -52,16 +66,35 @@ export type Query = {
 };
 
 
+export type QueryGenreArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QuerySongArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QuerySongsArgs = {
+  genreId?: InputMaybe<Scalars['ID']['input']>;
+};
+
+
 export type QueryUserArgs = {
   id: Scalars['ID']['input'];
 };
 
 export type Song = {
   __typename?: 'Song';
+  /** ID of the genre */
+  genre: Genre;
   /** The ID of the song */
   id: Scalars['ID']['output'];
   /** The name of the song */
   name: Scalars['String']['output'];
+  /** ID of the user */
+  user: User;
 };
 
 export type User = {
@@ -72,6 +105,7 @@ export type User = {
   name: Scalars['String']['output'];
   /** The songs of the user */
   songs: Array<Song>;
+  songsCount: Scalars['Int']['output'];
 };
 
 export type SongsQueryVariables = Exact<{ [key: string]: never; }>;

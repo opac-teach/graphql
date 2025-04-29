@@ -4,19 +4,26 @@ type User {
   "The name of the user"
   name: String!
   "The songs of the user"
-  songs: [Song!]!
+  songs(limit: Int, offset: Int): [Song!]!
+  songsCount: Int!
 }
 
 type Query {
   "Get all users"
-  users: [User!]!
+  users(limit: Int, offset: Int): [User!]!
   "Get a user by ID"
   user(id: ID!): User!
+  "Pagination"
+  usersConnection(first: Int!, after: String): UserConnection!
 }
 
 type Mutation {
   "Create a new user"
   createUser(input: CreateUserInput!): CreateUserResponse!
+  "Method to update a user"
+  updateUser(input: UpdateUserInput!): User!
+  "Method to delete a user"
+  deleteUser(id: ID!): Boolean!
 }
 
 """
@@ -32,4 +39,24 @@ type CreateUserResponse {
   success: Boolean!
   "The created user"
   user: User!
+}
+
+input UpdateUserInput {
+  id: ID!
+  name: String
+}
+
+type UserConnection {
+  edges: [UserEdge!]!
+  pageInfo: PageInfo!
+}
+
+type UserEdge {
+  node: User!
+  cursor: String!
+}
+
+type PageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
 }

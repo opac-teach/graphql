@@ -1,0 +1,13 @@
+type Genre {
+  id: ID!
+  name: String!
+  songs(limit: Int, offset: Int): [Song!]!
+  songsCount: Int!
+}
+
+type Query {
+  "Get all genres"
+  genres: [Genre!]!
+  "Get a Genre by ID"
+  genre(id: ID!): Genre!
+}

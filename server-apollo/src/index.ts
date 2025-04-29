@@ -3,18 +3,18 @@ import { startStandaloneServer } from "@apollo/server/standalone";
 import DataLoader from "dataloader";
 
 import { typeDefs, resolvers } from "./schemas";
-import { DBUser, DBSong, Database, database } from "./datasource";
+import { DBUser, DBSong, Database, database, DBGenre } from "./datasource";
 
 import { getDataLoader, getForeignDataLoader } from "./FakeORM";
 
 export type ResolversContext = {
   userId: string | null;
-  dataSources: {
-    db: Database;
-  };
+  user?: DBUser | null;
+  dataSources: { db: Database };
   loaders: {
     users: DataLoader<string, DBUser>;
     songs: DataLoader<string, DBSong>;
+    genres: DataLoader<string, DBGenre>;
     songsByUser: DataLoader<string, DBSong[]>;
   };
 };
@@ -34,13 +34,17 @@ async function startApolloServer() {
       const userId = Array.isArray(req.headers.user_id)
         ? req.headers.user_id[0] || ""
         : req.headers.user_id || "";
+      
+      const user = userId ? database.user.findById(userId) : null;
 
       return {
         userId,
+        user,
         dataSources: { db },
         loaders: {
           users: getDataLoader<DBUser>(db.user),
           songs: getDataLoader<DBSong>(db.song),
+          genres: getDataLoader<DBGenre>(db.genre),
           songsByUser: getForeignDataLoader<DBSong>(db.song, "userId"),
         },
       };

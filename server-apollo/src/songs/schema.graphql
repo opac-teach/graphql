@@ -3,9 +3,57 @@ type Song {
   id: ID!
   "The name of the song"
   name: String!
+  "ID of the user"
+  user: User!
+  "ID of the genre"
+  genre: Genre!
 }
 
 type Query {
   "Get all songs"
-  songs: [Song!]!
+  songs(limit: Int, offset: Int, genreId: ID): [Song!]!
+  "Get a song by ID"
+  song(id: ID!): Song!
+  "Pagination"
+  songsConnection(first: Int!, after: String): SongConnection!
+}
+
+input CreateSongInput {
+  "Name of the new song"
+  name: String!
+  "Genre of the new song"
+  genreId: ID!
+}
+
+input UpdateSongInput {
+  "ID of the song"
+  id: ID!
+  "Name of the song"
+  name: String
+  "Genre of the song"
+  genreId: ID
+}
+
+type Mutation {
+  "Method to create a song"
+  createSong(input: CreateSongInput!): Song!
+  "Method to update a song"
+  updateSong(input: UpdateSongInput!): Song!
+  "Method to delete a song by returning a boolean"
+  deleteSong(id: ID!): Boolean!
+}
+
+type SongConnection {
+  edges: [SongEdge!]!
+  pageInfo: PageInfo!
+}
+
+type SongEdge {
+  node: Song!
+  cursor: String!
+}
+
+type PageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
 }
