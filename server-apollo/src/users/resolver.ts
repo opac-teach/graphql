@@ -20,7 +20,17 @@ export const userResolvers: Resolvers = {
   },
   Mutation: {
     createUser: (_, { input }, { dataSources }) => {
-      const user = dataSources.db.user.create(input);
+      const existingUser = dataSources.db.user.findMany({
+        name: input.name,
+      });
+      if (existingUser.length > 0) {
+        throw new GraphQLError("User already exists", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+          },
+        });
+      }
+      const user = dataSources.db.user.create({ ...input, role: "USER" });
       return {
         success: true,
         user,

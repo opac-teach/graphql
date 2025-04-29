@@ -1,8 +1,11 @@
 import { users, songs, genres } from "./mock-data";
 import { FakeORM, DBModel, FakeDataSource } from "./FakeORM";
 
+export type EnumRole = "ADMIN" | "USER";
+
 export interface DBUser extends DBModel {
   name: string;
+  role: EnumRole;
 }
 
 export interface DBSong extends DBModel {

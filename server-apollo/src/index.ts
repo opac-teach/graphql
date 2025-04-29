@@ -10,6 +10,7 @@ import { getDataLoader, getForeignDataLoader } from "./FakeORM";
 
 export type ResolversContext = {
   userId: string | null;
+  role: string | null;
   dataSources: {
     db: Database;
   };
@@ -37,8 +38,13 @@ async function startApolloServer() {
         ? req.headers.user_id[0] || ""
         : req.headers.user_id || "";
 
+      const role = Array.isArray(req.headers.role)
+        ? req.headers.role[0] || ""
+        : req.headers.role || "";
+
       return {
         userId,
+        role,
         dataSources: { db },
         loaders: {
           users: getDataLoader<DBUser>(db.user),

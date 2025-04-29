@@ -19,6 +19,10 @@ type Query {
 type Mutation {
   "Create a new genre"
   createGenre(input: CreateGenreInput!): CreateGenreResponse!
+  "Update a genre"
+  updateGenre(input: UpdateGenreInput!, id: ID!): UpdateGenreResponse!
+  "Delete a genre"
+  deleteGenre(id: ID!): DeleteGenreResponse!
 }
 
 "The input for creating a new genre"
@@ -27,10 +31,31 @@ input CreateGenreInput {
   name: String!
 }
 
+"The input for updating a genre"
+input UpdateGenreInput {
+  "The name of the genre"
+  name: String
+}
+
 "The response for creating a new genre"
 type CreateGenreResponse {
   "Whether the genre was created successfully"
   success: Boolean!
   "The created genre"
   genre: Genre!
+}
+
+"The response for updating a genre"
+type UpdateGenreResponse {
+  "Whether the genre was updated successfully"
+  success: Boolean!
+  "The updated genre"
+  genre: Genre!
+}
+
+type DeleteGenreResponse {
+  "Whether the genre was deleted successfully"
+  success: Boolean!
+  "The ID of the deleted genre"
+  id: ID!
 }

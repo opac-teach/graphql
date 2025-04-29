@@ -1,3 +1,4 @@
+import { GraphQLError } from "graphql";
 import { Resolvers } from "../types";
 
 export const genreResolvers: Resolvers = {
@@ -18,11 +19,49 @@ export const genreResolvers: Resolvers = {
     },
   },
   Mutation: {
-    createGenre: (_, { input }, { dataSources }) => {
+    createGenre: (_, { input }, { dataSources, role, userId }) => {
+      if (role !== "ADMIN" || !userId) {
+        throw new GraphQLError("Unauthorized", {
+          extensions: {
+            code: "UNAUTHORIZED",
+          },
+        });
+      }
       const genre = dataSources.db.genre.create(input);
       return {
         success: true,
         genre,
+      };
+    },
+
+    updateGenre: (_, { input, id }, { dataSources, role, userId }) => {
+      if (role !== "ADMIN" || !userId) {
+        throw new GraphQLError("Unauthorized", {
+          extensions: {
+            code: "UNAUTHORIZED",
+          },
+        });
+      }
+      const updatedGenre = dataSources.db.genre.update(id, input);
+      return {
+        success: true,
+        genre: updatedGenre,
+      };
+    },
+
+    deleteGenre: (_, { id }, { dataSources, role, userId }) => {
+      if (role !== "ADMIN" || !userId) {
+        throw new GraphQLError("Unauthorized", {
+          extensions: {
+            code: "UNAUTHORIZED",
+          },
+        });
+      }
+      const genre = dataSources.db.genre.findById(id);
+      dataSources.db.genre.delete(id);
+      return {
+        success: true,
+        id: genre.id,
       };
     },
   },

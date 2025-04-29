@@ -7,6 +7,15 @@ type User {
   songs: [Song!]!
   "The number of songs"
   songsCount: Float!
+  "The role of the user"
+  role: EnumRole!
+}
+
+enum EnumRole {
+  "The user is an admin"
+  ADMIN
+  "The user is a regular user"
+  USER
 }
 
 type Query {

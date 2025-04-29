@@ -64,6 +64,14 @@ export type CreateUserResponse = {
   user: User;
 };
 
+export type DeleteGenreResponse = {
+  __typename?: 'DeleteGenreResponse';
+  /** The ID of the deleted genre */
+  id: Scalars['ID']['output'];
+  /** Whether the genre was deleted successfully */
+  success: Scalars['Boolean']['output'];
+};
+
 export type DeleteSongResponse = {
   __typename?: 'DeleteSongResponse';
   /** The ID of the deleted song */
@@ -79,6 +87,13 @@ export type DeleteUserResponse = {
   /** Whether the user was deleted successfully */
   success: Scalars['Boolean']['output'];
 };
+
+export enum EnumRole {
+  /** The user is an admin */
+  Admin = 'ADMIN',
+  /** The user is a regular user */
+  User = 'USER'
+}
 
 export type Genre = {
   __typename?: 'Genre';
@@ -100,10 +115,14 @@ export type Mutation = {
   createSong: CreateSongResponse;
   /** Create a new user */
   createUser: CreateUserResponse;
+  /** Delete a genre */
+  deleteGenre: DeleteGenreResponse;
   /** Delete a song */
   deleteSong: DeleteSongResponse;
   /** Delete a user */
   deleteUser: DeleteUserResponse;
+  /** Update a genre */
+  updateGenre: UpdateGenreResponse;
   /** Update a new song */
   updateSong: UpdateSongResponse;
   /** Update a user */
@@ -126,6 +145,11 @@ export type MutationCreateUserArgs = {
 };
 
 
+export type MutationDeleteGenreArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
 export type MutationDeleteSongArgs = {
   id: Scalars['ID']['input'];
 };
@@ -133,6 +157,12 @@ export type MutationDeleteSongArgs = {
 
 export type MutationDeleteUserArgs = {
   id: Scalars['ID']['input'];
+};
+
+
+export type MutationUpdateGenreArgs = {
+  id: Scalars['ID']['input'];
+  input: UpdateGenreInput;
 };
 
 
@@ -203,6 +233,21 @@ export type Song = {
   user: User;
 };
 
+/** The input for updating a genre */
+export type UpdateGenreInput = {
+  /** The name of the genre */
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** The response for updating a genre */
+export type UpdateGenreResponse = {
+  __typename?: 'UpdateGenreResponse';
+  /** The updated genre */
+  genre: Genre;
+  /** Whether the genre was updated successfully */
+  success: Scalars['Boolean']['output'];
+};
+
 /** The input for updating a song */
 export type UpdateSongInput = {
   /** The genreId of the song */
@@ -239,6 +284,8 @@ export type User = {
   id: Scalars['ID']['output'];
   /** The name of the user */
   name: Scalars['String']['output'];
+  /** The role of the user */
+  role: EnumRole;
   /** The songs of the user */
   songs: Array<Song>;
   /** The number of songs */
@@ -324,8 +371,10 @@ export type ResolversTypes = ResolversObject<{
   CreateSongResponse: ResolverTypeWrapper<Omit<CreateSongResponse, 'song'> & { song: ResolversTypes['Song'] }>;
   CreateUserInput: CreateUserInput;
   CreateUserResponse: ResolverTypeWrapper<Omit<CreateUserResponse, 'user'> & { user: ResolversTypes['User'] }>;
+  DeleteGenreResponse: ResolverTypeWrapper<DeleteGenreResponse>;
   DeleteSongResponse: ResolverTypeWrapper<DeleteSongResponse>;
   DeleteUserResponse: ResolverTypeWrapper<DeleteUserResponse>;
+  EnumRole: EnumRole;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   Genre: ResolverTypeWrapper<DBGenre>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
@@ -334,6 +383,8 @@ export type ResolversTypes = ResolversObject<{
   Query: ResolverTypeWrapper<{}>;
   Song: ResolverTypeWrapper<DBSong>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  UpdateGenreInput: UpdateGenreInput;
+  UpdateGenreResponse: ResolverTypeWrapper<Omit<UpdateGenreResponse, 'genre'> & { genre: ResolversTypes['Genre'] }>;
   UpdateSongInput: UpdateSongInput;
   UpdateSongResponse: ResolverTypeWrapper<Omit<UpdateSongResponse, 'song'> & { song: ResolversTypes['Song'] }>;
   UpdateUserInput: UpdateUserInput;
@@ -350,6 +401,7 @@ export type ResolversParentTypes = ResolversObject<{
   CreateSongResponse: Omit<CreateSongResponse, 'song'> & { song: ResolversParentTypes['Song'] };
   CreateUserInput: CreateUserInput;
   CreateUserResponse: Omit<CreateUserResponse, 'user'> & { user: ResolversParentTypes['User'] };
+  DeleteGenreResponse: DeleteGenreResponse;
   DeleteSongResponse: DeleteSongResponse;
   DeleteUserResponse: DeleteUserResponse;
   Float: Scalars['Float']['output'];
@@ -360,6 +412,8 @@ export type ResolversParentTypes = ResolversObject<{
   Query: {};
   Song: DBSong;
   String: Scalars['String']['output'];
+  UpdateGenreInput: UpdateGenreInput;
+  UpdateGenreResponse: Omit<UpdateGenreResponse, 'genre'> & { genre: ResolversParentTypes['Genre'] };
   UpdateSongInput: UpdateSongInput;
   UpdateSongResponse: Omit<UpdateSongResponse, 'song'> & { song: ResolversParentTypes['Song'] };
   UpdateUserInput: UpdateUserInput;
@@ -382,6 +436,12 @@ export type CreateSongResponseResolvers<ContextType = ResolversContext, ParentTy
 export type CreateUserResponseResolvers<ContextType = ResolversContext, ParentType extends ResolversParentTypes['CreateUserResponse'] = ResolversParentTypes['CreateUserResponse']> = ResolversObject<{
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type DeleteGenreResponseResolvers<ContextType = ResolversContext, ParentType extends ResolversParentTypes['DeleteGenreResponse'] = ResolversParentTypes['DeleteGenreResponse']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -409,8 +469,10 @@ export type MutationResolvers<ContextType = ResolversContext, ParentType extends
   createGenre?: Resolver<ResolversTypes['CreateGenreResponse'], ParentType, ContextType, RequireFields<MutationCreateGenreArgs, 'input'>>;
   createSong?: Resolver<ResolversTypes['CreateSongResponse'], ParentType, ContextType, RequireFields<MutationCreateSongArgs, 'input'>>;
   createUser?: Resolver<ResolversTypes['CreateUserResponse'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'input'>>;
+  deleteGenre?: Resolver<ResolversTypes['DeleteGenreResponse'], ParentType, ContextType, RequireFields<MutationDeleteGenreArgs, 'id'>>;
   deleteSong?: Resolver<ResolversTypes['DeleteSongResponse'], ParentType, ContextType, RequireFields<MutationDeleteSongArgs, 'id'>>;
   deleteUser?: Resolver<ResolversTypes['DeleteUserResponse'], ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'id'>>;
+  updateGenre?: Resolver<ResolversTypes['UpdateGenreResponse'], ParentType, ContextType, RequireFields<MutationUpdateGenreArgs, 'id' | 'input'>>;
   updateSong?: Resolver<ResolversTypes['UpdateSongResponse'], ParentType, ContextType, RequireFields<MutationUpdateSongArgs, 'id' | 'input'>>;
   updateUser?: Resolver<ResolversTypes['UpdateUserResponse'], ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'id' | 'input'>>;
 }>;
@@ -432,6 +494,12 @@ export type SongResolvers<ContextType = ResolversContext, ParentType extends Res
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type UpdateGenreResponseResolvers<ContextType = ResolversContext, ParentType extends ResolversParentTypes['UpdateGenreResponse'] = ResolversParentTypes['UpdateGenreResponse']> = ResolversObject<{
+  genre?: Resolver<ResolversTypes['Genre'], ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type UpdateSongResponseResolvers<ContextType = ResolversContext, ParentType extends ResolversParentTypes['UpdateSongResponse'] = ResolversParentTypes['UpdateSongResponse']> = ResolversObject<{
   song?: Resolver<ResolversTypes['Song'], ParentType, ContextType>;
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
@@ -447,6 +515,7 @@ export type UpdateUserResponseResolvers<ContextType = ResolversContext, ParentTy
 export type UserResolvers<ContextType = ResolversContext, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  role?: Resolver<ResolversTypes['EnumRole'], ParentType, ContextType>;
   songs?: Resolver<Array<ResolversTypes['Song']>, ParentType, ContextType>;
   songsCount?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -456,12 +525,14 @@ export type Resolvers<ContextType = ResolversContext> = ResolversObject<{
   CreateGenreResponse?: CreateGenreResponseResolvers<ContextType>;
   CreateSongResponse?: CreateSongResponseResolvers<ContextType>;
   CreateUserResponse?: CreateUserResponseResolvers<ContextType>;
+  DeleteGenreResponse?: DeleteGenreResponseResolvers<ContextType>;
   DeleteSongResponse?: DeleteSongResponseResolvers<ContextType>;
   DeleteUserResponse?: DeleteUserResponseResolvers<ContextType>;
   Genre?: GenreResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Song?: SongResolvers<ContextType>;
+  UpdateGenreResponse?: UpdateGenreResponseResolvers<ContextType>;
   UpdateSongResponse?: UpdateSongResponseResolvers<ContextType>;
   UpdateUserResponse?: UpdateUserResponseResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
