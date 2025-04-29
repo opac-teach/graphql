@@ -7,6 +7,7 @@ import { join } from 'node:path';
 import { SongsModule } from './songs/songs.module';
 import { ArtistsModule } from './artists/artists.module';
 import { PlaylistsModule } from './playlists/playlists.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { PlaylistsModule } from './playlists/playlists.module';
     SongsModule,
     ArtistsModule,
     PlaylistsModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
