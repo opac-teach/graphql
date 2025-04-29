@@ -3,9 +3,66 @@ type Song {
   id: ID!
   "The name of the song"
   name: String!
+  "The artist of the song"
+  user: User!
+  "The genre of the song"
+  genre: Genre!
 }
 
 type Query {
   "Get all songs"
-  songs: [Song!]!
+  songs(genreId: ID, limit: Int, offset: Int): [Song!]!
+  "Get a song by ID"
+  songById(id: ID!): Song
+}
+
+
+type Mutation {
+  "Create a new user"
+  createSong(input: CreateSongInput!): CreateSongResponse!
+  "Delete a song by current user"
+  deleteSong(id: ID!): DeleteSongResponse!
+  "Update a song by current user"
+  updateSong(id: ID!, input: UpdateSongInput!): UpdateSongResponse!
+}
+
+"""
+The input for creating a new user
+"""
+input CreateSongInput {
+  "The name of the song"
+  name: String!
+  "The genre of the song"
+  genreId: String!
+}
+
+type CreateSongResponse {
+  "Whether the song was created successfully"
+  success: Boolean!
+  "The created song"
+  song: Song!
+}
+
+"""
+The input for updating a song
+"""
+input UpdateSongInput {
+  "The name of the song"
+  name: String
+  "The genre of the song"
+  genreId: String
+}
+
+type UpdateSongResponse {
+  "Whether the song was updated successfully"
+  success: Boolean!
+  "The updated song"
+  song: Song!
+}
+
+type DeleteSongResponse {
+  "Whether the song was deleted successfully"
+  success: Boolean!
+  "The deleted song"
+  song: Song!
 }
