@@ -55,11 +55,16 @@ async function startApolloServer() {
           genres: new DataLoader<string, DBGenre>(() => {
             return Promise.resolve(db.genre.findMany());
           }),
-          songsByUser: new DataLoader<string, DBSong[]>((userIds: string[]) => {
-            return Promise.resolve(
-              userIds.map((userId) => db.song.findMany({ userId }))
-            );
-          }),
+          songsByUser: new DataLoader<string, DBSong[]>(
+            async (userIds: readonly string[]) => {
+              const foundSongs = db.song.findMany(
+                userIds.map((id) => ({ userId: id }))
+              );
+              return userIds.map((userId) =>
+                foundSongs.filter((song) => song.userId === userId)
+              );
+            }
+          ),
         },
       };
     },
