@@ -1,29 +1,64 @@
 "use client";
 
-import { useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import Link from "next/link";
-import CreateUserForm from "./CreateUserForm";
 import Loading from "@/components/Loading";
 import { GET_USERS } from "@/requetes/queries";
+import { CREATE_USER } from "@/requetes/mutations";
+import ModalCreate from "@/components/ModalCreate";
 
 export default function Users() {
-  const { data, loading, error, refetch } = useQuery(GET_USERS);
+  const { data, loading, error } = useQuery(GET_USERS);
+
+  const [mutateFunction] = useMutation(CREATE_USER, {
+    update(cache, { data }) {
+      const newUser = data?.createUser?.user;
+      if (!newUser) return;
+
+      cache.modify({
+        fields: {
+          users(existingUsers = []) {
+            const newUserRef = cache.writeFragment({
+              data: newUser,
+              fragment: gql`
+                fragment NewUser on User {
+                  id
+                  name
+                }
+              `,
+            });
+
+            return [...existingUsers, newUserRef];
+          },
+        },
+      });
+    },
+  });
+
+  const create = async (name: string) => {
+    await mutateFunction({
+      variables: { input: { name } },
+    });
+  };
 
   if (loading) return <Loading />;
   if (error) return <div>Error: {error.message}</div>;
 
   return (
     <div>
-      <h2>Users</h2>
-      <div>
+      <div className="flex justify-between">
+        <h2>Users</h2>
+        <ModalCreate title="user" onConfirm={create} />
+      </div>
+      <div className="flex gap-2 mt-2">
         {data?.users.map((user) => (
-          <div key={user.id} className="flex gap-2">
-            <Link href={`/users/${user.id}`}>{user.name}</Link>
-          </div>
+          <CardUser key={user.id} user={user} />
         ))}
       </div>
-
-      <CreateUserForm refetch={refetch} />
     </div>
   );
+}
+
+function CardUser({ user }: { user: { id: string; name: string } }) {
+  return <Link href={`/users/${user.id}`}>{user.name}</Link>;
 }

@@ -20,9 +20,9 @@ type Documents = {
     "\n  query Genre($id: ID!) {\n  genre(id: $id) {\n    id\n    name\n    songsCount\n    songs {\n      id\n      name\n      user {\n        id\n        name\n      }\n    }\n  }\n}\n": typeof types.GenreDocument,
     "\n  query Songs($limit: Int, $offset: Int, $genreId: ID) {\n  songs(limit: $limit, offset: $offset, genreId: $genreId) {\n    id\n    name\n    user {\n      id\n      name\n    }\n    genre {\n      id\n      name\n    }\n  }\n}\n": typeof types.SongsDocument,
     "\n  query Song($id: ID!) {\n  song(id: $id) {\n    name\n    user {\n      id\n      name \n    }\n  }\n}\n": typeof types.SongDocument,
-    "\n  query Users {\n    users {\n      ...userFragment\n    }\n  }\n": typeof types.UsersDocument,
-    "\n  query User($id: ID!) {\n    user(id: $id) {\n      ...userFragment\n      songs {\n        id\n        name\n      }\n    }\n  }\n": typeof types.UserDocument,
-    "\n  fragment userFragment on User {\n    id  \n    name\n  }\n": typeof types.UserFragmentFragmentDoc,
+    "\n  query Users {\n    users {\n      id  \n      name\n    }\n  }\n": typeof types.UsersDocument,
+    "\n  query User($id: ID!) {\n    user(id: $id) {\n      id  \n    name\n    songsCount\n      songs {\n        id\n        name\n      }\n    }\n  }\n": typeof types.UserDocument,
+    "\n  fragment userFragment on User {\n    id  \n    name\n    songsCount\n  }\n": typeof types.UserFragmentFragmentDoc,
 };
 const documents: Documents = {
     "\n    mutation CreateGenre($input: CreateGenreInput!) {\n        createGenre(input: $input) {\n            success\n            genre {\n                id\n                name\n            }\n        }\n    }    \n": types.CreateGenreDocument,
@@ -31,9 +31,9 @@ const documents: Documents = {
     "\n  query Genre($id: ID!) {\n  genre(id: $id) {\n    id\n    name\n    songsCount\n    songs {\n      id\n      name\n      user {\n        id\n        name\n      }\n    }\n  }\n}\n": types.GenreDocument,
     "\n  query Songs($limit: Int, $offset: Int, $genreId: ID) {\n  songs(limit: $limit, offset: $offset, genreId: $genreId) {\n    id\n    name\n    user {\n      id\n      name\n    }\n    genre {\n      id\n      name\n    }\n  }\n}\n": types.SongsDocument,
     "\n  query Song($id: ID!) {\n  song(id: $id) {\n    name\n    user {\n      id\n      name \n    }\n  }\n}\n": types.SongDocument,
-    "\n  query Users {\n    users {\n      ...userFragment\n    }\n  }\n": types.UsersDocument,
-    "\n  query User($id: ID!) {\n    user(id: $id) {\n      ...userFragment\n      songs {\n        id\n        name\n      }\n    }\n  }\n": types.UserDocument,
-    "\n  fragment userFragment on User {\n    id  \n    name\n  }\n": types.UserFragmentFragmentDoc,
+    "\n  query Users {\n    users {\n      id  \n      name\n    }\n  }\n": types.UsersDocument,
+    "\n  query User($id: ID!) {\n    user(id: $id) {\n      id  \n    name\n    songsCount\n      songs {\n        id\n        name\n      }\n    }\n  }\n": types.UserDocument,
+    "\n  fragment userFragment on User {\n    id  \n    name\n    songsCount\n  }\n": types.UserFragmentFragmentDoc,
 };
 
 /**
@@ -77,15 +77,15 @@ export function gql(source: "\n  query Song($id: ID!) {\n  song(id: $id) {\n    
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query Users {\n    users {\n      ...userFragment\n    }\n  }\n"): (typeof documents)["\n  query Users {\n    users {\n      ...userFragment\n    }\n  }\n"];
+export function gql(source: "\n  query Users {\n    users {\n      id  \n      name\n    }\n  }\n"): (typeof documents)["\n  query Users {\n    users {\n      id  \n      name\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query User($id: ID!) {\n    user(id: $id) {\n      ...userFragment\n      songs {\n        id\n        name\n      }\n    }\n  }\n"): (typeof documents)["\n  query User($id: ID!) {\n    user(id: $id) {\n      ...userFragment\n      songs {\n        id\n        name\n      }\n    }\n  }\n"];
+export function gql(source: "\n  query User($id: ID!) {\n    user(id: $id) {\n      id  \n    name\n    songsCount\n      songs {\n        id\n        name\n      }\n    }\n  }\n"): (typeof documents)["\n  query User($id: ID!) {\n    user(id: $id) {\n      id  \n    name\n    songsCount\n      songs {\n        id\n        name\n      }\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  fragment userFragment on User {\n    id  \n    name\n  }\n"): (typeof documents)["\n  fragment userFragment on User {\n    id  \n    name\n  }\n"];
+export function gql(source: "\n  fragment userFragment on User {\n    id  \n    name\n    songsCount\n  }\n"): (typeof documents)["\n  fragment userFragment on User {\n    id  \n    name\n    songsCount\n  }\n"];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};
