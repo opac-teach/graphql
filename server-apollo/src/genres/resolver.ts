@@ -3,16 +3,22 @@ import { Resolvers } from "../types";
 
 export const genreResolvers: Resolvers = {
   Query: {
-    genres: (_, __, { dataSources }) => {
-      return dataSources.db.genre.findMany();
+    genres: (_, { pagination }, { dataSources }) => {
+      return dataSources.db.genre.findMany(_, pagination ? {
+        limit: pagination.pageSize,
+        offset: pagination.page * pagination.pageSize
+      } : {});
     },
     genre: (_, { id }, { dataSources }) => {
       return dataSources.db.genre.findById(id);
     },
   },
   Genre: {
-    songs: async (parent, _, { dataSources }) => {
-      return dataSources.db.song.findMany({ genreId: parent.id });
+    songs: async (parent, { pagination }, { dataSources }) => {
+      return dataSources.db.song.findMany({ genreId: parent.id }, pagination ? {
+        limit: pagination.pageSize,
+        offset: pagination.page * pagination.pageSize
+      } : {});
     },
     songsCount: async (parent, _, { dataSources }) => {
       return dataSources.db.song.count({ genreId: parent.id });

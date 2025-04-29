@@ -11,7 +11,7 @@ type Song {
 
 type Query {
   "Get all songs"
-  songs(genreId: ID): [Song!]!
+  songs(pagination: SongPaginationInput, genreId: ID): [Song!]!
   "Get a song by ID"
   song(id: ID!): Song!
 }
@@ -66,4 +66,12 @@ type UpdateSongResponse {
   success: Boolean!
   "The updated song"
   song: Song!
+}
+
+"""
+The input for song pagination
+"""
+input SongPaginationInput {
+  page: Int = 0
+  pageSize: Int = 10
 }

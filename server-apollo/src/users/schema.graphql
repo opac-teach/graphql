@@ -4,14 +4,14 @@ type User {
   "The name of the user"
   name: String!
   "The songs of the user"
-  songs: [Song!]!
+  songs(pagination: UserSongsPaginationInput): [Song!]!
   "The number of songs of the user"
   songsCount: Int!
 }
 
 type Query {
   "Get all users"
-  users: [User!]!
+  users(pagination: UserPaginationInput): [User!]!
   "Get a user by ID"
   user(id: ID!): User!
 }
@@ -58,4 +58,20 @@ type UpdateUserResponse {
   success: Boolean!
   "The updated user"
   user: User!
+}
+
+"""
+The input for user pagination
+"""
+input UserPaginationInput {
+  page: Int = 0
+  pageSize: Int = 10
+}
+
+"""
+The input for songs of user pagination
+"""
+input UserSongsPaginationInput {
+  page: Int = 0
+  pageSize: Int = 10
 }
