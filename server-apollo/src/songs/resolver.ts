@@ -3,8 +3,8 @@ import { Resolvers } from "../types";
 
 export const songResolvers: Resolvers = {
   Query: {
-    songs: (_, __, { dataSources }) => {
-      return dataSources.db.song.findMany();
+    songs: (_, {genreId}, { dataSources }) => {
+      return dataSources.db.song.findMany(genreId ? { genreId } : {});
     },
 
     song: (_, { id }, { dataSources }) => {
@@ -18,7 +18,15 @@ export const songResolvers: Resolvers = {
         throw new GraphQLError("Song does not have a userId");
       }
       return dataSources.db.user.findById(userId);
-    }
-  }
+    },
+    genre: async(parent, _, { dataSources }) => {
+      const genreId = parent.genreId;
+      if (!genreId) {
+        throw new GraphQLError("Song does not have a genreId");
+      }
+      return dataSources.db.genre.findById(genreId);
+    },
+  },
+
 };
 
