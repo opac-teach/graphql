@@ -1,5 +1,10 @@
 import { Resolvers } from "../types";
 import {GraphQLError} from "graphql";
+import {z} from "zod";
+
+const userInputSchema = z.object({
+  name: z.string().min(3).max(50)
+})
 
 export const userResolvers: Resolvers = {
   Query: {
@@ -25,14 +30,22 @@ export const userResolvers: Resolvers = {
     }
   },
   Mutation: {
-    createUser: (_, { input }, { dataSources }) => {
-      const user = dataSources.db.user.create(input);
-      return {
-        success: true,
-        user,
-      };
+    createUser: async (_, { input }, { dataSources }) => {
+      try {
+        await userInputSchema.parseAsync(input)
+
+        const user = dataSources.db.user.create(input);
+        return {
+          success: true,
+          user,
+        };
+      } catch (e) {
+        throw new GraphQLError(e.message, {
+          extensions: { code: "BAD_USER_INPUT" },
+        });
+      }
     },
-    updateUser: (_, { id, input }, { dataSources, userId }) => {
+    updateUser: async (_, { id, input }, { dataSources, userId }) => {
       if (!userId) {
         throw new GraphQLError("Unauthorized", { extensions: { code: "UNAUTHORIZED" } });
       }
@@ -47,12 +60,19 @@ export const userResolvers: Resolvers = {
         throw new GraphQLError("Forbidden", { extensions: { code: "FORBIDDEN" } });
       }
 
-      const userUpdated = dataSources.db.user.update(id, input);
+      try {
+        await userInputSchema.parseAsync(input)
 
-      return {
-        success: true,
-        user: userUpdated
-      };
+        const userUpdated = dataSources.db.user.update(id, input);
+        return {
+          success: true,
+          user: userUpdated
+        };
+      } catch (e) {
+        throw new GraphQLError(e.message, {
+          extensions: { code: "BAD_USER_INPUT" },
+        });
+      }
     },
     deleteUser: (_, { id }, { dataSources, userId }) => {
       if (!userId) {

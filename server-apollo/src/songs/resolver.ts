@@ -1,6 +1,12 @@
 import { GraphQLError } from "graphql";
 import { Resolvers } from "../types";
 import {DBSong} from "../datasource";
+import {z} from "zod";
+
+const songInputSchema = z.object({
+  name: z.string().min(3).max(100),
+  genreId: z.string()
+})
 
 export const songResolvers: Resolvers = {
   Query: {
@@ -23,7 +29,7 @@ export const songResolvers: Resolvers = {
     }
   },
   Mutation: {
-    createSong: (_:{}, { input }, { dataSources, userId }) => {
+    createSong: async (_:{}, { input }, { dataSources, userId }) => {
       if (!userId) {
         throw new GraphQLError("Unauthorized", {
           extensions: {
@@ -32,17 +38,25 @@ export const songResolvers: Resolvers = {
         });
       }
 
-      const song = dataSources.db.song.create({
-        name: input.name,
-        genreId: input.genreId,
-        userId: userId
-      })
-      return {
-        success: true,
-        song
+      try {
+        await songInputSchema.parseAsync(input);
+
+        const song = dataSources.db.song.create({
+          name: input.name,
+          genreId: input.genreId,
+          userId: userId
+        })
+        return {
+          success: true,
+          song
+        }
+      } catch (e) {
+        throw new GraphQLError(e.message, {
+          extensions: { code: "BAD_USER_INPUT" },
+        });
       }
     },
-    updateSong: (_, { id, input }, { dataSources, userId }) => {
+    updateSong: async (_, { id, input }, { dataSources, userId }) => {
       if (!userId) {
         throw new GraphQLError("Unauthorized", { extensions: { code: "UNAUTHORIZED" } });
       }
@@ -57,12 +71,19 @@ export const songResolvers: Resolvers = {
         throw new GraphQLError("Forbidden", { extensions: { code: "FORBIDDEN" } });
       }
 
-      const songUpdated = dataSources.db.song.update(id, input);
+      try {
+        await songInputSchema.parseAsync(input)
 
-      return {
-        success: true,
-        song: songUpdated
-      };
+        const songUpdated = dataSources.db.song.update(id, input);
+        return {
+          success: true,
+          song: songUpdated
+        };
+      } catch (e) {
+        throw new GraphQLError(e.message, {
+          extensions: { code: "BAD_USER_INPUT" },
+        });
+      }
     },
     deleteSong: (_, { id }, { dataSources, userId }) => {
       if (!userId) {

@@ -1,5 +1,10 @@
 import { Resolvers } from "../types";
 import {GraphQLError} from "graphql/index";
+import {z} from "zod";
+
+const genreInputSchema = z.object({
+    name: z.string().min(3).max(50)
+})
 
 export const genreResolvers: Resolvers = {
     Query: {
@@ -22,7 +27,7 @@ export const genreResolvers: Resolvers = {
         }
     },
     Mutation: {
-        createGenre: (_ :{}, { input }, { dataSources, userRole }) => {
+        createGenre: async (_ :{}, { input }, { dataSources, userRole }) => {
             if (userRole !== 'ROLE_ADMIN') {
                 throw new GraphQLError("Unauthorized", {
                     extensions: {
@@ -30,13 +35,22 @@ export const genreResolvers: Resolvers = {
                     },
                 });
             }
-            const genre = dataSources.db.genre.create(input)
-            return {
-                success: true,
-                genre
+            
+            try {
+                await genreInputSchema.parseAsync(input)
+
+                const genre = dataSources.db.genre.create(input)
+                return {
+                    success: true,
+                    genre
+                }
+            } catch (e) {
+                throw new GraphQLError(e.message, {
+                    extensions: { code: "BAD_USER_INPUT" },
+                });
             }
         },
-        updateGenre: (_, { id, input }, { dataSources, userRole }) => {
+        updateGenre: async (_, { id, input }, { dataSources, userRole }) => {
             if (userRole !== 'ROLE_ADMIN') {
                 throw new GraphQLError("Unauthorized", {
                     extensions: {
@@ -44,11 +58,19 @@ export const genreResolvers: Resolvers = {
                     },
                 });
             }
-            const genreUpdated = dataSources.db.genre.update(id, input)
 
-            return {
-                success: true,
-                genre: genreUpdated
+            try {
+                await genreInputSchema.parseAsync(input)
+
+                const genreUpdated = dataSources.db.genre.update(id, input)
+                return {
+                    success: true,
+                    genre: genreUpdated
+                }
+            } catch (e) {
+                throw new GraphQLError(e.message, {
+                    extensions: { code: "BAD_USER_INPUT" },
+                });
             }
         },
         deleteGenre: (_, { id }, { dataSources, userRole }) => {
