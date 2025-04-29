@@ -1,4 +1,5 @@
 import type { CodegenConfig } from "@graphql-codegen/cli";
+import { Genre } from './src/types';
 
 const config: CodegenConfig = {
   schema: "./src/**/*.graphql",
@@ -10,6 +11,7 @@ const config: CodegenConfig = {
         mappers: {
           User: "./datasource#DBUser",
           Song: "./datasource#DBSong",
+          Genre: "./datasource#DBGenre",
         },
         useIndexSignature: true,
       },

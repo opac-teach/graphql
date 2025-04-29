@@ -1,4 +1,4 @@
-import { DBSong, DBUser } from "./datasource";
+import { DBSong, DBUser, DBGenre } from "./datasource";
 import { v4 as uuidv4 } from "uuid";
 
 export const users: DBUser[] = [
@@ -12,25 +12,44 @@ export const users: DBUser[] = [
   },
 ];
 
+export const genres: DBGenre[] = [
+  {
+    id: "1",
+    name: "Rock",
+  },
+  {
+    id: "2",
+    name: "Hip-Hop",
+  },
+  {
+    id: "3",
+    name: "Jazz",
+  },
+];
+
 export const songs: DBSong[] = [
   {
     id: uuidv4(),
     name: "Alice Hop",
     userId: users[0].id,
+    genreId: "1",
   },
   {
     id: uuidv4(),
     name: "Bob Drum",
     userId: users[1].id,
+    genreId: "2",
   },
   {
     id: uuidv4(),
     name: "Alice Drum",
     userId: users[0].id,
+    genreId: "3",
   },
   {
     id: uuidv4(),
     name: "Bob Hop",
     userId: users[1].id,
+    genreId: "1",
   },
 ];

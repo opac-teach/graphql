@@ -4,12 +4,13 @@ type User {
   "The name of the user"
   name: String!
   "The songs of the user"
-  songs: [Song!]!
+  songs(limit: Int, offset: Int): [Song!]!
+  songsCount: Int!
 }
 
 type Query {
-  "Get all users"
-  users: [User!]!
+  "Get all users with pagination"
+  users(limit: Int, offset: Int): [User!]!
   "Get a user by ID"
   user(id: ID!): User!
 }
@@ -17,6 +18,9 @@ type Query {
 type Mutation {
   "Create a new user"
   createUser(input: CreateUserInput!): CreateUserResponse!
+  # Modifier un utilisateur existant
+  updateUser(id: ID!, input: UpdateUserInput!): UpdateUserResponse!
+  deleteUser(id: ID!): DeleteUserResponse!
 }
 
 """
@@ -32,4 +36,19 @@ type CreateUserResponse {
   success: Boolean!
   "The created user"
   user: User!
+}
+
+input UpdateUserInput {
+  name: String
+}
+
+type UpdateUserResponse {
+  success: Boolean!
+  user: User
+  message: String
+}
+
+type DeleteUserResponse {
+  success: Boolean!
+  message: String
 }
