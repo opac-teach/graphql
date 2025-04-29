@@ -3,6 +3,7 @@
 import gql from "graphql-tag";
 import {useQuery} from "@apollo/client";
 import Link from "next/link";
+import CreateGenreForm from "@/app/genres/CreateGenreForm";
 
 const GET_GENRES = gql(`
     query Genres {
@@ -15,7 +16,7 @@ const GET_GENRES = gql(`
 `)
 
 export default function Genres() {
-    const { data, loading, error } = useQuery(GET_GENRES)
+    const { data, loading, error, refetch } = useQuery(GET_GENRES)
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error.message}</div>;
@@ -34,6 +35,7 @@ export default function Genres() {
                     </div>
                 ))}
             </div>
+            <CreateGenreForm refetch={refetch} />
         </div>
     );
 }
