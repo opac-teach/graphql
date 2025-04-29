@@ -10,20 +10,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { gql } from "@/lib/graphql";
 import { useMutation } from "@apollo/client";
-
-const CREATE_USER = gql(`
-  mutation CreateUser($input: CreateUserInput!) {
-    createUser(input: $input) {
-      success
-      user {
-        id
-        name
-      }
-    }
-  }
-`);
+import { CREATE_USER } from "@/requetes/mutations";
 
 export default function CreateUserForm({ refetch }: { refetch: () => void }) {
   const [mutateFunction, { data, loading, error }] = useMutation(CREATE_USER);

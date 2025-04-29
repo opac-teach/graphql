@@ -1,36 +1,19 @@
 "use client";
 
 import { useQuery } from "@apollo/client";
-import { gql } from "@/lib/graphql";
 import Loading from "@/components/Loading";
 import SongCard from "@/components/song/song.card";
 import { useState } from "react";
-
-const GET_SONGS = gql(`
-  query Songs($limit: Int, $offset: Int, $genreId: ID) {
-  songs(limit: $limit, offset: $offset, genreId: $genreId) {
-    id
-    name
-    user {
-      id
-      name
-    }
-    genre {
-      id
-      name
-    }
-  }
-}
-`);
-
-const GET_GENRES = gql(`
-  query Genres {
-  genres {
-    id
-    name
-  }
-}
-`);
+import { GET_GENRES, GET_SONGS } from "@/requetes/queries";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function Songs() {
   const [genre, setGenre] = useState<string | null>(null);
@@ -49,9 +32,8 @@ export default function Songs() {
     error: genresError,
   } = useQuery(GET_GENRES);
 
-  const handleGenreChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedGenre = e.target.value;
-    setGenre(selectedGenre === "" ? null : selectedGenre);
+  const handleGenreChange = (value: string) => {
+    setGenre(value === "all" ? null : value);
   };
 
   if (loading || genresLoading) return <Loading />;
@@ -81,24 +63,28 @@ export default function Songs() {
 function SelectGenre({
   genres,
   onChange,
-  defaultValue = null,
+  defaultValue,
 }: {
   genres: { id: string; name: string }[] | undefined;
-  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  onChange: (value: string) => void;
   defaultValue?: string | null;
 }) {
   return (
-    <select
-      className="border rounded-md p-2 cursor-pointer"
-      onChange={onChange}
-      defaultValue={defaultValue || ""}
-    >
-      <option value="">All Genres</option>
-      {genres?.map((genre) => (
-        <option key={genre.id} value={genre.id}>
-          {genre.name}
-        </option>
-      ))}
-    </select>
+    <Select defaultValue={defaultValue || "all"} onValueChange={onChange}>
+      <SelectTrigger className="w-[180px]">
+        <SelectValue placeholder="Select a genre" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectGroup>
+          <SelectLabel>Genres</SelectLabel>
+          <SelectItem value="all">All Genres</SelectItem>
+          {genres?.map((genre) => (
+            <SelectItem key={genre.id} value={genre.id}>
+              {genre.name}
+            </SelectItem>
+          ))}
+        </SelectGroup>
+      </SelectContent>
+    </Select>
   );
 }

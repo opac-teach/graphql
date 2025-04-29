@@ -3,17 +3,8 @@
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import CreateUserForm from "./CreateUserForm";
-import { gql } from "@/lib/graphql";
 import Loading from "@/components/Loading";
-
-const GET_USERS = gql(`
-  query Users {
-    users {
-      id
-      name
-    }
-  }
-`);
+import { GET_USERS } from "@/requetes/queries";
 
 export default function Users() {
   const { data, loading, error, refetch } = useQuery(GET_USERS);
@@ -23,7 +14,7 @@ export default function Users() {
 
   return (
     <div>
-      <h1>Users</h1>
+      <h2>Users</h2>
       <div>
         {data?.users.map((user) => (
           <div key={user.id} className="flex gap-2">

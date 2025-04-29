@@ -9,6 +9,7 @@ function logout() {
 
 function login() {
   localStorage.setItem("user_id", "827dcc1f-062e-4c09-97cc-b0743acf16df");
+  localStorage.setItem("role", "ADMIN");
   window.location.reload();
 }
 
