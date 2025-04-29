@@ -27,27 +27,55 @@ export const genres: DBGenre[] = [
 export const songs: DBSong[] = [
   {
     id: uuidv4(),
-    name: "Alice Hop",
+    name: "fait ça bien",
     userId: users[0].id,
     genreId: genres[0].id
   },
   {
     id: uuidv4(),
-    name: "Bob Drum",
+    name: "Dix leurres",
     userId: users[1].id,
     genreId: genres[0].id
   },
   {
     id:uuidv4(),
-    name: "Alice Drum",
+    name: "Bella",
     userId: users[0].id,
-    genreId: genres[1].id
+    genreId: genres[0].id
   },
   {
     id: uuidv4(),
-    name: "Bob Hop",
+    name: "je m' tire ",
     userId: users[1].id,
-    genreId: genres[1].id
+    genreId: genres[0].id
+
+  },
+  {
+    id: uuidv4(),
+    name: "ciel",
+    userId: users[1].id,
+    genreId: genres[0].id
+
+  },
+  {
+    id: uuidv4(),
+    name: "Soit pas timide",
+    userId: users[1].id,
+    genreId: genres[0].id
+
+  },
+  {
+    id: uuidv4(),
+    name: "Macaréna",
+    userId: users[1].id,
+    genreId: genres[0].id
+
+  },
+  {
+    id: uuidv4(),
+    name: "911",
+    userId: users[1].id,
+    genreId: genres[0].id
 
   },
 ];

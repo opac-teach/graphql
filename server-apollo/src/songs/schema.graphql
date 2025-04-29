@@ -10,14 +10,26 @@ type Song {
 
 type Query {
   "Get all songs"
-  songs(genreId: ID): [Song!]!
+  songs(genreId: ID, pagination: PaginationInput): [Song!]!
   "Get one song "
   song(id: ID!): Song!
 }
 
+input PaginationInput {
+  page: Int = 1
+  pageSize: Int = 10
+}
+
 type Mutation {
   "create new song"
-  createSong(input: CreateSongInput!) : CreateSongResponse!
+  createSong(input: CreateSongInput!) : SongResponse!
+  "update song"
+  updateSong(id: ID!,input: UpdateSongInput!): SongResponse!
+}
+
+input UpdateSongInput {
+  "id of song you want to update"
+  name: String!
 }
 
 input CreateSongInput {
@@ -28,7 +40,7 @@ input CreateSongInput {
 
 }
 
-type CreateSongResponse {
+type SongResponse {
   "Whether the user was created successfully"
   success: Boolean!
   "The created user"

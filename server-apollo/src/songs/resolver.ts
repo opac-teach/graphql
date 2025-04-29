@@ -2,9 +2,10 @@ import { Resolvers } from "../types";
 
 export const songResolvers: Resolvers = {
   Query: {
-    songs: (_, {genreId}, { dataSources }) => {
-      if (!genreId) return  dataSources.db.song.findMany();
-      return  dataSources.db.song.findMany({genreId});
+    songs: (_, {genreId, pagination}, { dataSources }) => {
+        const paginationQuery = pagination || {page: 0, pageSize: 2}
+
+        return  dataSources.db.song.findMany({genreId},{limit: paginationQuery.pageSize, offset: paginationQuery.page * paginationQuery.pageSize});
     },
 
     song: (_, { id }, { dataSources }) => {
@@ -27,6 +28,19 @@ export const songResolvers: Resolvers = {
           return {
               success: true,
               song: newSong
+          }
+      },
+
+      updateSong: (_, {id, input }, { dataSources, userId }) => {
+          const song = dataSources.db.song.findById(id)
+          if (song.userId !== userId) return {
+              success: false,
+              song: null
+          }
+          const updatedSong = dataSources.db.song.update(id, input)
+          return {
+              success: true,
+              song: updatedSong
           }
       }
   }
