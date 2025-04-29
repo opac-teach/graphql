@@ -89,6 +89,23 @@ export type Genre = {
   songsCount: Scalars['Int']['output'];
 };
 
+
+export type GenreSongsArgs = {
+  pagination?: InputMaybe<GenreSongsPaginationInput>;
+};
+
+/** The input for genre pagination */
+export type GenrePaginationInput = {
+  page?: InputMaybe<Scalars['Int']['input']>;
+  pageSize?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** The input for songs of genre pagination */
+export type GenreSongsPaginationInput = {
+  page?: InputMaybe<Scalars['Int']['input']>;
+  pageSize?: InputMaybe<Scalars['Int']['input']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   /** Create a new genre */
@@ -166,6 +183,11 @@ export type QueryGenreArgs = {
 };
 
 
+export type QueryGenresArgs = {
+  pagination?: InputMaybe<GenrePaginationInput>;
+};
+
+
 export type QuerySongArgs = {
   id: Scalars['ID']['input'];
 };
@@ -173,11 +195,17 @@ export type QuerySongArgs = {
 
 export type QuerySongsArgs = {
   genreId?: InputMaybe<Scalars['ID']['input']>;
+  pagination?: InputMaybe<SongPaginationInput>;
 };
 
 
 export type QueryUserArgs = {
   id: Scalars['ID']['input'];
+};
+
+
+export type QueryUsersArgs = {
+  pagination?: InputMaybe<UserPaginationInput>;
 };
 
 export type Song = {
@@ -190,6 +218,12 @@ export type Song = {
   name: Scalars['String']['output'];
   /** The user of the song */
   user: User;
+};
+
+/** The input for song pagination */
+export type SongPaginationInput = {
+  page?: InputMaybe<Scalars['Int']['input']>;
+  pageSize?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** The input for updating a song */
@@ -234,6 +268,23 @@ export type User = {
   songs: Array<Song>;
   /** The number of songs of the user */
   songsCount: Scalars['Int']['output'];
+};
+
+
+export type UserSongsArgs = {
+  pagination?: InputMaybe<UserSongsPaginationInput>;
+};
+
+/** The input for user pagination */
+export type UserPaginationInput = {
+  page?: InputMaybe<Scalars['Int']['input']>;
+  pageSize?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** The input for songs of user pagination */
+export type UserSongsPaginationInput = {
+  page?: InputMaybe<Scalars['Int']['input']>;
+  pageSize?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -318,17 +369,22 @@ export type ResolversTypes = ResolversObject<{
   DeleteSongResponse: ResolverTypeWrapper<DeleteSongResponse>;
   DeleteUserResponse: ResolverTypeWrapper<DeleteUserResponse>;
   Genre: ResolverTypeWrapper<DBGenre>;
+  GenrePaginationInput: GenrePaginationInput;
+  GenreSongsPaginationInput: GenreSongsPaginationInput;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   Song: ResolverTypeWrapper<DBSong>;
+  SongPaginationInput: SongPaginationInput;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   UpdateSongInput: UpdateSongInput;
   UpdateSongResponse: ResolverTypeWrapper<Omit<UpdateSongResponse, 'song'> & { song: ResolversTypes['Song'] }>;
   UpdateUserInput: UpdateUserInput;
   UpdateUserResponse: ResolverTypeWrapper<Omit<UpdateUserResponse, 'user'> & { user: ResolversTypes['User'] }>;
   User: ResolverTypeWrapper<DBUser>;
+  UserPaginationInput: UserPaginationInput;
+  UserSongsPaginationInput: UserSongsPaginationInput;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -343,17 +399,22 @@ export type ResolversParentTypes = ResolversObject<{
   DeleteSongResponse: DeleteSongResponse;
   DeleteUserResponse: DeleteUserResponse;
   Genre: DBGenre;
+  GenrePaginationInput: GenrePaginationInput;
+  GenreSongsPaginationInput: GenreSongsPaginationInput;
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
   Mutation: {};
   Query: {};
   Song: DBSong;
+  SongPaginationInput: SongPaginationInput;
   String: Scalars['String']['output'];
   UpdateSongInput: UpdateSongInput;
   UpdateSongResponse: Omit<UpdateSongResponse, 'song'> & { song: ResolversParentTypes['Song'] };
   UpdateUserInput: UpdateUserInput;
   UpdateUserResponse: Omit<UpdateUserResponse, 'user'> & { user: ResolversParentTypes['User'] };
   User: DBUser;
+  UserPaginationInput: UserPaginationInput;
+  UserSongsPaginationInput: UserSongsPaginationInput;
 }>;
 
 export type CreateGenreResponseResolvers<ContextType = ResolversContext, ParentType extends ResolversParentTypes['CreateGenreResponse'] = ResolversParentTypes['CreateGenreResponse']> = ResolversObject<{
@@ -387,7 +448,7 @@ export type DeleteUserResponseResolvers<ContextType = ResolversContext, ParentTy
 export type GenreResolvers<ContextType = ResolversContext, ParentType extends ResolversParentTypes['Genre'] = ResolversParentTypes['Genre']> = ResolversObject<{
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  songs?: Resolver<Array<ResolversTypes['Song']>, ParentType, ContextType>;
+  songs?: Resolver<Array<ResolversTypes['Song']>, ParentType, ContextType, Partial<GenreSongsArgs>>;
   songsCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
@@ -404,11 +465,11 @@ export type MutationResolvers<ContextType = ResolversContext, ParentType extends
 
 export type QueryResolvers<ContextType = ResolversContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   genre?: Resolver<ResolversTypes['Genre'], ParentType, ContextType, RequireFields<QueryGenreArgs, 'id'>>;
-  genres?: Resolver<Array<ResolversTypes['Genre']>, ParentType, ContextType>;
+  genres?: Resolver<Array<ResolversTypes['Genre']>, ParentType, ContextType, Partial<QueryGenresArgs>>;
   song?: Resolver<ResolversTypes['Song'], ParentType, ContextType, RequireFields<QuerySongArgs, 'id'>>;
   songs?: Resolver<Array<ResolversTypes['Song']>, ParentType, ContextType, Partial<QuerySongsArgs>>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
-  users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
+  users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, Partial<QueryUsersArgs>>;
 }>;
 
 export type SongResolvers<ContextType = ResolversContext, ParentType extends ResolversParentTypes['Song'] = ResolversParentTypes['Song']> = ResolversObject<{
@@ -434,7 +495,7 @@ export type UpdateUserResponseResolvers<ContextType = ResolversContext, ParentTy
 export type UserResolvers<ContextType = ResolversContext, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  songs?: Resolver<Array<ResolversTypes['Song']>, ParentType, ContextType>;
+  songs?: Resolver<Array<ResolversTypes['Song']>, ParentType, ContextType, Partial<UserSongsArgs>>;
   songsCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;

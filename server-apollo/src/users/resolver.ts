@@ -3,16 +3,22 @@ import { Resolvers } from "../types";
 
 export const userResolvers: Resolvers = {
   Query: {
-    users: (_, __, { dataSources }) => {
-      return dataSources.db.user.findMany();
+    users: (_, { pagination }, { dataSources }) => {
+      return dataSources.db.user.findMany(_, pagination ? {
+        limit: pagination.pageSize,
+        offset: pagination.page * pagination.pageSize
+      } : {});
     },
     user: (_, { id }, { dataSources }) => {
       return dataSources.db.user.findById(id);
     },
   },
   User: {
-    songs: async (parent, _, { dataSources }) => {
-      return dataSources.db.song.findMany({ userId: parent.id });
+    songs: async (parent, { pagination }, { dataSources }) => {
+      return dataSources.db.song.findMany({ userId: parent.id }, pagination ? {
+        limit: pagination.pageSize,
+        offset: pagination.page * pagination.pageSize
+      } : {});
     },
     songsCount: async (parent, _, { dataSources }) => {
       return dataSources.db.song.count({ userId: parent.id });
