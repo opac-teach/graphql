@@ -1,9 +1,12 @@
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
-import DataLoader from "dataloader";
 
 import { typeDefs, resolvers } from "./schemas";
+<<<<<<< Updated upstream
 import { DBUser, DBSong, DBGenre, Database, database } from "./datasource";
+=======
+import { Database, database } from "./datasource";
+>>>>>>> Stashed changes
 
 export type ResolversContext = {
   userId: string | null;
@@ -11,10 +14,8 @@ export type ResolversContext = {
     db: Database;
   };
   loaders: {
-    users: DataLoader<string, DBUser>;
-    songs: DataLoader<string, DBSong>;
-    genres: DataLoader<string, DBGenre>;
-    songsByUser: DataLoader<string, DBSong[]>;
+    song: ReturnType<Database["song"]["createLoader"]>;
+    user: ReturnType<Database["user"]["createLoader"]>;
   };
 };
 
@@ -34,10 +35,14 @@ async function startApolloServer() {
         ? req.headers.User[0] || ""
         : req.headers.user_id || "";
 
+      const songLoader = db.song.createLoader();
+      const userLoader = db.user.createLoader();
+
       return {
         userId,
         dataSources: { db },
         loaders: {
+<<<<<<< Updated upstream
           users: new DataLoader<string, DBUser>(
             async (userIds: readonly string[]) => {
               const foundUsers = db.user.findByIds(userIds as string[]);
@@ -65,6 +70,10 @@ async function startApolloServer() {
               );
             }
           ),
+=======
+          song: songLoader,
+          user: userLoader,
+>>>>>>> Stashed changes
         },
       };
     },

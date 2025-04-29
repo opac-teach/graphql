@@ -6,6 +6,7 @@ export interface DBModel {
 }
 
 export class FakeORM<T extends DBModel> {
+<<<<<<< Updated upstream
   constructor(
     private modelName: string,
     private data: T[]
@@ -14,44 +15,71 @@ export class FakeORM<T extends DBModel> {
   findById(id: string): T | undefined {
     console.log(this.data.find((item) => item.id === id));
     return this.data.find((item) => item.id === id);
+=======
+  private data: T[];
+
+  constructor(
+    private modelName: string,
+    initialData: T[] = []
+  ) {
+    this.data = initialData;
   }
 
-  findByIds(ids: string[]): T[] {
+  createLoader(): DataLoader<string, T> {
+    console.log("createLoader", this.modelName);
+    return new DataLoader(async (ids: readonly string[]) => {
+      const results = this.data.filter((item) => ids.includes(item.id));
+      const resultMap = new Map(results.map((item) => [item.id, item]));
+      return ids.map(
+        (id) => resultMap.get(id) ?? new Error(`Not found: ${id}`)
+      );
+    });
+  }
+
+  findById(loader: DataLoader<string, T>, id: string): Promise<T> {
+    console.log("findById", this.modelName, id);
+    return loader.load(id);
+>>>>>>> Stashed changes
+  }
+
+  async findByIds(loader: DataLoader<string, T>, ids: string[]): Promise<T[]> {
     console.log("findByIds", this.modelName, ids);
-    return this.data.filter((item) => ids.includes(item.id));
+    return await loader
+      .loadMany(ids)
+      .then((results) => results.filter((r): r is T => !(r instanceof Error)));
   }
 
-  findMany(
+  async findMany(
+    loader: DataLoader<string, T>,
     filter?: Partial<T> | Partial<T>[],
     options?: { limit?: number; offset?: number },
     hideLog?: boolean
-  ): T[] {
+  ): Promise<T[]> {
     if (!hideLog) console.log("findMany", this.modelName, filter);
+
     const limit = options?.limit || 100;
     const offset = options?.offset || 0;
-    if (!filter) return this.data.slice(offset, offset + limit);
 
-    if (!Array.isArray(filter)) filter = [filter];
+    let filtered = this.data;
 
-    return this.data
-      .filter((item) => {
-        return filter.some((filter) =>
-          Object.keys(filter).every((key) => {
-            return (
-              !filter[key as keyof T] ||
-              item[key as keyof T] === filter[key as keyof T]
-            );
-          })
-        );
-      })
-      .slice(offset, offset + limit);
+    if (filter) {
+      if (!Array.isArray(filter)) filter = [filter];
+      const filters = filter as Partial<T>[];
+      filtered = this.data.filter((item) =>
+        filters.some((f) =>
+          Object.entries(f).every(
+            ([key, val]) => !val || item[key as keyof T] === val
+          )
+        )
+      );
+    }
+
+    const ids = filtered.slice(offset, offset + limit).map((item) => item.id);
+    return this.findByIds(loader, ids);
   }
 
   create(input: Omit<T, "id">): T {
-    const object: T = {
-      id: uuidv4(),
-      ...input,
-    } as T;
+    const object: T = { id: uuidv4(), ...input } as T;
     this.data.push(object);
     return object;
   }
@@ -70,7 +98,19 @@ export class FakeORM<T extends DBModel> {
   }
 
   count(filter?: Partial<T> | Partial<T>[]): number {
-    return this.findMany(filter, undefined, true).length;
+    let filtered = this.data;
+    if (filter) {
+      if (!Array.isArray(filter)) filter = [filter];
+      const filters = filter as Partial<T>[];
+      filtered = this.data.filter((item) =>
+        filters.some((f) =>
+          Object.entries(f).every(
+            ([key, val]) => !val || item[key as keyof T] === val
+          )
+        )
+      );
+    }
+    return filtered.length;
   }
 }
 

@@ -1,5 +1,6 @@
 import { GraphQLError } from "graphql";
 import { Resolvers } from "../types";
+<<<<<<< Updated upstream
 import DataLoader from "dataloader";
 import { off } from "process";
 
@@ -21,6 +22,23 @@ export const songResolvers: Resolvers = {
       const song = dataSources.db.song.findById(id);
       console.log("Loading song...");
       console.log(song);
+=======
+
+export const songResolvers: Resolvers = {
+  Query: {
+    songs: (_, { limit, page }, { dataSources, loaders }) => {
+      return dataSources.db.song.findMany(
+        loaders.song,
+        {},
+        {
+          limit,
+          offset: page,
+        }
+      );
+    },
+    songById: async (_, { id }, { dataSources, loaders }) => {
+      const song = await dataSources.db.song.findById(loaders.song, id);
+>>>>>>> Stashed changes
       if (!song) {
         throw new GraphQLError("Song not found", {
           extensions: {
@@ -33,6 +51,7 @@ export const songResolvers: Resolvers = {
   },
   Song: {
     user: async (parent, _, { dataSources, loaders }) => {
+<<<<<<< Updated upstream
       return await loaders.users.load(parent.userId);
     },
     genre: async (parent, _, { dataSources, loaders }) => {
@@ -45,10 +64,13 @@ export const songResolvers: Resolvers = {
         });
       }
       return genre;
+=======
+      return dataSources.db.user.findById(loaders.user, parent.userId);
+>>>>>>> Stashed changes
     },
   },
   Mutation: {
-    createSong: (__, { input }, { dataSources, userId }) => {
+    createSong: async (__, { input }, { dataSources, userId }) => {
       try {
         const { name, genreId } = input;
 
@@ -77,7 +99,7 @@ export const songResolvers: Resolvers = {
         };
       }
     },
-    editSong: (__, { id, input }, { dataSources, userId }) => {
+    editSong: async (__, { id, input }, { dataSources, userId, loaders }) => {
       try {
         const { name, genreId } = input;
 
@@ -88,7 +110,10 @@ export const songResolvers: Resolvers = {
           };
         }
 
-        const existingSong = dataSources.db.song.findById(id);
+        const existingSong = await dataSources.db.song.findById(
+          loaders.song,
+          id
+        );
 
         if (!existingSong) {
           return {
@@ -104,7 +129,7 @@ export const songResolvers: Resolvers = {
           };
         }
 
-        const song = dataSources.db.song.update(id, {
+        const song = await dataSources.db.song.update(id, {
           name,
           genreId,
         });

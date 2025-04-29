@@ -8,9 +8,15 @@ export class SpotifyConnect implements IApisConnect {
   private accessToken: string;
 
   constructor() {
+    this.init();
+  }
+
+  public async init(): Promise<void> {
     const clientId = process.env.SPOTIFY_CLIENT_ID;
     const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
-    this.setAccessToken(clientId, clientSecret);
+    if (!this.accessToken) {
+      await this.setAccessToken(clientId, clientSecret);
+    }
   }
 
   private async setAccessToken(
