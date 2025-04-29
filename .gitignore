@@ -23,3 +23,10 @@ node_modules/
 
 # Always regenerate new types before running project
 /src/types.ts
+
+# Ignore all .env files
+.env
+
+nest-server/.env
+./nest-server/.env
+/nest-server/.env

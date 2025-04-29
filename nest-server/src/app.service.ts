@@ -4,7 +4,7 @@ import { ApisConnect } from './services/apis/ApisConnect.service';
 @Injectable()
 export class AppService {
   constructor() {
-    this.init();
+    // this.init();
   }
 
   private async init() {
