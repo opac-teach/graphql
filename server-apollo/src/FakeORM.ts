@@ -6,16 +6,6 @@ export interface DBModel {
 }
 
 export class FakeORM<T extends DBModel> {
-<<<<<<< Updated upstream
-  constructor(
-    private modelName: string,
-    private data: T[]
-  ) {}
-
-  findById(id: string): T | undefined {
-    console.log(this.data.find((item) => item.id === id));
-    return this.data.find((item) => item.id === id);
-=======
   private data: T[];
 
   constructor(
@@ -39,7 +29,6 @@ export class FakeORM<T extends DBModel> {
   findById(loader: DataLoader<string, T>, id: string): Promise<T> {
     console.log("findById", this.modelName, id);
     return loader.load(id);
->>>>>>> Stashed changes
   }
 
   async findByIds(loader: DataLoader<string, T>, ids: string[]): Promise<T[]> {
