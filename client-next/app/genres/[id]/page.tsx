@@ -7,18 +7,14 @@ import { Song } from "@/lib/graphql/graphql";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 
-const GET_SONG = gql(`
-   query Song($id: ID!) {
-        song(id: $id) {
+const GET_GENRE = gql(`
+   query Genre($id: ID!, $limit: Int!, $page: Int!) {
+        genre(id: $id) {
             id
             name
-            user {
-                id
+            songs(limit: $limit, page: $page) {
                 name
-            }
-            genre {
                 id
-                name
             }
         }
    }
@@ -26,9 +22,11 @@ const GET_SONG = gql(`
 
 export default function Song({ params }: { params: { id: string } }) {
   const { id } = useParams<{ id: string }>();
-  const { data, loading, error } = useQuery(GET_SONG, {
+  const { data, loading, error } = useQuery(GET_GENRE, {
     variables: {
       id: id,
+      limit: 10,
+      page: 1,
     },
   });
 
@@ -37,21 +35,16 @@ export default function Song({ params }: { params: { id: string } }) {
 
   return (
     <div>
-      <h1>Song</h1>
+      <h1>Genre</h1>
       <div className="mt-4 flex gap-2 items-end">
-        <h3>{data?.song.name}</h3>
-        <p>by</p>
-        <Link href={`/users/${data?.song.user.id}`}>
-          <h3>{data?.song.user.name}</h3>
-        </Link>
-        <p>in</p>
-        {data?.song.genre ? (
-          <Link href={`/genres/${data?.song.genre.id}`}>
-            <h3>{data?.song.genre.name}</h3>
-          </Link>
-        ) : (
-          <h3>Unknown</h3>
-        )}
+        <h3>{data?.genre.name}</h3>
+        <p>has</p>
+        <h3>{data?.genre.songs.length} songs</h3> :
+        {data?.genre.songs.map((song: Song) => (
+          <div key={song.id} className="flex gap-2">
+            <Link href={`/songs/${song.id}`}>{song.name}</Link>
+          </div>
+        ))}
       </div>
     </div>
   );

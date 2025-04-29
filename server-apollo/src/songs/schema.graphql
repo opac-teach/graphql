@@ -7,6 +7,8 @@ type Song {
   genreId: ID!
   "user who created the song"
   user: User!
+  "The genre of the song"
+  genre: Genre!
 }
 
 type Query {

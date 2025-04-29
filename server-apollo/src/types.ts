@@ -110,7 +110,7 @@ export type MutationEditSongArgs = {
 export type Query = {
   __typename?: 'Query';
   /** Get a genre by ID */
-  genreById: Genre;
+  genre: Genre;
   /** Get all genres */
   genres: Array<Genre>;
   /** Get a song by ID */
@@ -126,8 +126,14 @@ export type Query = {
 };
 
 
-export type QueryGenreByIdArgs = {
+export type QueryGenreArgs = {
   id: Scalars['ID']['input'];
+};
+
+
+export type QueryGenresArgs = {
+  limit: Scalars['Int']['input'];
+  page: Scalars['Int']['input'];
 };
 
 
@@ -154,6 +160,8 @@ export type QueryUsersArgs = {
 
 export type Song = {
   __typename?: 'Song';
+  /** The genre of the song */
+  genre: Genre;
   /** The id of the genre of the song */
   genreId: Scalars['ID']['output'];
   /** The ID of the song */
@@ -317,8 +325,8 @@ export type MutationResolvers<ContextType = ResolversContext, ParentType extends
 }>;
 
 export type QueryResolvers<ContextType = ResolversContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
-  genreById?: Resolver<ResolversTypes['Genre'], ParentType, ContextType, RequireFields<QueryGenreByIdArgs, 'id'>>;
-  genres?: Resolver<Array<ResolversTypes['Genre']>, ParentType, ContextType>;
+  genre?: Resolver<ResolversTypes['Genre'], ParentType, ContextType, RequireFields<QueryGenreArgs, 'id'>>;
+  genres?: Resolver<Array<ResolversTypes['Genre']>, ParentType, ContextType, RequireFields<QueryGenresArgs, 'limit' | 'page'>>;
   song?: Resolver<ResolversTypes['Song'], ParentType, ContextType, RequireFields<QuerySongArgs, 'id'>>;
   songs?: Resolver<Array<ResolversTypes['Song']>, ParentType, ContextType, RequireFields<QuerySongsArgs, 'limit' | 'page'>>;
   songsWithUsers?: Resolver<Array<ResolversTypes['Song']>, ParentType, ContextType>;
@@ -327,6 +335,7 @@ export type QueryResolvers<ContextType = ResolversContext, ParentType extends Re
 }>;
 
 export type SongResolvers<ContextType = ResolversContext, ParentType extends ResolversParentTypes['Song'] = ResolversParentTypes['Song']> = ResolversObject<{
+  genre?: Resolver<ResolversTypes['Genre'], ParentType, ContextType>;
   genreId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;

@@ -3,10 +3,16 @@ import { Resolvers } from "../types";
 
 export const genreResolvers: Resolvers = {
   Query: {
-    genres: (_, __, { dataSources }) => {
-      return dataSources.db.genre.findMany();
+    genres: (_, { limit, page }, { dataSources }) => {
+      return dataSources.db.genre.findMany(
+        {},
+        {
+          limit: limit,
+          offset: page ? (page - 1) * limit : 0,
+        }
+      );
     },
-    genreById: (_, { id }, { dataSources }) => {
+    genre: (_, { id }, { dataSources }) => {
       const genre = dataSources.db.genre.findById(id);
       if (!genre) {
         throw new GraphQLError("Genre not found", {
@@ -26,7 +32,7 @@ export const genreResolvers: Resolvers = {
         },
         {
           limit,
-          offset: page,
+          offset: page ? (page - 1) * limit : 0,
         }
       );
       return songs;

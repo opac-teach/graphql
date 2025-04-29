@@ -35,6 +35,17 @@ export const songResolvers: Resolvers = {
     user: async (parent, _, { dataSources, loaders }) => {
       return await loaders.users.load(parent.userId);
     },
+    genre: async (parent, _, { dataSources, loaders }) => {
+      const genre = await dataSources.db.genre.findById(parent.genreId);
+      if (!genre) {
+        throw new GraphQLError("Genre not found", {
+          extensions: {
+            code: "NOT_FOUND",
+          },
+        });
+      }
+      return genre;
+    },
   },
   Mutation: {
     createSong: (__, { input }, { dataSources, userId }) => {

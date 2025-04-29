@@ -11,7 +11,7 @@ type Genre {
 
 type Query {
   "Get all genres"
-  genres: [Genre!]!
+  genres(page: Int!, limit: Int!): [Genre!]!
   "Get a genre by ID"
-  genreById(id: ID!): Genre!
+  genre(id: ID!): Genre!
 }
