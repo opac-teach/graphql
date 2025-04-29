@@ -14,11 +14,11 @@ export const songResolvers: Resolvers = {
     },
   },
   Song: {
-    user: async (parent, _, { dataSources }) => {
-      return dataSources.db.user.findById(parent.userId);
+    user: async (parent, _, { loaders }) => {
+      return await loaders.users.load(parent.userId);
     },
-    genre: async (parent, _, { dataSources }) => {
-      return dataSources.db.genre.findById(parent.genreId);
+    genre: async (parent, _, { loaders }) => {
+      return await loaders.genres.load(parent.genreId);
     },
   },
   Mutation: {
