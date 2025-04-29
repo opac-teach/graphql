@@ -114,7 +114,7 @@ export type Query = {
   /** Get all genres */
   genres: Array<Genre>;
   /** Get a song by ID */
-  songById: Song;
+  song: Song;
   /** Get all songs */
   songs: Array<Song>;
   /** Get all songs with users */
@@ -131,7 +131,7 @@ export type QueryGenreByIdArgs = {
 };
 
 
-export type QuerySongByIdArgs = {
+export type QuerySongArgs = {
   id: Scalars['ID']['input'];
 };
 
@@ -319,7 +319,7 @@ export type MutationResolvers<ContextType = ResolversContext, ParentType extends
 export type QueryResolvers<ContextType = ResolversContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   genreById?: Resolver<ResolversTypes['Genre'], ParentType, ContextType, RequireFields<QueryGenreByIdArgs, 'id'>>;
   genres?: Resolver<Array<ResolversTypes['Genre']>, ParentType, ContextType>;
-  songById?: Resolver<ResolversTypes['Song'], ParentType, ContextType, RequireFields<QuerySongByIdArgs, 'id'>>;
+  song?: Resolver<ResolversTypes['Song'], ParentType, ContextType, RequireFields<QuerySongArgs, 'id'>>;
   songs?: Resolver<Array<ResolversTypes['Song']>, ParentType, ContextType, RequireFields<QuerySongsArgs, 'limit' | 'page'>>;
   songsWithUsers?: Resolver<Array<ResolversTypes['Song']>, ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;

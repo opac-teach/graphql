@@ -1,16 +1,22 @@
 import { GraphQLError } from "graphql";
 import { Resolvers } from "../types";
 import DataLoader from "dataloader";
+import { off } from "process";
 
 export const songResolvers: Resolvers = {
   Query: {
-    songs: (_, { limit, page }, { dataSources }) => {
-      return dataSources.db.song.findMany(undefined, {
-        limit: limit,
-        offset: page,
-      });
+    songs: (_, { limit, page }, { dataSources, loaders }) => {
+      const songs = dataSources.db.song.findMany(
+        {},
+        {
+          limit,
+          offset: (page - 1) * limit,
+        }
+      );
+
+      return songs;
     },
-    songById: (_, { id }, { dataSources }) => {
+    song: (_, { id }, { dataSources }) => {
       const song = dataSources.db.song.findById(id);
       if (!song) {
         throw new GraphQLError("Song not found", {
@@ -21,23 +27,10 @@ export const songResolvers: Resolvers = {
       }
       return song;
     },
-    songsWithUsers: async (_, __, { dataSources, loaders }) => {
-      const songs = dataSources.db.song.findMany();
-      return Promise.all(
-        songs.map(async (song) => {
-          const user = await loaders.users.load(song.userId);
-          return {
-            ...song,
-            user,
-          };
-        })
-      );
-    },
   },
   Song: {
-    user: async (parent, _, { dataSources }) => {
-      const user = dataSources.db.user.findById(parent.userId);
-      return user;
+    user: async (parent, _, { loaders }) => {
+      return await loaders.users.load(parent.userId);
     },
   },
   Mutation: {

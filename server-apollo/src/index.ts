@@ -5,8 +5,6 @@ import DataLoader from "dataloader";
 import { typeDefs, resolvers } from "./schemas";
 import { DBUser, DBSong, DBGenre, Database, database } from "./datasource";
 
-import { getDataLoader, getForeignDataLoader } from "./FakeORM";
-
 export type ResolversContext = {
   userId: string | null;
   dataSources: {
@@ -14,7 +12,7 @@ export type ResolversContext = {
   };
   loaders: {
     users: DataLoader<string, DBUser>;
-    songs: DataLoader<string, DBSong>;
+    songs: DataLoader<any, DBSong>;
     genres: DataLoader<string, DBGenre>;
     songsByUser: DataLoader<string, DBSong[]>;
   };
@@ -40,10 +38,20 @@ async function startApolloServer() {
         userId,
         dataSources: { db },
         loaders: {
-          users: getDataLoader<DBUser>(db.user),
-          songs: getDataLoader<DBSong>(db.song),
-          genres: getDataLoader<DBGenre>(db.genre),
-          songsByUser: getForeignDataLoader<DBSong>(db.song, "userId"),
+          users: new DataLoader<string, DBUser>(() => {
+            return Promise.resolve(db.user.findMany());
+          }),
+          songs: new DataLoader<string, DBSong>(() => {
+            return Promise.resolve(db.song.findMany());
+          }),
+          genres: new DataLoader<string, DBGenre>(() => {
+            return Promise.resolve(db.genre.findMany());
+          }),
+          songsByUser: new DataLoader<string, DBSong[]>((userIds: string[]) => {
+            return Promise.resolve(
+              userIds.map((userId) => db.song.findMany({ userId }))
+            );
+          }),
         },
       };
     },
