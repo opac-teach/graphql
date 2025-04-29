@@ -23,7 +23,10 @@ export const genreResolvers: Resolvers = {
     },
   },
   Mutation: {
-    createGenre: (_, { input }, { dataSources }) => {
+    createGenre: (_, { input }, { dataSources, role }) => {
+      if (role !== "ADMIN") {
+        throw new Error("Accès interdit : seul  ADMIN a droit de créer un genre.");
+      }
       const createdGenre = dataSources.db.genre.create(input);
 
       return {

@@ -12,6 +12,9 @@ type Query {
   songs(genreId: ID, limit: Int, offset: Int): [Song!]!
   "Get a song by ID"
   song(id: ID!): Song!
+  "Get all songs with their user (for testing DataLoader)"
+  songsWithUser: [Song!]!
+  
 }
 
 type Mutation {

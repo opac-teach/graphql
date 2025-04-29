@@ -1,5 +1,6 @@
 import { GraphQLError } from "graphql";
 import { Resolvers } from "../types";
+import { ResolversContext } from "../index";
 
 export const songResolvers: Resolvers = {
   Query: {
@@ -13,10 +14,13 @@ export const songResolvers: Resolvers = {
     song: (_, { id }, { dataSources }) => {
       return dataSources.db.song.findById(id);
     },
+    songsWithUser: (_: unknown, __: unknown, { dataSources }: ResolversContext) => {
+      return dataSources.db.song.findMany();
+    },
   },
   Song: {
-    user: (parent, _, { dataSources }) => {
-      return dataSources.db.user.findById(parent.userId);
+    user: (parent, _, { loaders }) => {
+      return loaders.users.load(parent.userId);
     },
     genre: (parent, _, { dataSources }) => {
       const genre = dataSources.db.genre.findById(parent.genreId);

@@ -140,6 +140,8 @@ export type Query = {
   song: Song;
   /** Get all songs, with optional genre filter and pagination */
   songs: Array<Song>;
+  /** Get all songs with their user (for testing DataLoader) */
+  songsWithUser: Array<Song>;
   /** Get a user by ID */
   user: User;
   /** Get all users with pagination */
@@ -389,6 +391,7 @@ export type QueryResolvers<ContextType = ResolversContext, ParentType extends Re
   genres?: Resolver<Array<ResolversTypes['Genre']>, ParentType, ContextType>;
   song?: Resolver<ResolversTypes['Song'], ParentType, ContextType, RequireFields<QuerySongArgs, 'id'>>;
   songs?: Resolver<Array<ResolversTypes['Song']>, ParentType, ContextType, Partial<QuerySongsArgs>>;
+  songsWithUser?: Resolver<Array<ResolversTypes['Song']>, ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, Partial<QueryUsersArgs>>;
 }>;
