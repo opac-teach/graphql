@@ -20,19 +20,19 @@ export const songResolvers: Resolvers = {
     },
   },
   Song: {
-    user: async(parent, _, { dataSources }) => {
+    user: async(parent, _, { loaders }) => {
       const userId = parent.userId;
       if (!userId) {
         throw new GraphQLError("Song does not have a userId");
       }
-      return dataSources.db.user.findById(userId);
+      return loaders.users.load(userId);
     },
-    genre: async(parent, _, { dataSources }) => {
+    genre: async(parent, _, { loaders }) => {
       const genreId = parent.genreId;
       if (!genreId) {
         throw new GraphQLError("Song does not have a genreId");
       }
-      return dataSources.db.genre.findById(genreId);
+      return loaders.genres.load(genreId);
     },
   },
 

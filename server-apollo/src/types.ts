@@ -248,6 +248,11 @@ export type User = {
   songs: Array<Song>;
 };
 
+
+export type UserSongsArgs = {
+  pagination?: InputMaybe<PaginationInput>;
+};
+
 export type WithIndex<TObject> = TObject & Record<string, any>;
 export type ResolversObject<TObject> = WithIndex<TObject>;
 
@@ -451,7 +456,7 @@ export type UserResolvers<ContextType = ResolversContext, ParentType extends Res
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   songCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  songs?: Resolver<Array<ResolversTypes['Song']>, ParentType, ContextType>;
+  songs?: Resolver<Array<ResolversTypes['Song']>, ParentType, ContextType, Partial<UserSongsArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 

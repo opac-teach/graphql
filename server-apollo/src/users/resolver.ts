@@ -18,8 +18,13 @@ export const userResolvers: Resolvers = {
     },
   },
   User: {
-    songs: async (parent, _, { dataSources }) => {
-      return dataSources.db.song.findMany({ userId: parent.id });
+    songs: async (parent, {pagination}, { dataSources }) => {
+      const {page=1, limit=2} = pagination || {};
+      const offset = (page - 1) * limit;
+      return dataSources.db.song.findMany({ userId: parent.id }, {
+        offset: offset,
+        limit: limit,
+      });
     },
 
     songCount: async (parent, _, { dataSources }) => {

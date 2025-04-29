@@ -4,7 +4,7 @@ type User {
   "The name of the user"
   name: String!
   "The songs of the user"
-  songs: [Song!]!
+  songs(pagination: PaginationInput): [Song!]!
   "Count of songs by user"
   songCount: Int!
 }
