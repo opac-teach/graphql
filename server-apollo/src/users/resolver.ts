@@ -5,7 +5,7 @@ export const userResolvers: Resolvers = {
     users: (_, { limit, page }, { dataSources }) => {
       return dataSources.db.user.findMany(undefined, {
         limit: limit,
-        offset: page,
+        offset: page ? (page - 1) * limit : 0,
       });
     },
     user: (_, { id }, { dataSources }) => {
@@ -13,8 +13,8 @@ export const userResolvers: Resolvers = {
     },
   },
   User: {
-    songs: (parent, _, { dataSources }) => {
-      return dataSources.db.song.findMany({ userId: parent.id });
+    songs: (parent, _, { dataSources, loaders }) => {
+      return loaders.songsByUser.load(parent.id);
     },
     songCount: (parent, _, { dataSources }) => {
       const songs = dataSources.db.song.findMany({ userId: parent.id });

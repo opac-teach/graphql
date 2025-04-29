@@ -12,7 +12,7 @@ export class FakeORM<T extends DBModel> {
   ) {}
 
   findById(id: string): T | undefined {
-    console.log("findById", this.modelName, id);
+    console.log(this.data.find((item) => item.id === id));
     return this.data.find((item) => item.id === id);
   }
 

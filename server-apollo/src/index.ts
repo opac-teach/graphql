@@ -12,7 +12,7 @@ export type ResolversContext = {
   };
   loaders: {
     users: DataLoader<string, DBUser>;
-    songs: DataLoader<any, DBSong>;
+    songs: DataLoader<string, DBSong>;
     genres: DataLoader<string, DBGenre>;
     songsByUser: DataLoader<string, DBSong[]>;
   };
@@ -31,18 +31,26 @@ async function startApolloServer() {
       console.log("-- New request");
 
       const userId = Array.isArray(req.headers.user_id)
-        ? req.headers.user_id[0] || ""
+        ? req.headers.User[0] || ""
         : req.headers.user_id || "";
 
       return {
         userId,
         dataSources: { db },
         loaders: {
-          users: new DataLoader<string, DBUser>(() => {
-            return Promise.resolve(db.user.findMany());
-          }),
-          songs: new DataLoader<string, DBSong>(() => {
-            return Promise.resolve(db.song.findMany());
+          users: new DataLoader<string, DBUser>(
+            async (userIds: readonly string[]) => {
+              const foundUsers = db.user.findByIds(userIds as string[]);
+              return userIds.map(
+                (id) => foundUsers.find((u) => u.id === id) ?? null
+              );
+            }
+          ),
+          songs: new DataLoader<string, DBSong>(async (songIds: string[]) => {
+            const allSongs = db.song.findByIds(songIds);
+            return songIds.map(
+              (id) => allSongs.find((song) => song.id === id) || null
+            );
           }),
           genres: new DataLoader<string, DBGenre>(() => {
             return Promise.resolve(db.genre.findMany());

@@ -5,7 +5,8 @@ import { off } from "process";
 
 export const songResolvers: Resolvers = {
   Query: {
-    songs: (_, { limit, page }, { dataSources, loaders }) => {
+    songs: (_, { limit, page }, { dataSources }) => {
+      console.log("Loading songs...");
       const songs = dataSources.db.song.findMany(
         {},
         {
@@ -18,6 +19,8 @@ export const songResolvers: Resolvers = {
     },
     song: (_, { id }, { dataSources }) => {
       const song = dataSources.db.song.findById(id);
+      console.log("Loading song...");
+      console.log(song);
       if (!song) {
         throw new GraphQLError("Song not found", {
           extensions: {
@@ -29,7 +32,7 @@ export const songResolvers: Resolvers = {
     },
   },
   Song: {
-    user: async (parent, _, { loaders }) => {
+    user: async (parent, _, { dataSources, loaders }) => {
       return await loaders.users.load(parent.userId);
     },
   },
