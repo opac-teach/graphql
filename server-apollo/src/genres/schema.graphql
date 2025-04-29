@@ -1,0 +1,29 @@
+type Genre {
+    "The ID of the gender"
+    id: ID!
+    "The name of the gender"
+    name: String!
+    "song list of gender"
+    songs: [Song!]
+    songsCount: Int
+}
+
+type Query {
+    "Get all gender"
+    genres: [Genre!]!
+    "Get one song "
+    genre(id: ID!): Genre!
+}
+
+type Mutation {
+    createGenre(input: CreateGenreInput): CreateGenreResponse
+}
+
+input  CreateGenreInput {
+    name: String!
+}
+
+type CreateGenreResponse {
+    success: Boolean!
+    genre: Genre!
+}

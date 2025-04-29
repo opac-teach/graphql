@@ -3,7 +3,7 @@ import { startStandaloneServer } from "@apollo/server/standalone";
 import DataLoader from "dataloader";
 
 import { typeDefs, resolvers } from "./schemas";
-import { DBUser, DBSong, Database, database } from "./datasource";
+import {DBUser, DBSong, Database, database} from "./datasource";
 
 import { getDataLoader, getForeignDataLoader } from "./FakeORM";
 

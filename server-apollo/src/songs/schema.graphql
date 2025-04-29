@@ -3,9 +3,34 @@ type Song {
   id: ID!
   "The name of the song"
   name: String!
+  user: User!
+  genre: Genre!
+
 }
 
 type Query {
   "Get all songs"
-  songs: [Song!]!
+  songs(genreId: ID): [Song!]!
+  "Get one song "
+  song(id: ID!): Song!
+}
+
+type Mutation {
+  "create new song"
+  createSong(input: CreateSongInput!) : CreateSongResponse!
+}
+
+input CreateSongInput {
+  "song name"
+  name: String!
+  "id of gender"
+  genreId: String!
+
+}
+
+type CreateSongResponse {
+  "Whether the user was created successfully"
+  success: Boolean!
+  "The created user"
+  song: Song!
 }

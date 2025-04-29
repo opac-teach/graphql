@@ -19,6 +19,31 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
+export type CreateGenreInput = {
+  name: Scalars['String']['input'];
+};
+
+export type CreateGenreResponse = {
+  __typename?: 'CreateGenreResponse';
+  genre: Genre;
+  success: Scalars['Boolean']['output'];
+};
+
+export type CreateSongInput = {
+  /** id of gender */
+  genreId: Scalars['String']['input'];
+  /** song name */
+  name: Scalars['String']['input'];
+};
+
+export type CreateSongResponse = {
+  __typename?: 'CreateSongResponse';
+  /** The created user */
+  song: Song;
+  /** Whether the user was created successfully */
+  success: Scalars['Boolean']['output'];
+};
+
 /** The input for creating a new user */
 export type CreateUserInput = {
   /** The name of the user */
@@ -33,10 +58,34 @@ export type CreateUserResponse = {
   user: User;
 };
 
+export type Genre = {
+  __typename?: 'Genre';
+  /** The ID of the gender */
+  id: Scalars['ID']['output'];
+  /** The name of the gender */
+  name: Scalars['String']['output'];
+  /** song list of gender */
+  songs?: Maybe<Array<Song>>;
+  songsCount?: Maybe<Scalars['Int']['output']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
+  createGenre?: Maybe<CreateGenreResponse>;
+  /** create new song */
+  createSong: CreateSongResponse;
   /** Create a new user */
   createUser: CreateUserResponse;
+};
+
+
+export type MutationCreateGenreArgs = {
+  input?: InputMaybe<CreateGenreInput>;
+};
+
+
+export type MutationCreateSongArgs = {
+  input: CreateSongInput;
 };
 
 
@@ -46,6 +95,12 @@ export type MutationCreateUserArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  /** Get one song  */
+  genre: Genre;
+  /** Get all gender */
+  genres: Array<Genre>;
+  /** Get one song  */
+  song: Song;
   /** Get all songs */
   songs: Array<Song>;
   /** Get a user by ID */
@@ -55,16 +110,33 @@ export type Query = {
 };
 
 
+export type QueryGenreArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QuerySongArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QuerySongsArgs = {
+  genreId?: InputMaybe<Scalars['ID']['input']>;
+};
+
+
 export type QueryUserArgs = {
   id: Scalars['ID']['input'];
 };
 
 export type Song = {
   __typename?: 'Song';
+  genre: Genre;
   /** The ID of the song */
   id: Scalars['ID']['output'];
   /** The name of the song */
   name: Scalars['String']['output'];
+  user: User;
 };
 
 export type User = {
@@ -75,6 +147,7 @@ export type User = {
   name: Scalars['String']['output'];
   /** The songs of the user */
   songs: Array<Song>;
+  songsCount?: Maybe<Scalars['Int']['output']>;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -150,9 +223,15 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  CreateGenreInput: CreateGenreInput;
+  CreateGenreResponse: ResolverTypeWrapper<Omit<CreateGenreResponse, 'genre'> & { genre: ResolversTypes['Genre'] }>;
+  CreateSongInput: CreateSongInput;
+  CreateSongResponse: ResolverTypeWrapper<Omit<CreateSongResponse, 'song'> & { song: ResolversTypes['Song'] }>;
   CreateUserInput: CreateUserInput;
   CreateUserResponse: ResolverTypeWrapper<Omit<CreateUserResponse, 'user'> & { user: ResolversTypes['User'] }>;
+  Genre: ResolverTypeWrapper<Omit<Genre, 'songs'> & { songs?: Maybe<Array<ResolversTypes['Song']>> }>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
+  Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   Song: ResolverTypeWrapper<DBSong>;
@@ -163,14 +242,32 @@ export type ResolversTypes = ResolversObject<{
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
   Boolean: Scalars['Boolean']['output'];
+  CreateGenreInput: CreateGenreInput;
+  CreateGenreResponse: Omit<CreateGenreResponse, 'genre'> & { genre: ResolversParentTypes['Genre'] };
+  CreateSongInput: CreateSongInput;
+  CreateSongResponse: Omit<CreateSongResponse, 'song'> & { song: ResolversParentTypes['Song'] };
   CreateUserInput: CreateUserInput;
   CreateUserResponse: Omit<CreateUserResponse, 'user'> & { user: ResolversParentTypes['User'] };
+  Genre: Omit<Genre, 'songs'> & { songs?: Maybe<Array<ResolversParentTypes['Song']>> };
   ID: Scalars['ID']['output'];
+  Int: Scalars['Int']['output'];
   Mutation: {};
   Query: {};
   Song: DBSong;
   String: Scalars['String']['output'];
   User: DBUser;
+}>;
+
+export type CreateGenreResponseResolvers<ContextType = ResolversContext, ParentType extends ResolversParentTypes['CreateGenreResponse'] = ResolversParentTypes['CreateGenreResponse']> = ResolversObject<{
+  genre?: Resolver<ResolversTypes['Genre'], ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type CreateSongResponseResolvers<ContextType = ResolversContext, ParentType extends ResolversParentTypes['CreateSongResponse'] = ResolversParentTypes['CreateSongResponse']> = ResolversObject<{
+  song?: Resolver<ResolversTypes['Song'], ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type CreateUserResponseResolvers<ContextType = ResolversContext, ParentType extends ResolversParentTypes['CreateUserResponse'] = ResolversParentTypes['CreateUserResponse']> = ResolversObject<{
@@ -179,19 +276,34 @@ export type CreateUserResponseResolvers<ContextType = ResolversContext, ParentTy
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type GenreResolvers<ContextType = ResolversContext, ParentType extends ResolversParentTypes['Genre'] = ResolversParentTypes['Genre']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  songs?: Resolver<Maybe<Array<ResolversTypes['Song']>>, ParentType, ContextType>;
+  songsCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type MutationResolvers<ContextType = ResolversContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
+  createGenre?: Resolver<Maybe<ResolversTypes['CreateGenreResponse']>, ParentType, ContextType, Partial<MutationCreateGenreArgs>>;
+  createSong?: Resolver<ResolversTypes['CreateSongResponse'], ParentType, ContextType, RequireFields<MutationCreateSongArgs, 'input'>>;
   createUser?: Resolver<ResolversTypes['CreateUserResponse'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'input'>>;
 }>;
 
 export type QueryResolvers<ContextType = ResolversContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
-  songs?: Resolver<Array<ResolversTypes['Song']>, ParentType, ContextType>;
+  genre?: Resolver<ResolversTypes['Genre'], ParentType, ContextType, RequireFields<QueryGenreArgs, 'id'>>;
+  genres?: Resolver<Array<ResolversTypes['Genre']>, ParentType, ContextType>;
+  song?: Resolver<ResolversTypes['Song'], ParentType, ContextType, RequireFields<QuerySongArgs, 'id'>>;
+  songs?: Resolver<Array<ResolversTypes['Song']>, ParentType, ContextType, Partial<QuerySongsArgs>>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
 }>;
 
 export type SongResolvers<ContextType = ResolversContext, ParentType extends ResolversParentTypes['Song'] = ResolversParentTypes['Song']> = ResolversObject<{
+  genre?: Resolver<ResolversTypes['Genre'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -199,11 +311,15 @@ export type UserResolvers<ContextType = ResolversContext, ParentType extends Res
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   songs?: Resolver<Array<ResolversTypes['Song']>, ParentType, ContextType>;
+  songsCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type Resolvers<ContextType = ResolversContext> = ResolversObject<{
+  CreateGenreResponse?: CreateGenreResponseResolvers<ContextType>;
+  CreateSongResponse?: CreateSongResponseResolvers<ContextType>;
   CreateUserResponse?: CreateUserResponseResolvers<ContextType>;
+  Genre?: GenreResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Song?: SongResolvers<ContextType>;
