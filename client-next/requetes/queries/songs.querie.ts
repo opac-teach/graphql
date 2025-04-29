@@ -16,3 +16,15 @@ export const GET_SONGS = gql(`
   }
 }
 `);
+
+export const GET_SONG = gql(`
+  query Song($id: ID!) {
+  song(id: $id) {
+    name
+    user {
+      id
+      name 
+    }
+  }
+}
+`);

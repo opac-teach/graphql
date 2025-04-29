@@ -4,21 +4,8 @@ import { Button } from "@/components/ui/button";
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { gql } from "@/lib/graphql";
 import Loading from "@/components/Loading";
-
-const GET_USER = gql(`
-  query User($id: ID!) {
-    user(id: $id) {
-      id
-      name
-      songs {
-        id
-        name
-      }
-    }
-  }
-`);
+import { GET_USER } from "@/requetes/queries";
 
 function loginAs(userId: string) {
   localStorage.setItem("user_id", userId);

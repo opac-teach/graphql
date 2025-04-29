@@ -8,3 +8,21 @@ export const GET_GENRES = gql(`
   }
 }
 `);
+
+export const GET_GENRE = gql(`
+  query Genre($id: ID!) {
+  genre(id: $id) {
+    id
+    name
+    songsCount
+    songs {
+      id
+      name
+      user {
+        id
+        name
+      }
+    }
+  }
+}
+`);

@@ -1,23 +1,11 @@
 "use client";
 
 import Loading from "@/components/Loading";
-import { gql } from "@/lib/graphql";
+import { GET_SONG } from "@/requetes/queries";
 import { useQuery } from "@apollo/client";
 import { Music2 } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-
-const GET_SONG = gql(`
-  query Song($id: ID!) {
-  song(id: $id) {
-    name
-    user {
-      id
-      name 
-    }
-  }
-}
-`);
 
 export default function SongPage() {
   const { id } = useParams<{ id: string }>();
