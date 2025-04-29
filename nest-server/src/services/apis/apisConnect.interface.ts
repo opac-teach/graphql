@@ -1,0 +1,9 @@
+import { Artist } from 'src/types/artist.type';
+import { Playlist } from 'src/types/playlist.type';
+import { Song } from 'src/types/song.type';
+
+export interface IApisConnect {
+  searchSongs: (query: string) => Promise<Song[]>;
+  searchArtists: (query: string) => Promise<Artist[]>;
+  searchPlaylists: (query: string) => Promise<Playlist[]>;
+}

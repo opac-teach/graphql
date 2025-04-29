@@ -7,11 +7,11 @@ import { join } from 'node:path';
 
 @Module({
   imports: [
-    GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
-      graphiql: true,
-      typePaths: ['./**/*.gql'],
-    }),
+    // GraphQLModule.forRoot<ApolloDriverConfig>({
+    //   driver: ApolloDriver,
+    //   graphiql: true,
+    //   typePaths: ['./**/*.gql'],
+    // }),
   ],
   controllers: [AppController],
   providers: [AppService],
