@@ -20,11 +20,22 @@ export const genreResolvers: Resolvers = {
   },
   Mutation: {
     createGenre: (_, { input }, { dataSources }) => {
-      const genre = dataSources.db.genre.create(input);
-      return {
-        success: true,
-        genre,
-      };
+      try {
+        const genre = dataSources.db.genre.create(input);
+        return {
+          success: true,
+          genre,
+        };
+      } catch {
+        throw new GraphQLError(
+          "An error occurred during the create.",
+          {
+            extensions: {
+              code: "INTERNAL_SERVER_ERROR",
+            },
+          }
+        );
+      }
     },
   },
 };
