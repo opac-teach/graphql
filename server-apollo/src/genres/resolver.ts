@@ -18,4 +18,24 @@ export const genreResolvers: Resolvers = {
       return dataSources.db.song.count({ genreId: parent.id });
     },
   },
+  Mutation: {
+    createGenre: (_, { input }, { dataSources }) => {
+      try {
+        const genre = dataSources.db.genre.create(input);
+        return {
+          success: true,
+          genre,
+        };
+      } catch {
+        throw new GraphQLError(
+          "An error occurred during the create.",
+          {
+            extensions: {
+              code: "INTERNAL_SERVER_ERROR",
+            },
+          }
+        );
+      }
+    },
+  },
 };

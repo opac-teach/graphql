@@ -19,6 +19,10 @@ type Query {
 type Mutation {
   "Create a new user"
   createUser(input: CreateUserInput!): CreateUserResponse!
+  "Delete a user"
+  deleteUser(id: ID!): DeleteUserResponse!
+  "update a user"
+  updateUser(id: ID!, input: UpdateUserInput!): UpdateUserResponse!
 }
 
 """
@@ -33,5 +37,25 @@ type CreateUserResponse {
   "Whether the user was created successfully"
   success: Boolean!
   "The created user"
+  user: User!
+}
+
+type DeleteUserResponse {
+  "Whether the user was deleted successfully"
+  success: Boolean!
+}
+
+"""
+The input for updating a user
+"""
+input UpdateUserInput {
+  "The name of the user"
+  name: String!
+}
+
+type UpdateUserResponse {
+  "Whether the user was updated successfully"
+  success: Boolean!
+  "The updated user"
   user: User!
 }
