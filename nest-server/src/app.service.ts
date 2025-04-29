@@ -12,6 +12,6 @@ export class AppService {
     setTimeout(async () => {
       const playlists = await connectService.searchPlaylists('chill');
       console.log('Playlists:', playlists);
-    }, 3000);
+    }, 2000);
   }
 }

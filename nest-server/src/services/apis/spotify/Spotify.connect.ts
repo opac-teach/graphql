@@ -133,11 +133,13 @@ export class SpotifyConnect implements IApisConnect {
       );
     }
     const data = await response.json();
-    console.log('Playlists:', data.playlists.items);
-    const playlists: Playlist[] = data.playlists.items.map((item: any) => ({
-      id: item.id,
-      name: item.name,
-      imageUrl: item.images[0].url,
+    const filteredItems = data.playlists.items.filter(
+      (item: any) => item !== null,
+    );
+    const playlists: Playlist[] = filteredItems.map((item: any) => ({
+      id: item?.id,
+      name: item?.name,
+      imageUrl: item?.images[0].url,
     }));
     return playlists;
   }
