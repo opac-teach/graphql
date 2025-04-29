@@ -4,6 +4,7 @@ import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import CreateUserForm from "./CreateUserForm";
 import { gql } from "@/lib/graphql";
+import Loading from "@/components/Loading";
 
 const GET_USERS = gql(`
   query Users {
@@ -17,7 +18,7 @@ const GET_USERS = gql(`
 export default function Users() {
   const { data, loading, error, refetch } = useQuery(GET_USERS);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loading />;
   if (error) return <div>Error: {error.message}</div>;
 
   return (

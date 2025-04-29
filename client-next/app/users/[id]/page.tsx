@@ -5,6 +5,7 @@ import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { gql } from "@/lib/graphql";
+import Loading from "@/components/Loading";
 
 const GET_USER = gql(`
   query User($id: ID!) {
@@ -33,7 +34,7 @@ export default function User() {
     },
   });
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loading />;
   if (error) return <div>Error: {error.message}</div>;
 
   return (

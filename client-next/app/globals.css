@@ -57,11 +57,11 @@
   }
 
   p {
-    @apply leading-7 [&:not(:first-child)]:mt-6;
+    @apply leading-7;
   }
 
   a {
-    @apply font-medium text-primary underline underline-offset-4;
+    @apply font-medium text-primary;
   }
 
   blockquote {
