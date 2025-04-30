@@ -58,6 +58,13 @@ export const genreResolvers: Resolvers = {
         });
       }
       const genre = dataSources.db.genre.findById(id);
+
+      // supprime tout les sons liés à ce genre
+      const allSongs = dataSources.db.song.findMany({ genreId: id });
+      allSongs.forEach((song) => {
+        dataSources.db.song.delete(song.id);
+      });
+
       dataSources.db.genre.delete(id);
       return {
         success: true,

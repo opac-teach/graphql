@@ -2,14 +2,14 @@
 
 import GenreBadge from "@/components/genre/genre.badge";
 import Loading from "@/components/Loading";
+import ModalConfirmDelete from "@/components/ModalConfirmDelete";
 import ModalCreate from "@/components/ModalCreate";
-import { Button } from "@/components/ui/button";
-import { UPDATE_SONG } from "@/requetes/mutations";
+import { DELETE_SONG, UPDATE_SONG } from "@/requetes/mutations";
 import { GET_SONG } from "@/requetes/queries";
 import { useMutation, useQuery } from "@apollo/client";
-import { Music2, Trash2 } from "lucide-react";
+import { Music2 } from "lucide-react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FieldValues } from "react-hook-form";
 import { toast } from "sonner";
@@ -22,6 +22,7 @@ const songSchema = z.object({
 
 export default function SongPage() {
   const { id } = useParams<{ id: string }>();
+  const router = useRouter();
 
   const [userId, setUserId] = useState<string | null>(null);
 
@@ -35,7 +36,7 @@ export default function SongPage() {
     },
   });
 
-  const [mutateFunction] = useMutation(UPDATE_SONG, {
+  const [updateSongMutation] = useMutation(UPDATE_SONG, {
     refetchQueries: [GET_SONG],
     awaitRefetchQueries: true,
     onCompleted: (data) => {
@@ -43,18 +44,44 @@ export default function SongPage() {
     },
   });
 
+  const [deleteSongMutation] = useMutation(DELETE_SONG, {
+    onCompleted: (data) => {
+      if (data.deleteSong.success) {
+        router.push("/songs");
+        toast.success("Song deleted successfully!");
+      } else {
+        toast.error("Error deleting song.");
+      }
+    },
+    update(cache, { data }) {
+      const deletedSongId = data?.deleteSong?.id;
+      if (!deletedSongId) return;
+
+      cache.modify({
+        fields: {
+          songs(existingSongs = []) {
+            return existingSongs.filter(
+              (songRef: { __ref: string }) =>
+                songRef.__ref !== `Song:${deletedSongId}`
+            );
+          },
+        },
+      });
+    },
+  });
+
   if (loading) return <Loading />;
   if (error) return <div>Error: {error.message}</div>;
 
   const song = data?.song;
-  if (!song) return <div>Song not found</div>;
+  if (!song) return <div className="text-center">Song not found</div>;
 
   const update = async (values: FieldValues) => {
     if (values.name === song.name && values.genreId === song.genre.id) {
       return;
     }
     try {
-      await mutateFunction({
+      await updateSongMutation({
         variables: {
           input: {
             name: values.name,
@@ -95,9 +122,12 @@ export default function SongPage() {
                   schema={songSchema}
                   defaultValues={{ name: song.name, genreId: song.genre.id }}
                 />
-                <Button variant="destructive">
-                  <Trash2 />
-                </Button>
+                <ModalConfirmDelete
+                  title="song"
+                  onDelete={() =>
+                    deleteSongMutation({ variables: { deleteSongId: id } })
+                  }
+                />
               </div>
             )}
           </div>

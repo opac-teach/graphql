@@ -11,3 +11,12 @@ export const CREATE_GENRE = gql(`
         }
     }    
 `);
+
+export const DELETE_GENRE = gql(`
+    mutation DeleteGenre($deleteGenreId: ID!) {
+        deleteGenre(id: $deleteGenreId) {
+            success
+            id
+        }
+}
+`);
