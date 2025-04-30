@@ -9,6 +9,10 @@ const GET_SONGS = gql(`
     songs {
       id
       name
+      user {
+        id
+        name
+      }
     }
   }
 `);
@@ -25,8 +29,11 @@ export default function Songs() {
       <div>
         {data?.songs.map((song) => (
           <div key={song.id} className="flex gap-2">
-            <div>
+            <div className="flex gap-1">
               <Link href={`/songs/${song.id}`}>{song.name}</Link>
+              <span>
+                (Author : <Link href={`/users/${song.user.id}`}>{song.user.name}</Link>)
+              </span>
             </div>
           </div>
         ))}
