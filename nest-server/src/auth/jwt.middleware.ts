@@ -10,7 +10,6 @@ export class AuthMiddleware implements NestMiddleware {
   }
 
   async use(req: Request, res: Response, next: NextFunction) {
-    console.log(req);
     const token = this.extractTokenFromHeader(req);
 
     if (token) {

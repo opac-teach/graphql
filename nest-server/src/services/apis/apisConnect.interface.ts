@@ -7,4 +7,8 @@ export interface IApisConnect {
   searchArtists: (query: string) => Promise<Artist[]>;
   searchPlaylists: (query: string) => Promise<Playlist[]>;
   getPlaylistTracks: (playlistId: string) => Promise<Song[]>;
+  getUserPlaylists: (
+    userAccessToken: string,
+    userId: string,
+  ) => Promise<Playlist[]>;
 }

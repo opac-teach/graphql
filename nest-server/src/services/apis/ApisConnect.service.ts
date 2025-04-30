@@ -28,4 +28,11 @@ export class ApisConnect implements IApisConnect {
   public async getPlaylistTracks(query: string): Promise<Song[]> {
     return await this.api.getPlaylistTracks(query);
   }
+
+  public async getUserPlaylists(
+    userAccessToken: string,
+    userId: string,
+  ): Promise<Playlist[]> {
+    return await this.api.getUserPlaylists(userAccessToken, userId);
+  }
 }

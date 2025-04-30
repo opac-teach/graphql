@@ -1,20 +1,34 @@
-import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Context,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { ApisConnect } from 'src/services/apis/ApisConnect.service';
 import { Playlist } from './entities/playlist.entity';
 import { Song } from 'src/songs/entities/song.entity';
-import { UseGuards } from '@nestjs/common';
+import { Req } from '@nestjs/common';
+import { PlaylistsService } from './playlists.service';
 
 @Resolver(() => Playlist)
 export class PlaylistsResolver {
-  private readonly playlistsService = new ApisConnect('spotify');
+  constructor(private readonly playlistsService: PlaylistsService) {}
 
   @Query(() => [Playlist], { name: 'playlists' })
   async findAll(@Args('query') query: string) {
-    return await this.playlistsService.searchPlaylists(query);
+    return await this.playlistsService.findAll(query);
   }
 
   @ResolveField(() => [Song])
   async songs(@Parent() playlist: Playlist) {
     return await this.playlistsService.getPlaylistTracks(playlist.id);
+  }
+
+  @Query(() => [Playlist], { name: 'myplaylists' })
+  async findMyPlaylists(@Context() context: { req: { userId: string } }) {
+    const userId = context.req.userId;
+    return await this.playlistsService.getUserPlaylists(userId);
   }
 }

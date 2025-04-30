@@ -22,6 +22,7 @@ export class AuthService {
   async storeSpotifyToken(userId: string, tokenData: any) {
     try {
       const client = this.redisService.getClient();
+      console.log(tokenData);
       await client.set(
         `spotify_token:${userId}`,
         JSON.stringify(tokenData),

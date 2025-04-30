@@ -1,8 +1,9 @@
 import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
-import { Response } from 'express';
+import { query, Response } from 'express';
 import { AuthService } from './auth.service';
 import { SpotifyOauthGuard } from './guards/spotify-oauth.quard';
 import { Profile } from 'passport-spotify';
+import { stringify } from 'querystring';
 
 @Controller('auth')
 export class AuthController {
@@ -24,7 +25,7 @@ export class AuthController {
       user,
       authInfo,
     }: {
-      user: { profile: Profile };
+      user: any;
       authInfo: {
         accessToken: string;
         refreshToken: string;
@@ -37,34 +38,39 @@ export class AuthController {
       return;
     }
 
-    req.user = undefined;
-
     const code = req.query.code;
 
-    console.log(process.env.SPOTIFY_CALLBACK_URL);
+    if (!code) {
+      return res.status(400).send('No code found in query');
+    }
 
-    const response = await fetch('https://accounts.spotify.com/api/token', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        Authorization: `Basic ${Buffer.from(
-          `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`,
-        ).toString('base64')}`,
-      },
-      body: new URLSearchParams({
-        grant_type: 'client_credentials',
-        code,
-        redirect_uri: process.env.SPOTIFY_CALLBACK_URL,
-      }),
-    });
-    const userTokenInfos = await response.json();
+    // const response = await fetch('https://accounts.spotify.com/api/token', {
+    //   method: 'POST',
+    //   headers: {
+    //     Authorization: `Basic ${Buffer.from(
+    //       `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`,
+    //     ).toString('base64')}`,
+    //     'Content-Type': 'application/x-www-form-urlencoded',
+    //   },
+    //   body: new URLSearchParams({
+    //     grant_type: 'authorization_code',
+    //     code,
+    //     redirect_uri: process.env.SPOTIFY_CALLBACK_URL,
+    //   }),
+    // });
+    // const userTokenInfos = await response.json();
 
-    await this.authService.storeSpotifyToken(user.profile.id, userTokenInfos);
+    console.log(user.refreshToken);
+
+    await this.authService.storeSpotifyToken(
+      user.profile.id,
+      user.refreshToken,
+    );
 
     const jwt = this.authService.login(user.profile);
 
     res.set('authorization', `Bearer ${jwt}`);
 
-    return res.status(201).json({ authInfo, user: user.profile });
+    return res.status(201).json({ jwt });
   }
 }

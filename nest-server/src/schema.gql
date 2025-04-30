@@ -37,4 +37,5 @@ type Query {
   songs(query: String!): [Song!]!
   artists(query: String!): [Artist!]!
   playlists(query: String!): [Playlist!]!
+  myplaylists: [Playlist!]!
 }
