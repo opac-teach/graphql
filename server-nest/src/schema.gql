@@ -1,0 +1,22 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input CreateSongInput {
+  """Title of song"""
+  title: String!
+}
+
+type Mutation {
+  createSong(createSongInput: CreateSongInput!): Song!
+}
+
+type Query {
+  song(id: String!): Song!
+  songs: [Song!]!
+}
+
+type Song {
+  id: String!
+  title: String!
+}

@@ -42,15 +42,18 @@ export default function Page() {
       const deletedGenreId = data?.deleteGenre?.id;
       if (!deletedGenreId) return;
 
-      cache.modify({
-        fields: {
-          genres(existingGenres = []) {
-            return existingGenres.filter(
-              (genreRef: { __ref: string }) =>
-                genreRef.__ref !== `Genre:${deletedGenreId}`
-            );
-          },
-        },
+      // cache.modify({
+      //   fields: {
+      //     genres(existingGenres = []) {
+      //       return existingGenres.filter(
+      //         (genreRef: { __ref: string }) =>
+      //           genreRef.__ref !== `Genre:${deletedGenreId}`
+      //       );
+      //     },
+      //   },
+      // });
+      cache.evict({
+        id: cache.identify({ __typename: "Genre", id: deletedGenreId }),
       });
     },
   });

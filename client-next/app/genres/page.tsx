@@ -33,6 +33,7 @@ export default function Genres() {
                   name
                 }
               `,
+              // query: GET_GENRES,
             });
 
             return [...existingGenres, newGenreRef];
