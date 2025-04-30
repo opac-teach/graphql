@@ -4,7 +4,7 @@ export const songResolvers: Resolvers = {
   Query: {
     songs: (_, {genreId, pagination}, { dataSources }) => {
         const paginationQuery = pagination || {page: 0, pageSize: 2}
-
+        if (!genreId) return dataSources.db.song.findMany({}, {limit: paginationQuery.pageSize, offset: paginationQuery.page * paginationQuery.pageSize})
         return  dataSources.db.song.findMany({genreId},{limit: paginationQuery.pageSize, offset: paginationQuery.page * paginationQuery.pageSize});
     },
 
@@ -14,11 +14,11 @@ export const songResolvers: Resolvers = {
   },
 
   Song: {
-   user : async (parent, _, { dataSources }) => {
-      return dataSources.db.user.findById(parent.userId);
+   user : async (parent, _, { loaders }) => {
+      return loaders.users.load(parent.userId);
     },
-    genre: async (parent, _, { dataSources }) => {
-      return dataSources.db.genre.findById(parent.genreId);
+    genre: async (parent, _, { loaders }) => {
+      return loaders.genres.load(parent.genreId);
     },
   },
 
