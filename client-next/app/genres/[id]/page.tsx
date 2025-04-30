@@ -1,34 +1,28 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { gql } from "@/lib/graphql";
 
-const GET_USER = gql(`
-  query User($id: ID!) {
-    user(id: $id) {
+const GET_GENRE = gql(`
+  query Genre($id: ID!) {
+    genre(id: $id) {
       id
       name
       songs {
         id
         name
       }
-      songsCount
+    songsCount
     }
   }
 `);
 
-function loginAs(userId: string) {
-  localStorage.setItem("user_id", userId);
-  window.location.reload();
-}
-
-export default function User() {
+export default function Genre() {
   const { id } = useParams<{ id: string }>();
 
-  const { data, loading, error } = useQuery(GET_USER, {
+  const { data, loading, error } = useQuery(GET_GENRE, {
     variables: {
       id,
     },
@@ -39,25 +33,21 @@ export default function User() {
 
   return (
     <div>
-      <h1>User</h1>
-      <h3>{data?.user.name}</h3>
+      <h1>Genre</h1>
+      <h3>{data?.genre.name}</h3>
       <h2>Number of songs</h2>
       <div>
-        <span>{ data?.user.songsCount }</span>
+        <span>
+          { data?.genre.songsCount }
+        </span>
       </div>
       <h2>Songs</h2>
       <div>
-        {data?.user.songs.map((song) => (
+        {data?.genre.songs.map((song) => (
           <div key={song.id} className="flex gap-2">
             <Link href={`/songs/${song.id}`}>{song.name}</Link>
           </div>
         ))}
-      </div>
-
-      <div className="mt-4">
-        <Button onClick={() => loginAs(data?.user.id ?? "")}>
-          Login as {data?.user.name}
-        </Button>
       </div>
     </div>
   );

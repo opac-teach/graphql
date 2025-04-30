@@ -35,6 +35,7 @@ export default function RootLayout({
             <header className="flex justify-between items-center p-4">
               <nav className="flex flex-1 gap-4">
                 <Link href="/">Home</Link>
+                <Link href="/genres">Genres</Link>
                 <Link href="/songs">Songs</Link>
                 <Link href="/users">Users</Link>
               </nav>

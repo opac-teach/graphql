@@ -10,6 +10,7 @@ const GET_USERS = gql(`
     users {
       id
       name
+      songsCount
     }
   }
 `);
@@ -27,6 +28,9 @@ export default function Users() {
         {data?.users.map((user) => (
           <div key={user.id} className="flex gap-2">
             <Link href={`/users/${user.id}`}>{user.name}</Link>
+            <span>
+              (Number of songs : {user.songsCount})
+            </span>
           </div>
         ))}
       </div>
