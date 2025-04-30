@@ -16,6 +16,38 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
+/** The input for creating a new genre */
+export type CreateGenreInput = {
+  /** The name of the genre */
+  name: Scalars['String']['input'];
+};
+
+export type CreateGenreResponse = {
+  __typename?: 'CreateGenreResponse';
+  /** The created genre */
+  genre: Genre;
+  /** Whether the genre was created successfully */
+  success: Scalars['Boolean']['output'];
+};
+
+/** The input for creating a new song */
+export type CreateSongInput = {
+  /** The genre id of the song */
+  genreId: Scalars['String']['input'];
+  /** The name of the song */
+  name: Scalars['String']['input'];
+  /** The user id of the song */
+  userId: Scalars['String']['input'];
+};
+
+export type CreateSongResponse = {
+  __typename?: 'CreateSongResponse';
+  /** The created song */
+  song: Song;
+  /** Whether the song was created successfully */
+  success: Scalars['Boolean']['output'];
+};
+
 /** The input for creating a new user */
 export type CreateUserInput = {
   /** The name of the user */
@@ -30,10 +62,73 @@ export type CreateUserResponse = {
   user: User;
 };
 
+export type DeleteSongResponse = {
+  __typename?: 'DeleteSongResponse';
+  /** Whether the song was deleted successfully */
+  success: Scalars['Boolean']['output'];
+};
+
+export type DeleteUserResponse = {
+  __typename?: 'DeleteUserResponse';
+  /** Whether the user was deleted successfully */
+  success: Scalars['Boolean']['output'];
+};
+
+export type Genre = {
+  __typename?: 'Genre';
+  /** The ID of the genre */
+  id: Scalars['ID']['output'];
+  /** The name of the genre */
+  name: Scalars['String']['output'];
+  /** The songs of the genre */
+  songs: Array<Song>;
+  /** The number of songs of the genre */
+  songsCount: Scalars['Int']['output'];
+};
+
+
+export type GenreSongsArgs = {
+  pagination?: InputMaybe<GenreSongsPaginationInput>;
+};
+
+/** The input for genre pagination */
+export type GenrePaginationInput = {
+  page?: InputMaybe<Scalars['Int']['input']>;
+  pageSize?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** The input for songs of genre pagination */
+export type GenreSongsPaginationInput = {
+  page?: InputMaybe<Scalars['Int']['input']>;
+  pageSize?: InputMaybe<Scalars['Int']['input']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
+  /** Create a new genre */
+  createGenre: CreateGenreResponse;
+  /** Create a new song */
+  createSong: CreateSongResponse;
   /** Create a new user */
   createUser: CreateUserResponse;
+  /** delete a song */
+  deleteSong: DeleteSongResponse;
+  /** Delete a user */
+  deleteUser: DeleteUserResponse;
+  /** update a song */
+  updateSong: UpdateSongResponse;
+  /** update a user */
+  updateUser: UpdateUserResponse;
+};
+
+
+export type MutationCreateGenreArgs = {
+  input: CreateGenreInput;
+};
+
+
+export type MutationCreateSongArgs = {
+  input: CreateSongInput;
 };
 
 
@@ -41,8 +136,36 @@ export type MutationCreateUserArgs = {
   input: CreateUserInput;
 };
 
+
+export type MutationDeleteSongArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDeleteUserArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationUpdateSongArgs = {
+  id: Scalars['ID']['input'];
+  input: UpdateSongInput;
+};
+
+
+export type MutationUpdateUserArgs = {
+  id: Scalars['ID']['input'];
+  input: UpdateUserInput;
+};
+
 export type Query = {
   __typename?: 'Query';
+  /** Get a genre by ID */
+  genre: Genre;
+  /** Get all genres */
+  genres: Array<Genre>;
+  /** Get a song by ID */
+  song: Song;
   /** Get all songs */
   songs: Array<Song>;
   /** Get a user by ID */
@@ -52,16 +175,84 @@ export type Query = {
 };
 
 
+export type QueryGenreArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryGenresArgs = {
+  pagination?: InputMaybe<GenrePaginationInput>;
+};
+
+
+export type QuerySongArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QuerySongsArgs = {
+  genreId?: InputMaybe<Scalars['ID']['input']>;
+  pagination?: InputMaybe<SongPaginationInput>;
+};
+
+
 export type QueryUserArgs = {
   id: Scalars['ID']['input'];
 };
 
+
+export type QueryUsersArgs = {
+  pagination?: InputMaybe<UserPaginationInput>;
+};
+
 export type Song = {
   __typename?: 'Song';
+  /** The genre of the song */
+  genre: Genre;
   /** The ID of the song */
   id: Scalars['ID']['output'];
   /** The name of the song */
   name: Scalars['String']['output'];
+  /** The user of the song */
+  user: User;
+};
+
+/** The input for song pagination */
+export type SongPaginationInput = {
+  page?: InputMaybe<Scalars['Int']['input']>;
+  pageSize?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** The input for updating a song */
+export type UpdateSongInput = {
+  /** The genre id of the song */
+  genreId: Scalars['String']['input'];
+  /** The name of the song */
+  name: Scalars['String']['input'];
+  /** The user id of the song */
+  userId: Scalars['String']['input'];
+};
+
+export type UpdateSongResponse = {
+  __typename?: 'UpdateSongResponse';
+  /** The updated song */
+  song: Song;
+  /** Whether the song was updated successfully */
+  success: Scalars['Boolean']['output'];
+};
+
+/** The input for updating a user */
+export type UpdateUserInput = {
+  /** The name of the user */
+  name: Scalars['String']['input'];
+};
+
+export type UpdateUserResponse = {
+  __typename?: 'UpdateUserResponse';
+  /** Whether the user was updated successfully */
+  success: Scalars['Boolean']['output'];
+  /** The updated user */
+  user: User;
 };
 
 export type User = {
@@ -72,12 +263,38 @@ export type User = {
   name: Scalars['String']['output'];
   /** The songs of the user */
   songs: Array<Song>;
+  /** The number of songs of the user */
+  songsCount: Scalars['Int']['output'];
 };
+
+
+export type UserSongsArgs = {
+  pagination?: InputMaybe<UserSongsPaginationInput>;
+};
+
+/** The input for user pagination */
+export type UserPaginationInput = {
+  page?: InputMaybe<Scalars['Int']['input']>;
+  pageSize?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** The input for songs of user pagination */
+export type UserSongsPaginationInput = {
+  page?: InputMaybe<Scalars['Int']['input']>;
+  pageSize?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type SongQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type SongQuery = { __typename?: 'Query', song: { __typename?: 'Song', id: string, name: string, user: { __typename?: 'User', id: string, name: string } } };
 
 export type SongsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SongsQuery = { __typename?: 'Query', songs: Array<{ __typename?: 'Song', id: string, name: string }> };
+export type SongsQuery = { __typename?: 'Query', songs: Array<{ __typename?: 'Song', id: string, name: string, user: { __typename?: 'User', id: string, name: string } }> };
 
 export type CreateUserMutationVariables = Exact<{
   input: CreateUserInput;
@@ -99,7 +316,8 @@ export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
 export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, name: string }> };
 
 
-export const SongsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Songs"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"songs"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<SongsQuery, SongsQueryVariables>;
+export const SongDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Song"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"song"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<SongQuery, SongQueryVariables>;
+export const SongsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Songs"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"songs"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<SongsQuery, SongsQueryVariables>;
 export const CreateUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateUserInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createUser"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<CreateUserMutation, CreateUserMutationVariables>;
 export const UserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"User"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"songs"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<UserQuery, UserQueryVariables>;
 export const UsersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Users"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"users"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<UsersQuery, UsersQueryVariables>;
