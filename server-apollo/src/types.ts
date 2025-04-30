@@ -35,11 +35,11 @@ export type CreateGenreResponse = {
 
 export type CreateSongInput = {
   /** The ID of the genre */
-  genreId: Scalars['ID']['input'];
+  genreId?: InputMaybe<Scalars['ID']['input']>;
   /** The name of the song */
   name: Scalars['String']['input'];
   /** The ID of the user */
-  userId: Scalars['ID']['input'];
+  userId?: InputMaybe<Scalars['ID']['input']>;
 };
 
 export type CreateSongResponse = {
@@ -181,7 +181,7 @@ export type QuerySongArgs = {
 
 
 export type QuerySongsArgs = {
-  genreId: Scalars['ID']['input'];
+  genreId?: InputMaybe<Scalars['ID']['input']>;
   pagination?: InputMaybe<PaginationInput>;
 };
 
@@ -198,7 +198,7 @@ export type QueryUsersArgs = {
 export type Song = {
   __typename?: 'Song';
   /** The genre of the song */
-  genre: Genre;
+  genre?: Maybe<Genre>;
   /** The ID of the song */
   id: Scalars['ID']['output'];
   /** The name of the song */
@@ -427,13 +427,13 @@ export type QueryResolvers<ContextType = ResolversContext, ParentType extends Re
   genre?: Resolver<ResolversTypes['Genre'], ParentType, ContextType, RequireFields<QueryGenreArgs, 'id'>>;
   genres?: Resolver<Array<ResolversTypes['Genre']>, ParentType, ContextType>;
   song?: Resolver<ResolversTypes['Song'], ParentType, ContextType, RequireFields<QuerySongArgs, 'id'>>;
-  songs?: Resolver<Array<ResolversTypes['Song']>, ParentType, ContextType, RequireFields<QuerySongsArgs, 'genreId'>>;
+  songs?: Resolver<Array<ResolversTypes['Song']>, ParentType, ContextType, Partial<QuerySongsArgs>>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, Partial<QueryUsersArgs>>;
 }>;
 
 export type SongResolvers<ContextType = ResolversContext, ParentType extends ResolversParentTypes['Song'] = ResolversParentTypes['Song']> = ResolversObject<{
-  genre?: Resolver<ResolversTypes['Genre'], ParentType, ContextType>;
+  genre?: Resolver<Maybe<ResolversTypes['Genre']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;

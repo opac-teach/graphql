@@ -6,12 +6,12 @@ type Song {
   "The artist of the song"
   user: User!
   "The genre of the song"
-  genre: Genre!
+  genre: Genre
 }
 
 extend type Query {
   "Get all songs"
-  songs(genreId: ID!, pagination: PaginationInput): [Song!]!
+  songs(genreId: ID, pagination: PaginationInput): [Song!]!
   "Get a song by ID"
   song(id: ID!): Song!
 }
@@ -38,9 +38,9 @@ input CreateSongInput {
   "The name of the song"
   name: String!
   "The ID of the user"
-  userId: ID!
+  userId: ID
   "The ID of the genre"
-  genreId: ID!
+  genreId: ID
 }
 
 # ######## DELETE SONG #######

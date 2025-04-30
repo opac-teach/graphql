@@ -5,7 +5,7 @@ export const userResolvers: Resolvers = {
   Query: {
     users: (_, {pagination}, { dataSources }) => {
 
-      const {page=1, limit=1} = pagination || {};
+      const {page=1, limit=10} = pagination || {};
       const offset = (page - 1) * limit;
       return dataSources.db.user.findMany(_,{
         limit: limit,
@@ -19,7 +19,7 @@ export const userResolvers: Resolvers = {
   },
   User: {
     songs: async (parent, {pagination}, { dataSources }) => {
-      const {page=1, limit=2} = pagination || {};
+      const {page=1, limit=10} = pagination || {};
       const offset = (page - 1) * limit;
       return dataSources.db.song.findMany({ userId: parent.id }, {
         offset: offset,

@@ -6,7 +6,7 @@ export const songResolvers: Resolvers = {
     songs: (_, {genreId, pagination}, { dataSources }) => {
       const genre_id = genreId ? { genreId } : {}
 
-      const {page=1, limit=2} = pagination || {};
+      const {page=1, limit=10} = pagination || {};
       const offset = (page - 1) * limit;
 
       return dataSources.db.song.findMany(genre_id, {
@@ -42,10 +42,14 @@ export const songResolvers: Resolvers = {
       if (!userId){
         throw new GraphQLError("Not authenticated");
       }
+      const {name, genreId} = input;
       try {
-        const song = dataSources.db.song.create({
-          ...input, userId,
-        });
+        const songData = {
+          name,
+          userId,
+          ...(genreId && { genreId }),
+        };
+        const song = dataSources.db.song.create(songData);
         return {
           success: true,
           song,

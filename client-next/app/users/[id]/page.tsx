@@ -15,6 +15,7 @@ const GET_USER = gql(`
         id
         name
       }
+      songCount
     }
   }
 `);
@@ -47,6 +48,10 @@ export default function User() {
             <Link href={`/songs/${song.id}`}>{song.name}</Link>
           </div>
         ))}
+      </div>
+
+      <div>
+        <p>Song count : {data?.user.songCount}</p>
       </div>
 
       <div className="mt-4">
