@@ -51,7 +51,7 @@ export default function User() {
       </div>
       <h2>Songs</h2>
       <div>
-        {data?.user.songs.map((song) => (
+        {data?.user.songs.map((song) => ( 
           <div key={song.id} className="flex gap-2">
             <Link href={`/songs/${song.id}`}>{song.name}</Link>
             <span>

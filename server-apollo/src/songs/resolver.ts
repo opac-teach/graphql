@@ -34,6 +34,17 @@ export const songResolvers: Resolvers = {
         );
       }
 
+      if (userId !== input.userId) {
+        throw new GraphQLError(
+          "You must be logged as the user who will owns this song to perform this action.",
+          {
+            extensions: {
+              code: "UNAUTHORIZED",
+            },
+          }
+        );
+      }
+
       try {
         const song = dataSources.db.song.create(input);
         return {

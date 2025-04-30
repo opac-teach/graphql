@@ -24,8 +24,7 @@ type Documents = {
     "\n  mutation UpdateSong($updateSongId: ID!, $input: UpdateSongInput!) {\n    updateSong(id: $updateSongId, input: $input) {\n      success\n      song {\n\t\t\t\tid\n\t\t\t\tname\n\t\t\t\tuser {\n\t\t\t\t\tid\n\t\t\t\t\tname\n\t\t\t\t}\n        genre {\n\t\t\t\t\tid\n\t\t\t\t\tname\n        }\n      }\n    }\n  }\n": typeof types.UpdateSongDocument,
     "\n  query Songs {\n    songs {\n      id\n      name\n      user {\n        id\n        name\n      }\n      genre {\n        id\n        name\n      }\n    }\n  }\n": typeof types.SongsDocument,
     "\n  mutation CreateUser($input: CreateUserInput!) {\n    createUser(input: $input) {\n      success\n      user {\n        id\n        name\n      }\n    }\n  }\n": typeof types.CreateUserDocument,
-    "\n  query User($id: ID!) {\n    user(id: $id) {\n      id\n      name\n      songs {\n        id\n        name\n      }\n      songsCount\n    }\n  }\n": typeof types.UserDocument,
-    "\n  query Users {\n    users {\n      id\n      name\n      songsCount\n    }\n  }\n": typeof types.UsersDocument,
+    "\n  query User($id: ID!) {\n    user(id: $id) {\n      id\n      name\n      songs {\n        id\n        name\n        genre {\n          id\n          name\n        }\n      }\n      songsCount\n    }\n  }\n": typeof types.UserDocument,
 };
 const documents: Documents = {
     "\n  mutation CreateGenre($input: CreateGenreInput!) {\n    createGenre(input: $input) {\n      success\n      genre {\n        id\n        name\n      }\n    }\n  }\n": types.CreateGenreDocument,
@@ -38,8 +37,7 @@ const documents: Documents = {
     "\n  mutation UpdateSong($updateSongId: ID!, $input: UpdateSongInput!) {\n    updateSong(id: $updateSongId, input: $input) {\n      success\n      song {\n\t\t\t\tid\n\t\t\t\tname\n\t\t\t\tuser {\n\t\t\t\t\tid\n\t\t\t\t\tname\n\t\t\t\t}\n        genre {\n\t\t\t\t\tid\n\t\t\t\t\tname\n        }\n      }\n    }\n  }\n": types.UpdateSongDocument,
     "\n  query Songs {\n    songs {\n      id\n      name\n      user {\n        id\n        name\n      }\n      genre {\n        id\n        name\n      }\n    }\n  }\n": types.SongsDocument,
     "\n  mutation CreateUser($input: CreateUserInput!) {\n    createUser(input: $input) {\n      success\n      user {\n        id\n        name\n      }\n    }\n  }\n": types.CreateUserDocument,
-    "\n  query User($id: ID!) {\n    user(id: $id) {\n      id\n      name\n      songs {\n        id\n        name\n      }\n      songsCount\n    }\n  }\n": types.UserDocument,
-    "\n  query Users {\n    users {\n      id\n      name\n      songsCount\n    }\n  }\n": types.UsersDocument,
+    "\n  query User($id: ID!) {\n    user(id: $id) {\n      id\n      name\n      songs {\n        id\n        name\n        genre {\n          id\n          name\n        }\n      }\n      songsCount\n    }\n  }\n": types.UserDocument,
 };
 
 /**
@@ -99,7 +97,7 @@ export function gql(source: "\n  mutation CreateUser($input: CreateUserInput!) {
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query User($id: ID!) {\n    user(id: $id) {\n      id\n      name\n      songs {\n        id\n        name\n      }\n      songsCount\n    }\n  }\n"): (typeof documents)["\n  query User($id: ID!) {\n    user(id: $id) {\n      id\n      name\n      songs {\n        id\n        name\n      }\n      songsCount\n    }\n  }\n"];
+export function gql(source: "\n  query User($id: ID!) {\n    user(id: $id) {\n      id\n      name\n      songs {\n        id\n        name\n        genre {\n          id\n          name\n        }\n      }\n      songsCount\n    }\n  }\n"): (typeof documents)["\n  query User($id: ID!) {\n    user(id: $id) {\n      id\n      name\n      songs {\n        id\n        name\n        genre {\n          id\n          name\n        }\n      }\n      songsCount\n    }\n  }\n"];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};
