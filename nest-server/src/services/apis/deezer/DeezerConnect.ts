@@ -12,6 +12,8 @@ export class DeezerConnect implements IApisConnect {
     this.clientSecret = process.env.DEEZER_CLIENT_SECRET;
   }
 
+  public async init(): Promise<void> {}
+
   public async searchSongs(query: string): Promise<Song[]> {
     return [];
   }

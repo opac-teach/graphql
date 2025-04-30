@@ -18,13 +18,23 @@ export class PlaylistsResolver {
   constructor(private readonly playlistsService: PlaylistsService) {}
 
   @Query(() => [Playlist], { name: 'playlists' })
-  async findAll(@Args('query') query: string) {
-    return await this.playlistsService.findAll(query);
+  async findAll(
+    @Args('query') query: string,
+    @Context() context: { req: { userId: string } },
+  ) {
+    const userId = context.req.userId;
+    return await this.playlistsService.findAll(query, userId);
   }
 
   @ResolveField(() => [Song])
-  async songs(@Parent() playlist: Playlist) {
-    return await this.playlistsService.getPlaylistTracks(playlist.id);
+  async songs(
+    @Parent() playlist: Playlist,
+    @Context() context: { req: { userId: string } },
+  ) {
+    return await this.playlistsService.getPlaylistTracks(
+      playlist.id,
+      context.req.userId,
+    );
   }
 
   @Query(() => [Playlist], { name: 'myplaylists' })

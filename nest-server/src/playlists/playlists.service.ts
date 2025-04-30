@@ -1,19 +1,35 @@
 import { Injectable } from '@nestjs/common';
+import { StreamingServices } from 'src/enums/streaming-services.enum';
 import { ApisConnect } from 'src/services/apis/ApisConnect.service';
 import { RedisService } from 'src/services/redis.service';
 
 @Injectable()
 export class PlaylistsService {
-  private readonly playlistsService = new ApisConnect('spotify');
+  constructor(
+    private readonly redisService: RedisService,
+    private readonly apisConnect: ApisConnect,
+  ) {}
 
-  constructor(private readonly redisService: RedisService) {}
-
-  async findAll(query: string) {
-    return await this.playlistsService.searchPlaylists(query);
+  async findAll(query: string, userId: string) {
+    const client = this.redisService.getClient();
+    const cacheKey = `spotify_token:${userId}`;
+    const cachedToken = await client.get(cacheKey);
+    if (!cachedToken) throw new Error('No token found for user');
+    const tokenData = JSON.parse(cachedToken);
+    const accessToken = tokenData;
+    return await this.apisConnect.searchPlaylists(
+      query,
+      StreamingServices.SPOTIFY,
+    );
   }
 
-  async getPlaylistTracks(playlistId: string) {
-    return await this.playlistsService.getPlaylistTracks(playlistId);
+  async getPlaylistTracks(playlistId: string, userId: string) {
+    return await this.apisConnect.getPlaylistTracks(
+      playlistId,
+      10,
+      0,
+      StreamingServices.SPOTIFY,
+    );
   }
 
   async getUserPlaylists(userId: string) {
@@ -23,7 +39,11 @@ export class PlaylistsService {
     if (!cachedToken) throw new Error('No token found for user');
     const tokenData = JSON.parse(cachedToken);
     const accessToken = tokenData;
-    return await this.playlistsService.getUserPlaylists(accessToken, userId);
+    return await this.apisConnect.getUserPlaylists(
+      accessToken,
+      userId,
+      StreamingServices.SPOTIFY,
+    );
   }
 
   async addSongToPlaylist(playlistId: string, songId: string, userId: string) {
@@ -33,11 +53,12 @@ export class PlaylistsService {
     if (!cachedToken) throw new Error('No token found for user');
     const tokenData = JSON.parse(cachedToken);
     const accessToken = tokenData;
-    return await this.playlistsService.addSongToPlaylist(
+    return await this.apisConnect.addSongToPlaylist(
       playlistId,
       songId,
       accessToken,
       userId,
+      StreamingServices.SPOTIFY,
     );
   }
 
@@ -52,11 +73,12 @@ export class PlaylistsService {
     if (!cachedToken) throw new Error('No token found for user');
     const tokenData = JSON.parse(cachedToken);
     const accessToken = tokenData;
-    return await this.playlistsService.removeSongFromPlaylist(
+    return await this.apisConnect.removeSongFromPlaylist(
       playlistId,
       songId,
       accessToken,
       userId,
+      StreamingServices.SPOTIFY,
     );
   }
 }

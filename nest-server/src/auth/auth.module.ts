@@ -7,6 +7,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { RedisService } from 'src/services/redis.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { UserEntity } from './entities/user';
 
 @Module({
   imports: [
@@ -19,6 +21,7 @@ import { RedisService } from 'src/services/redis.service';
       }),
       inject: [ConfigService],
     }),
+    TypeOrmModule.forFeature([UserEntity]),
   ],
   providers: [AuthService, JwtStrategy, SpotifyOauthStrategy, RedisService],
   controllers: [AuthController],

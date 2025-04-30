@@ -8,11 +8,26 @@ import { SongsModule } from './songs/songs.module';
 import { ArtistsModule } from './artists/artists.module';
 import { PlaylistsModule } from './playlists/playlists.module';
 import { AuthModule } from './auth/auth.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { RedisService } from './services/redis.service';
+import { ApisConnectModule } from './services/apis/apisConnect.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { databaseConfig } from './config';
 
 @Module({
   imports: [
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        url:
+          process.env.DATABASE_URL ||
+          'postgres://postgres:postgres@localhost:5432/nestdemo',
+        autoLoadEntities: true,
+        synchronize: true,
+      }),
+      inject: [ConfigService],
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -25,6 +40,7 @@ import { RedisService } from './services/redis.service';
     ArtistsModule,
     PlaylistsModule,
     AuthModule,
+    ApisConnectModule,
   ],
   controllers: [AppController],
   providers: [AppService, RedisService],

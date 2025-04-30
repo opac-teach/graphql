@@ -1,14 +1,30 @@
-import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { query, Response } from 'express';
 import { AuthService } from './auth.service';
 import { SpotifyOauthGuard } from './guards/spotify-oauth.quard';
 import { Profile } from 'passport-spotify';
 import { stringify } from 'querystring';
+import { RegisterDto } from './dtos/register.dto';
+import { JwtAuthGuard } from './jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Post('register')
+  async register(@Body() body: RegisterDto): Promise<any> {
+    return await this.authService.register(body);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @UseGuards(SpotifyOauthGuard)
   @Get('login')
   login(): void {

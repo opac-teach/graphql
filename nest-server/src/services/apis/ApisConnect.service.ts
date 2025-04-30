@@ -4,36 +4,76 @@ import { IApisConnect } from './apisConnect.interface';
 import { Playlist } from 'src/types/playlist.type';
 import { SpotifyConnect } from './spotify/Spotify.connect';
 import { DeezerConnect } from './deezer/DeezerConnect';
+import { StreamingServices } from 'src/enums/streaming-services.enum';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class ApisConnect implements IApisConnect {
-  private readonly api: SpotifyConnect | DeezerConnect;
+  private spotityInstance: SpotifyConnect;
+  private deezerInstance: DeezerConnect;
 
-  constructor(serviceName: 'spotify' | 'deezer') {
-    this.api =
-      serviceName === 'spotify' ? new SpotifyConnect() : new DeezerConnect();
+  private getInstance(
+    serviceName: StreamingServices,
+  ): SpotifyConnect | DeezerConnect {
+    switch (serviceName) {
+      case StreamingServices.SPOTIFY:
+        return this.spotityInstance;
+      case StreamingServices.DEEZER:
+        return this.deezerInstance;
+      default:
+        throw new Error('Invalid service name');
+    }
   }
 
-  public async searchSongs(query: string): Promise<Song[]> {
-    return await this.api.searchSongs(query);
+  public async init(): Promise<void> {
+    this.spotityInstance = new SpotifyConnect();
+    this.deezerInstance = new DeezerConnect();
+
+    await Promise.all([
+      this.spotityInstance.init(),
+      this.deezerInstance.init(),
+    ]);
   }
 
-  public async searchArtists(query: string): Promise<Artist[]> {
-    return await this.api.searchArtists(query);
+  public async searchSongs(
+    query: string,
+    serviceName: StreamingServices,
+  ): Promise<Song[]> {
+    return await this.getInstance(serviceName).searchSongs(query);
   }
 
-  public async searchPlaylists(query: string): Promise<Playlist[]> {
-    return await this.api.searchPlaylists(query);
+  public async searchArtists(
+    query: string,
+    serviceName: StreamingServices,
+  ): Promise<Artist[]> {
+    return await this.getInstance(serviceName).searchArtists(query);
   }
 
-  public async getPlaylistTracks(query: string): Promise<Song[]> {
-    return await this.api.getPlaylistTracks(query);
+  public async searchPlaylists(
+    query: string,
+    serviceName: StreamingServices,
+  ): Promise<Playlist[]> {
+    return await this.getInstance(serviceName).searchPlaylists(query);
+  }
+
+  public async getPlaylistTracks(
+    query: string,
+    page: number = 1,
+    limit: number = 10,
+    serviceName: StreamingServices,
+  ): Promise<Song[]> {
+    return await this.getInstance(serviceName).getPlaylistTracks(query);
   }
 
   public async getUserPlaylists(
+    serviceName: StreamingServices,
     userAccessToken: string,
     userId: string,
   ): Promise<Playlist[]> {
-    return await this.api.getUserPlaylists(userAccessToken, userId);
+    return await this.getInstance(serviceName).getUserPlaylists(
+      userAccessToken,
+      userId,
+    );
   }
 
   public async addSongToPlaylist(
@@ -41,8 +81,9 @@ export class ApisConnect implements IApisConnect {
     songId: string,
     userAccessToken: string,
     userId: string,
+    serviceName: StreamingServices,
   ): Promise<Playlist> {
-    return await this.api.addSongToPlaylist(
+    return await this.getInstance(serviceName).addSongToPlaylist(
       playlistId,
       songId,
       userAccessToken,
@@ -55,8 +96,9 @@ export class ApisConnect implements IApisConnect {
     songId: string,
     userAccessToken: string,
     userId: string,
+    serviceName: StreamingServices,
   ): Promise<Playlist> {
-    return await this.api.removeSongFromPlaylist(
+    return await this.getInstance(serviceName).removeSongFromPlaylist(
       playlistId,
       songId,
       userAccessToken,

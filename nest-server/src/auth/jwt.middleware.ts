@@ -2,9 +2,11 @@ import { Injectable, NestMiddleware } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request, Response, NextFunction } from 'express';
 import * as process from 'node:process';
+import { RedisService } from 'src/services/redis.service';
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
+  private redisService: RedisService = new RedisService();
   constructor(private jwtService: JwtService) {
     this.use = this.use.bind(this);
   }
@@ -21,6 +23,8 @@ export class AuthMiddleware implements NestMiddleware {
           },
         );
         req['userId'] = payload.sub;
+        const client = this.redisService.getClient();
+        const cacheKey = `token:${payload.sub}`;
       } catch (error) {
         res.status(401).json({ message: 'Unauthorized' });
         return;

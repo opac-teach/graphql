@@ -2,13 +2,37 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Profile } from 'passport-spotify';
 import { RedisService } from 'src/services/redis.service';
+import { RegisterDto } from './dtos/register.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { UserEntity } from './entities/user';
+import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly redisService: RedisService,
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>,
   ) {}
+
+  public async register(data: RegisterDto): Promise<string> {
+    try {
+      const createdUser = this.userRepository.create(data);
+      const salt = await bcrypt.genSalt(10);
+      createdUser.password = await bcrypt.hash(data.password, salt);
+      const savedUser = await this.userRepository.save(createdUser);
+      const payload = {
+        sub: savedUser.id,
+      };
+      const token = this.jwtService.sign(payload);
+      return token;
+    } catch (error) {
+      console.error('Error during registration:', error);
+      throw new Error('Registration failed');
+    }
+  }
 
   login(user: Profile) {
     const payload = {
@@ -22,10 +46,12 @@ export class AuthService {
   async storeSpotifyToken(userId: string, tokenData: any) {
     try {
       const client = this.redisService.getClient();
-      console.log(tokenData);
       await client.set(
         `spotify_token:${userId}`,
-        JSON.stringify(tokenData),
+        JSON.stringify({
+          token: tokenData,
+          plateform: 'spotify',
+        }),
         'EX',
         3600,
       );

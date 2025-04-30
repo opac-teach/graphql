@@ -7,9 +7,7 @@ export class SpotifyConnect implements IApisConnect {
   private readonly baseUrl: string = 'https://api.spotify.com/v1';
   private accessToken: string;
 
-  constructor() {
-    this.init();
-  }
+  constructor() {}
 
   public async init(): Promise<void> {
     const clientId = process.env.SPOTIFY_CLIENT_ID;
