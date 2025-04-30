@@ -1,3 +1,4 @@
+import { useQuery } from "@apollo/client";
 import {
   Select,
   SelectContent,
@@ -7,18 +8,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { GET_GENRES } from "@/requetes/queries";
+import Loading from "../Loading";
 
 export default function SelectGenre({
-  genres,
   onChange,
   defaultValue,
   withAll = false,
 }: {
-  genres: { id: string; name: string }[] | undefined;
   onChange: (value: string) => void;
   defaultValue?: string;
   withAll?: boolean;
 }) {
+  const { data, loading } = useQuery(GET_GENRES);
+
+  if (loading) return <Loading />;
+
   return (
     <Select defaultValue={defaultValue} onValueChange={onChange}>
       <SelectTrigger>
@@ -32,7 +37,7 @@ export default function SelectGenre({
               All Genres
             </SelectItem>
           )}
-          {genres?.map((genre) => (
+          {data?.genres?.map((genre) => (
             <SelectItem key={genre.id} value={genre.id}>
               {genre.name}
             </SelectItem>

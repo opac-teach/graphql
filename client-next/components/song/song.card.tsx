@@ -1,7 +1,6 @@
-import { getColorByGenre } from "@/utils/genreColor";
 import { Music2 } from "lucide-react";
 import Link from "next/link";
-import { Badge } from "../ui/badge";
+import GenreBadge from "../genre/genre.badge";
 
 type SongCard = {
   id: string;
@@ -29,9 +28,7 @@ export default function SongCard({ song }: SongCardProps) {
           {song.name}
         </h4>
         <div className="flex justify-between items-center">
-          <Badge style={{ backgroundColor: getColorByGenre(song.genre.name) }}>
-            {song.genre.name}
-          </Badge>
+          <GenreBadge name={song.genre.name} />
           <p className="text-sm text-gray-500">{song.user.name}</p>
         </div>
       </Link>

@@ -19,3 +19,17 @@ export const CREATE_SONG = gql(`
         }
     } 
 `);
+
+export const UPDATE_SONG = gql(`
+    mutation UpdateSong($input: UpdateSongInput!, $updateSongId: ID!) {
+        updateSong(input: $input, id: $updateSongId) {
+            success
+            song {
+                name
+                user {
+                    name
+                }
+            }
+        }
+}   
+`);

@@ -4,7 +4,7 @@ import { gql, useMutation, useQuery } from "@apollo/client";
 import Loading from "@/components/Loading";
 import SongCard from "@/components/song/song.card";
 import { useState } from "react";
-import { GET_GENRES, GET_SONGS } from "@/requetes/queries";
+import { GET_SONGS } from "@/requetes/queries";
 import ModalCreate from "@/components/ModalCreate";
 import SelectGenre from "@/components/genre/genre.select";
 import { z } from "zod";
@@ -16,30 +16,28 @@ const songSchema = z.object({
 });
 
 export default function Songs() {
-  const [genre, setGenre] = useState<string | null>(null);
+  const [genreId, setGenreId] = useState<string | null>(null);
 
   const { data, loading, error } = useQuery(GET_SONGS, {
     variables: {
       limit: 20,
       offset: 0,
-      genreId: genre,
+      genreId,
     },
   });
 
-  const {
-    data: genresData,
-    loading: genresLoading,
-    error: genresError,
-  } = useQuery(GET_GENRES);
-
   const handleGenreChange = (value: string) => {
-    setGenre(value === "all" ? null : value);
+    setGenreId(value === "all" ? null : value);
   };
 
   const [mutateFunction] = useMutation(CREATE_SONG, {
     update(cache, { data }) {
       const newSong = data?.createSong?.song;
       if (!newSong) return;
+
+      if (genreId && newSong.genre.id !== genreId) {
+        return;
+      }
 
       cache.modify({
         fields: {
@@ -75,9 +73,8 @@ export default function Songs() {
     });
   };
 
-  if (loading || genresLoading) return <Loading />;
-  if (error || genresError)
-    return <div>Error: {error?.message || genresError?.message}</div>;
+  if (loading) return <Loading />;
+  if (error) return <div>Error: {error?.message}</div>;
 
   if (!data?.songs) return <p>No songs found.</p>;
 
@@ -87,15 +84,13 @@ export default function Songs() {
         <h2>Songs</h2>
         <div className="flex gap-2">
           <SelectGenre
-            genres={genresData?.genres}
             onChange={handleGenreChange}
-            defaultValue={genre || "all"}
+            defaultValue={genreId || "all"}
             withAll
           />
           <ModalCreate
             title="song"
             onConfirm={create}
-            genres={genresData?.genres}
             schema={songSchema}
             defaultValues={{ name: "", genreId: "" }}
           />

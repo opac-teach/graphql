@@ -12,7 +12,7 @@ import {
   DialogTrigger,
 } from "./ui/dialog";
 import { Button } from "./ui/button";
-import { Plus } from "lucide-react";
+import { Pen, Plus } from "lucide-react";
 import {
   Form,
   FormControl,
@@ -23,13 +23,16 @@ import {
 } from "./ui/form";
 import { Input } from "./ui/input";
 import SelectGenre from "./genre/genre.select";
+import { useQuery } from "@apollo/client";
+import { GET_GENRES } from "@/requetes/queries";
+import Loading from "./Loading";
 
 interface ModalCreateProps<T extends FieldValues> {
   onConfirm: (values: T) => void;
   title: string;
   schema: ZodType<T>;
   defaultValues: DefaultValues<T>;
-  genres?: { id: string; name: string }[];
+  isUpdate?: boolean;
 }
 
 export default function ModalCreate<T extends FieldValues>({
@@ -37,9 +40,13 @@ export default function ModalCreate<T extends FieldValues>({
   title,
   schema,
   defaultValues,
-  genres = [],
+  isUpdate = false,
 }: ModalCreateProps<T>) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const { data, loading, error } = useQuery(GET_GENRES, {
+    skip: title !== "song",
+  });
 
   const form = useForm<T>({
     resolver: zodResolver(schema),
@@ -56,21 +63,27 @@ export default function ModalCreate<T extends FieldValues>({
     }
   };
 
+  if (loading) return <Loading />;
+  if (error) return <p>Error: {error.message}</p>;
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button>
-          <span>Add a {title}</span>
-          <Plus size={16} />
+        <Button variant={isUpdate ? "ghost" : "default"}>
+          <span>{!isUpdate && `Add a ${title}`}</span>
+          {isUpdate ? <Pen /> : <Plus size={16} />}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <DialogHeader>
-              <DialogTitle>Create a {title}</DialogTitle>
+              <DialogTitle>
+                {isUpdate ? "Update" : "Create"} a {title}
+              </DialogTitle>
               <DialogDescription>
-                Create a new {title} to add to your library.
+                {isUpdate ? "Update" : "Create"} a new {title} to add to your
+                library.
               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
@@ -88,7 +101,7 @@ export default function ModalCreate<T extends FieldValues>({
                     </FormItem>
                   )}
                 />
-                {"genreId" in form.getValues() && genres.length > 0 && (
+                {data?.genres && data?.genres.length > 0 && (
                   <FormField
                     control={form.control}
                     name={"genreId" as Path<T>}
@@ -97,8 +110,8 @@ export default function ModalCreate<T extends FieldValues>({
                         <FormLabel>Genre</FormLabel>
                         <FormControl>
                           <SelectGenre
-                            genres={genres}
                             onChange={(val) => field.onChange(val)}
+                            defaultValue={field.value}
                           />
                         </FormControl>
                         <FormMessage />

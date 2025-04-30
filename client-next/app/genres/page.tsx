@@ -1,11 +1,10 @@
 "use client";
 
+import GenreBadge from "@/components/genre/genre.badge";
 import Loading from "@/components/Loading";
 import ModalCreate from "@/components/ModalCreate";
-import { Badge } from "@/components/ui/badge";
 import { CREATE_GENRE } from "@/requetes/mutations";
 import { GET_GENRES } from "@/requetes/queries";
-import { getColorByGenre } from "@/utils/genreColor";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import Link from "next/link";
 import { z } from "zod";
@@ -66,14 +65,7 @@ export default function Genres() {
         <div className="flex gap-2 flex-wrap justify-center mt-4">
           {data?.genres.map((genre) => (
             <Link key={genre.id} href={`/genres/${genre.id}`}>
-              <Badge
-                variant="outline"
-                style={{
-                  backgroundColor: getColorByGenre(genre.name),
-                }}
-              >
-                {genre.name}
-              </Badge>
+              <GenreBadge name={genre.name} />
             </Link>
           ))}
         </div>

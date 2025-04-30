@@ -25,6 +25,10 @@ export const GET_SONG = gql(`
       id
       name 
     }
+    genre {
+      id
+      name
+    }
   }
 }
 `);
