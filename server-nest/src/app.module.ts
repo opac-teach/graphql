@@ -20,6 +20,7 @@ import { UserModule } from './user/user.module';
     }),
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: '.env',
     }),
     TypeOrmModule.forRoot(databaseConfig),
     SongModule,
