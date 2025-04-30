@@ -2,21 +2,49 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type AuthResponse {
+  message: String!
+  success: Boolean!
+}
+
 input CreateSongInput {
   """Title of song"""
   title: String!
 }
 
+input LoginInput {
+  email: String!
+  password: String!
+}
+
 type Mutation {
   createSong(createSongInput: CreateSongInput!): Song!
+  login(loginInput: LoginInput!): AuthResponse!
+  register(registerInput: RegisterInput!): User!
 }
 
 type Query {
+  me: User!
   song(id: String!): Song!
   songs: [Song!]!
+  user(id: String!): String!
+  users: String!
+}
+
+input RegisterInput {
+  email: String!
+  name: String!
+  password: String!
 }
 
 type Song {
   id: String!
   title: String!
+}
+
+type User {
+  email: String!
+  id: String!
+  name: String!
+  password: String!
 }

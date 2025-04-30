@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateSongInput } from './dto/create-song.input';
-import { Song } from './models/song.model';
+import { Song } from './model/song.model';
 
 @Injectable()
 export class SongService {

@@ -1,6 +1,6 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CreateSongInput } from './dto/create-song.input';
-import { Song } from './models/song.model';
+import { Song } from './model/song.model';
 import { SongService } from './song.service';
 
 @Resolver(() => Song)

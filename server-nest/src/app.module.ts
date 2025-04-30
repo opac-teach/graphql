@@ -4,8 +4,10 @@ import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
+import { AuthModule } from './auth/auth.module';
 import { databaseConfig } from './config';
 import { SongModule } from './song/song.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -14,12 +16,15 @@ import { SongModule } from './song/song.module';
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
       graphiql: true,
+      context: ({ req, res }) => ({ req, res }),
     }),
     ConfigModule.forRoot({
       isGlobal: true,
     }),
     TypeOrmModule.forRoot(databaseConfig),
     SongModule,
+    UserModule,
+    AuthModule,
   ],
 })
 export class AppModule {}
