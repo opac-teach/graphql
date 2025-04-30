@@ -4,6 +4,8 @@ import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { gql } from "@/lib/graphql";
+import UpdateSongForm from "./UpdateSongForm";
+import DeleteSongButton from "./DeleteSongButton";
 
 const GET_SONG = gql(`
   query Song($id: ID!) {
@@ -25,7 +27,7 @@ const GET_SONG = gql(`
 export default function Song() {
   const { id } = useParams<{ id: string }>();
 
-  const { data, loading, error } = useQuery(GET_SONG, {
+  const { data, loading, error, refetch } = useQuery(GET_SONG, {
     variables: {
       id,
     },
@@ -46,6 +48,8 @@ export default function Song() {
       <div>
         <Link href={`/genres/${data?.song.genre.id}`}> {data?.song.genre.name}</Link>
       </div>
+      <UpdateSongForm refetch={refetch} />
+      <DeleteSongButton />
     </div>
   );
 }

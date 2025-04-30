@@ -3,6 +3,7 @@
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import { gql } from "@/lib/graphql";
+import CreateSongForm from "./CreateSongForm";
 
 const GET_SONGS = gql(`
   query Songs {
@@ -22,7 +23,7 @@ const GET_SONGS = gql(`
 `);
 
 export default function Songs() {
-  const { data, loading, error } = useQuery(GET_SONGS);
+  const { data, loading, error, refetch } = useQuery(GET_SONGS);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
@@ -43,6 +44,7 @@ export default function Songs() {
           </div>
         ))}
       </div>
+      <CreateSongForm refetch={refetch} />
     </div>
   );
 }

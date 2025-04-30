@@ -15,11 +15,11 @@ import { Input } from "@/components/ui/input";
 import { gql } from "@/lib/graphql";
 import { useMutation } from "@apollo/client";
 
-const CREATE_USER = gql(`
-  mutation CreateUser($input: CreateUserInput!) {
-    createUser(input: $input) {
+const CREATE_GENRE = gql(`
+  mutation CreateGenre($input: CreateGenreInput!) {
+    createGenre(input: $input) {
       success
-      user {
+      genre {
         id
         name
       }
@@ -27,14 +27,15 @@ const CREATE_USER = gql(`
   }
 `);
 
-export default function CreateUserForm({ refetch }: { refetch: () => void }) {
-  const [mutateFunction, { data, loading, error }] = useMutation(CREATE_USER);
+export default function CreateGenreForm({ refetch }: { refetch: () => void }) {
+  const [mutateFunction, { data, loading, error }] = useMutation(CREATE_GENRE);
 
   const form = useForm<{ name: string }>({
     defaultValues: {
       name: "",
     },
   });
+
   async function onSubmit(values: { name: string }) {
     try {
       await mutateFunction({ variables: { input: { name: values.name } } });
@@ -45,7 +46,7 @@ export default function CreateUserForm({ refetch }: { refetch: () => void }) {
   }
   return (
     <div className="mt-4 max-w-md">
-      <h2 className="mb-4">Create User</h2>
+      <h2 className="mb-4">Create Genre</h2>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
@@ -53,9 +54,9 @@ export default function CreateUserForm({ refetch }: { refetch: () => void }) {
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Username*</FormLabel>
+                <FormLabel>Genre name*</FormLabel>
                 <FormControl>
-                  <Input placeholder="Charly" {...field} minLength={3} />
+                  <Input placeholder="Fantastic" {...field} required minLength={3} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -73,10 +74,10 @@ export default function CreateUserForm({ refetch }: { refetch: () => void }) {
       {data && (
         <div
           className={
-            data.createUser.success ? "text-green-500" : "text-red-500"
+            data.createGenre.success ? "text-green-500" : "text-red-500"
           }
         >
-          {data.createUser.success ? "User created" : "User not created"}
+          {data.createGenre.success ? "Genre created" : "Genre not created"}
         </div>
       )}
     </div>
