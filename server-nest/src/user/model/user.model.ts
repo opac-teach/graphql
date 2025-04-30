@@ -1,5 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Song } from 'src/song/model/song.model';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @ObjectType()
 @Entity('user')
@@ -13,10 +14,13 @@ export class User {
   name: string;
 
   @Field(() => String)
-  @Column()
+  @Column({ unique: true })
   email: string;
 
-  @Field(() => String)
   @Column()
   password: string;
+
+  @Field(() => [Song], { nullable: true })
+  @OneToMany(() => Song, (song) => song.author)
+  songs?: Song[];
 }

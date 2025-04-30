@@ -12,7 +12,7 @@ export class SongService {
   ) {}
 
   async findAll(): Promise<Song[]> {
-    return await this.songRepository.find();
+    return await this.songRepository.find({ relations: ['author'] });
   }
 
   async findOne(id: string) {
@@ -21,8 +21,14 @@ export class SongService {
     });
   }
 
-  async create(createSongInput: CreateSongInput): Promise<Song> {
-    const song = this.songRepository.create(createSongInput);
+  async create(
+    createSongInput: CreateSongInput,
+    userId: string,
+  ): Promise<Song> {
+    const song = this.songRepository.create({
+      ...createSongInput,
+      authorId: userId,
+    });
     return await this.songRepository.save(song);
   }
 }
