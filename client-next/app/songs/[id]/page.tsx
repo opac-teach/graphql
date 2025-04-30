@@ -14,11 +14,15 @@ const GET_SONG = gql(`
         id
         name
       }
+      genre {
+        id
+        name
+      }
     }
   }
 `);
 
-export default function User() {
+export default function Song() {
   const { id } = useParams<{ id: string }>();
 
   const { data, loading, error } = useQuery(GET_SONG, {
@@ -37,6 +41,10 @@ export default function User() {
       <h2>Author</h2>
       <div>
 				<Link href={`/users/${data?.song.user.id}`}> {data?.song.user.name}</Link>
+      </div>
+      <h2>Genre</h2>
+      <div>
+        <Link href={`/genres/${data?.song.genre.id}`}> {data?.song.genre.name}</Link>
       </div>
     </div>
   );

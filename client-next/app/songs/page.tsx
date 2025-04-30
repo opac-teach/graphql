@@ -13,6 +13,10 @@ const GET_SONGS = gql(`
         id
         name
       }
+      genre {
+        id
+        name
+      }
     }
   }
 `);
@@ -32,7 +36,8 @@ export default function Songs() {
             <div className="flex gap-1">
               <Link href={`/songs/${song.id}`}>{song.name}</Link>
               <span>
-                (Author : <Link href={`/users/${song.user.id}`}>{song.user.name}</Link>)
+                (Author : <Link href={`/users/${song.user.id}`}>{song.user.name}</Link>, 
+                Genre : <Link href={`/genres/${song.genre.id}`}>{song.genre.name}</Link>)
               </span>
             </div>
           </div>
