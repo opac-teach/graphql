@@ -25,6 +25,7 @@ type Documents = {
     "\n  query Songs {\n    songs {\n      id\n      name\n      user {\n        id\n        name\n      }\n      genre {\n        id\n        name\n      }\n    }\n  }\n": typeof types.SongsDocument,
     "\n  mutation CreateUser($input: CreateUserInput!) {\n    createUser(input: $input) {\n      success\n      user {\n        id\n        name\n      }\n    }\n  }\n": typeof types.CreateUserDocument,
     "\n  query User($id: ID!) {\n    user(id: $id) {\n      id\n      name\n      songs {\n        id\n        name\n      }\n      songsCount\n    }\n  }\n": typeof types.UserDocument,
+    "\n  query Users {\n    users {\n      id\n      name\n      songsCount\n    }\n  }\n": typeof types.UsersDocument,
 };
 const documents: Documents = {
     "\n  mutation CreateGenre($input: CreateGenreInput!) {\n    createGenre(input: $input) {\n      success\n      genre {\n        id\n        name\n      }\n    }\n  }\n": types.CreateGenreDocument,
@@ -38,6 +39,7 @@ const documents: Documents = {
     "\n  query Songs {\n    songs {\n      id\n      name\n      user {\n        id\n        name\n      }\n      genre {\n        id\n        name\n      }\n    }\n  }\n": types.SongsDocument,
     "\n  mutation CreateUser($input: CreateUserInput!) {\n    createUser(input: $input) {\n      success\n      user {\n        id\n        name\n      }\n    }\n  }\n": types.CreateUserDocument,
     "\n  query User($id: ID!) {\n    user(id: $id) {\n      id\n      name\n      songs {\n        id\n        name\n      }\n      songsCount\n    }\n  }\n": types.UserDocument,
+    "\n  query Users {\n    users {\n      id\n      name\n      songsCount\n    }\n  }\n": types.UsersDocument,
 };
 
 /**
