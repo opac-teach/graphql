@@ -2,6 +2,7 @@ import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { ApisConnect } from 'src/services/apis/ApisConnect.service';
 import { Playlist } from './entities/playlist.entity';
 import { Song } from 'src/songs/entities/song.entity';
+import { UseGuards } from '@nestjs/common';
 
 @Resolver(() => Playlist)
 export class PlaylistsResolver {

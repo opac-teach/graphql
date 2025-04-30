@@ -5,7 +5,7 @@ import * as dotenv from 'dotenv';
 dotenv.config({ path: process.cwd() + `/.env` });
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {});
   dotenv.config();
   app.enableCors({
     origin: '*', // Allow all origins

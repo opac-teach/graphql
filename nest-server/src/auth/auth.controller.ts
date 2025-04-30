@@ -39,7 +39,27 @@ export class AuthController {
 
     req.user = undefined;
 
-    console.log('User:', user.profile);
+    const code = req.query.code;
+
+    console.log(process.env.SPOTIFY_CALLBACK_URL);
+
+    const response = await fetch('https://accounts.spotify.com/api/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: `Basic ${Buffer.from(
+          `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`,
+        ).toString('base64')}`,
+      },
+      body: new URLSearchParams({
+        grant_type: 'client_credentials',
+        code,
+        redirect_uri: process.env.SPOTIFY_CALLBACK_URL,
+      }),
+    });
+    const userTokenInfos = await response.json();
+
+    await this.authService.storeSpotifyToken(user.profile.id, userTokenInfos);
 
     const jwt = this.authService.login(user.profile);
 
