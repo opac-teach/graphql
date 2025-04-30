@@ -33,3 +33,12 @@ export const UPDATE_SONG = gql(`
         }
 }   
 `);
+
+export const DELETE_SONG = gql(`
+    mutation DeleteSong($deleteSongId: ID!) {
+        deleteSong(id: $deleteSongId) {
+            success
+            id
+        }
+    }
+`);
