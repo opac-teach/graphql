@@ -8,9 +8,13 @@ import { SongsModule } from './songs/songs.module';
 import { ArtistsModule } from './artists/artists.module';
 import { PlaylistsModule } from './playlists/playlists.module';
 import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       graphiql: true,

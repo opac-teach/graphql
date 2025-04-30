@@ -24,7 +24,7 @@ export class AuthController {
       user,
       authInfo,
     }: {
-      user: Profile;
+      user: { profile: Profile };
       authInfo: {
         accessToken: string;
         refreshToken: string;
@@ -39,10 +39,12 @@ export class AuthController {
 
     req.user = undefined;
 
-    const jwt = this.authService.login(user);
+    console.log('User:', user.profile);
+
+    const jwt = this.authService.login(user.profile);
 
     res.set('authorization', `Bearer ${jwt}`);
 
-    return res.status(201).json({ authInfo, user });
+    return res.status(201).json({ authInfo, user: user.profile });
   }
 }
