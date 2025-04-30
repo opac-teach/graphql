@@ -6,6 +6,7 @@ import { RegisterDto } from './dtos/register.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user';
 import { Repository } from 'typeorm';
+import { randomBytes } from 'crypto';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -16,6 +17,19 @@ export class AuthService {
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
   ) {}
+
+  async generateStateFor(userId: string): Promise<string> {
+    const state = randomBytes(16).toString('hex');
+    const client = this.redisService.getClient();
+    await client.set(`spotify_state:${state}`, userId, 'EX', 300);
+    return state;
+  }
+
+  async getUserIdFromState(state: string): Promise<string | null> {
+    const client = this.redisService.getClient();
+    const userId = await client.get(`spotify_state:${state}`);
+    return userId || null;
+  }
 
   public async register(data: RegisterDto): Promise<string> {
     try {
@@ -50,7 +64,6 @@ export class AuthService {
         `spotify_token:${userId}`,
         JSON.stringify({
           token: tokenData,
-          plateform: 'spotify',
         }),
         'EX',
         3600,

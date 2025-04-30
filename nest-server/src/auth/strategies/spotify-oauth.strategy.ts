@@ -17,20 +17,22 @@ export class SpotifyOauthStrategy extends PassportStrategy(
         'playlist-read-private',
         'playlist-modify-public',
       ],
-    });
+    } as any);
   }
 
   async validate(
+    req: any,
     accessToken: string,
     refreshToken: string,
-    params: any,
     profile: Profile,
     done: VerifyCallback,
   ) {
+    const state = req.query.state;
     const user = {
       accessToken,
       refreshToken,
       profile,
+      state,
     };
     done(null, user);
   }

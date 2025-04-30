@@ -7,31 +7,58 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { query, Response } from 'express';
+import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { SpotifyOauthGuard } from './guards/spotify-oauth.quard';
-import { Profile } from 'passport-spotify';
-import { stringify } from 'querystring';
 import { RegisterDto } from './dtos/register.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
+import { stringify } from 'querystring';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiExcludeEndpoint,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @ApiOperation({ summary: 'User register' })
+  @ApiBody({ type: RegisterDto })
   @Post('register')
   async register(@Body() body: RegisterDto): Promise<any> {
     return await this.authService.register(body);
   }
 
+  @ApiOperation({ summary: 'User login w/ spotify' })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
-  @UseGuards(SpotifyOauthGuard)
-  @Get('login')
-  login(): void {
-    return;
+  @Get('spotify-login')
+  async login(@Req() req: any, @Res() res: Response) {
+    const userId = req.userId;
+    const state = await this.authService.generateStateFor(userId);
+
+    const params = stringify({
+      client_id: process.env.SPOTIFY_CLIENT_ID,
+      response_type: 'code',
+      redirect_uri: process.env.SPOTIFY_CALLBACK_URL,
+      scope: [
+        'user-read-email',
+        'user-read-private',
+        'playlist-read-private',
+        'playlist-modify-public',
+      ].join(' '),
+      state,
+    });
+
+    return res.redirect(`https://accounts.spotify.com/authorize?${params}`);
   }
 
   @UseGuards(SpotifyOauthGuard)
+  @ApiExcludeEndpoint(true)
   @Get('redirect')
   async spotifyAuthRedirect(
     @Req() req: any,
@@ -49,6 +76,9 @@ export class AuthController {
       };
     } = req;
 
+    const state = req.query.state;
+    const userId = await this.authService.getUserIdFromState(state);
+
     if (!user) {
       res.redirect('/');
       return;
@@ -60,33 +90,10 @@ export class AuthController {
       return res.status(400).send('No code found in query');
     }
 
-    // const response = await fetch('https://accounts.spotify.com/api/token', {
-    //   method: 'POST',
-    //   headers: {
-    //     Authorization: `Basic ${Buffer.from(
-    //       `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`,
-    //     ).toString('base64')}`,
-    //     'Content-Type': 'application/x-www-form-urlencoded',
-    //   },
-    //   body: new URLSearchParams({
-    //     grant_type: 'authorization_code',
-    //     code,
-    //     redirect_uri: process.env.SPOTIFY_CALLBACK_URL,
-    //   }),
-    // });
-    // const userTokenInfos = await response.json();
+    await this.authService.storeSpotifyToken(userId, user.refreshToken);
 
-    // console.log('userTokenInfos', userTokenInfos);
-
-    await this.authService.storeSpotifyToken(
-      user.profile.id,
-      user.refreshToken,
-    );
-
-    const jwt = this.authService.login(user.profile);
-
-    res.set('authorization', `Bearer ${jwt}`);
-
-    return res.status(201).json({ jwt });
+    return res.json({
+      message: 'OK',
+    });
   }
 }
