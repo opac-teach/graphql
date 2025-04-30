@@ -9,6 +9,8 @@ import ModalCreate from "@/components/ModalCreate";
 import SelectGenre from "@/components/genre/genre.select";
 import { z } from "zod";
 import { CREATE_SONG } from "@/requetes/mutations";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const songSchema = z.object({
   name: z.string().min(2),
@@ -17,6 +19,7 @@ const songSchema = z.object({
 
 export default function Songs() {
   const [genreId, setGenreId] = useState<string | null>(null);
+  const router = useRouter();
 
   const { data, loading, error } = useQuery(GET_SONGS, {
     variables: {
@@ -62,6 +65,14 @@ export default function Songs() {
 
             return [...existingSongs, newSongRef];
           },
+        },
+      });
+    },
+    onCompleted(data) {
+      toast.success(`Song ${data.createSong.song.name} created successfully`, {
+        action: {
+          label: "View",
+          onClick: () => router.push(`/songs/${data.createSong.song.id}`),
         },
       });
     },

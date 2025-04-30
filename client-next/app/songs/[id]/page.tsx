@@ -12,6 +12,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FieldValues } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 const songSchema = z.object({
@@ -37,7 +38,13 @@ export default function SongPage() {
   const [mutateFunction] = useMutation(UPDATE_SONG, {
     refetchQueries: [GET_SONG],
     awaitRefetchQueries: true,
+    onCompleted: (data) => {
+      toast.success(`Song ${data.updateSong.song.name} updated successfully!`);
+    },
   });
+
+  if (loading) return <Loading />;
+  if (error) return <div>Error: {error.message}</div>;
 
   const song = data?.song;
   if (!song) return <div>Song not found</div>;
@@ -60,9 +67,6 @@ export default function SongPage() {
       console.error("Error updating song:", error);
     }
   };
-
-  if (loading) return <Loading />;
-  if (error) return <div>Error: {error.message}</div>;
 
   const isOwner = song.user.id === userId;
 

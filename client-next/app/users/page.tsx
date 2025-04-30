@@ -7,6 +7,7 @@ import { GET_USERS } from "@/requetes/queries";
 import { CREATE_USER } from "@/requetes/mutations";
 import ModalCreate from "@/components/ModalCreate";
 import { z } from "zod";
+import { toast } from "sonner";
 
 const userSchema = z.object({
   name: z.string().min(2),
@@ -37,6 +38,9 @@ export default function Users() {
           },
         },
       });
+    },
+    onCompleted: (data) => {
+      toast.success(`User ${data.createUser.user.name} created successfully!`);
     },
   });
 

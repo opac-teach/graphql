@@ -5,6 +5,7 @@ import { Providers } from "./providers";
 import Link from "next/link";
 import Image from "next/image";
 import LoginComponent from "@/components/LoginComponent";
+import { Toaster } from "sonner";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -45,6 +46,7 @@ export default function RootLayout({
             </header>
 
             <main className="p-4 flex-1">{children}</main>
+            <Toaster />
 
             <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center p-4">
               <a

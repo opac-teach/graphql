@@ -7,6 +7,7 @@ import { CREATE_GENRE } from "@/requetes/mutations";
 import { GET_GENRES } from "@/requetes/queries";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import Link from "next/link";
+import { toast } from "sonner";
 import { z } from "zod";
 
 const genreSchema = z.object({
@@ -38,6 +39,11 @@ export default function Genres() {
           },
         },
       });
+    },
+    onCompleted: (data) => {
+      toast.success(
+        `Genre ${data.createGenre.genre.name} created successfully!`
+      );
     },
   });
 
