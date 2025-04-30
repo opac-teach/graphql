@@ -1,14 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { StreamingServices } from 'src/enums/streaming-services.enum';
+import { apisConnect } from 'src/main';
 import { ApisConnect } from 'src/services/apis/ApisConnect.service';
 import { RedisService } from 'src/services/redis.service';
 
 @Injectable()
 export class PlaylistsService {
-  constructor(
-    private readonly redisService: RedisService,
-    private readonly apisConnect: ApisConnect,
-  ) {}
+  constructor(private readonly redisService: RedisService) {}
 
   async findAll(query: string, userId: string) {
     const client = this.redisService.getClient();
@@ -17,14 +15,11 @@ export class PlaylistsService {
     if (!cachedToken) throw new Error('No token found for user');
     const tokenData = JSON.parse(cachedToken);
     const accessToken = tokenData;
-    return await this.apisConnect.searchPlaylists(
-      query,
-      StreamingServices.SPOTIFY,
-    );
+    return await apisConnect.searchPlaylists(query, StreamingServices.SPOTIFY);
   }
 
   async getPlaylistTracks(playlistId: string, userId: string) {
-    return await this.apisConnect.getPlaylistTracks(
+    return await apisConnect.getPlaylistTracks(
       playlistId,
       10,
       0,
@@ -38,8 +33,8 @@ export class PlaylistsService {
     const cachedToken = await client.get(cacheKey);
     if (!cachedToken) throw new Error('No token found for user');
     const tokenData = JSON.parse(cachedToken);
-    const accessToken = tokenData;
-    return await this.apisConnect.getUserPlaylists(
+    const accessToken = tokenData.token;
+    return await apisConnect.getUserPlaylists(
       accessToken,
       userId,
       StreamingServices.SPOTIFY,
@@ -53,7 +48,7 @@ export class PlaylistsService {
     if (!cachedToken) throw new Error('No token found for user');
     const tokenData = JSON.parse(cachedToken);
     const accessToken = tokenData;
-    return await this.apisConnect.addSongToPlaylist(
+    return await apisConnect.addSongToPlaylist(
       playlistId,
       songId,
       accessToken,
@@ -72,8 +67,8 @@ export class PlaylistsService {
     const cachedToken = await client.get(cacheKey);
     if (!cachedToken) throw new Error('No token found for user');
     const tokenData = JSON.parse(cachedToken);
-    const accessToken = tokenData;
-    return await this.apisConnect.removeSongFromPlaylist(
+    const accessToken = tokenData.token;
+    return await apisConnect.removeSongFromPlaylist(
       playlistId,
       songId,
       accessToken,

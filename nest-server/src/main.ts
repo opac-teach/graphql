@@ -12,6 +12,8 @@ import * as passport from 'passport';
 
 dotenv.config({ path: process.cwd() + `/.env` });
 
+let apisConnect: ApisConnect;
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {});
   dotenv.config();
@@ -30,7 +32,7 @@ async function bootstrap() {
   app.use(passport.initialize());
   app.use(passport.session());
   app.useGlobalPipes(new ValidationPipe());
-  const apisConnect = app.get(ApisConnect);
+  apisConnect = new ApisConnect();
   const config = new DocumentBuilder()
     .setTitle('songs platform')
     .setDescription('songs api')
@@ -56,3 +58,5 @@ async function bootstrap() {
   await app.listen(3000);
 }
 bootstrap();
+
+export { apisConnect };

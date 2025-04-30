@@ -12,11 +12,14 @@ export class ApisConnect implements IApisConnect {
   private spotityInstance: SpotifyConnect;
   private deezerInstance: DeezerConnect;
 
+  constructor() {}
+
   private getInstance(
     serviceName: StreamingServices,
   ): SpotifyConnect | DeezerConnect {
     switch (serviceName) {
       case StreamingServices.SPOTIFY:
+        console.log(this.spotityInstance);
         return this.spotityInstance;
       case StreamingServices.DEEZER:
         return this.deezerInstance;
@@ -28,6 +31,8 @@ export class ApisConnect implements IApisConnect {
   public async init(): Promise<void> {
     this.spotityInstance = new SpotifyConnect();
     this.deezerInstance = new DeezerConnect();
+
+    console.log(this.spotityInstance);
 
     await Promise.all([
       this.spotityInstance.init(),
@@ -66,10 +71,11 @@ export class ApisConnect implements IApisConnect {
   }
 
   public async getUserPlaylists(
-    serviceName: StreamingServices,
     userAccessToken: string,
     userId: string,
+    serviceName: StreamingServices,
   ): Promise<Playlist[]> {
+    console.log(serviceName);
     return await this.getInstance(serviceName).getUserPlaylists(
       userAccessToken,
       userId,

@@ -189,6 +189,7 @@ export class SpotifyConnect implements IApisConnect {
         'Content-Type': 'application/json',
       },
     });
+    console.log('response', response);
     if (!response.ok) {
       throw new Error(
         `Error fetching data from Spotify: ${response.statusText}`,

@@ -90,7 +90,9 @@ export class AuthController {
       return res.status(400).send('No code found in query');
     }
 
-    await this.authService.storeSpotifyToken(userId, user.refreshToken);
+    console.log(user);
+
+    await this.authService.storeSpotifyToken(userId, user.accessToken);
 
     return res.json({
       message: 'OK',
