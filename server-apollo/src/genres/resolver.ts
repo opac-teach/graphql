@@ -25,7 +25,18 @@ export const genreResolvers: Resolvers = {
     },
   },
   Mutation: {
-    createGenre: (_, { input }, { dataSources }) => {
+    createGenre: (_, { input }, { dataSources, userId }) => {
+      if (!userId) {
+        throw new GraphQLError(
+          "You must be logged in to perform this action.",
+          {
+            extensions: {
+              code: "FORBIDDEN",
+            },
+          }
+        );
+      }
+
       try {
         const genre = dataSources.db.genre.create(input);
         return {
