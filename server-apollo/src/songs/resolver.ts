@@ -3,9 +3,9 @@ import { Resolvers } from "../types";
 export const songResolvers: Resolvers = {
   Query: {
     songs: (_, {genreId, pagination}, { dataSources }) => {
-        const paginationQuery = pagination || {page: 0, pageSize: 2}
-        if (!genreId) return dataSources.db.song.findMany({}, {limit: paginationQuery.pageSize, offset: paginationQuery.page * paginationQuery.pageSize})
-        return  dataSources.db.song.findMany({genreId},{limit: paginationQuery.pageSize, offset: paginationQuery.page * paginationQuery.pageSize});
+      const paginationQuery = pagination || {page: 0, pageSize: 2}
+      if (!genreId) return dataSources.db.song.findMany({}, {limit: paginationQuery.pageSize, offset: paginationQuery.page * paginationQuery.pageSize})
+      return  dataSources.db.song.findMany({genreId},{limit: paginationQuery.pageSize, offset: paginationQuery.page * paginationQuery.pageSize});
     },
 
     song: (_, { id }, { dataSources }) => {

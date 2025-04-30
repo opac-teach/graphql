@@ -1,10 +1,17 @@
 "use client";
 
 import { useQuery } from "@apollo/client";
+import { useState } from "react";
 import Link from "next/link";
 import { gql } from "@/lib/graphql";
 import CreateSongForm from "./CreateSongForm";
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 const GET_SONGS = gql(`
   query Songs ($pagination: PaginationInput){
@@ -22,37 +29,56 @@ const GET_SONGS = gql(`
 `);
 
 export default function Songs() {
+  const [page, setPage] = useState(0);
   const { data, loading, error, refetch } = useQuery(GET_SONGS, {
     variables: {
       pagination: {
-        page: 0,
+        page: page,
         pageSize: 10,
       },
     },
   });
 
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
   return (
-    <table>
-      <thead>
-      <tr>
-        <th>Title</th>
-        <th>Genre</th>
-        <th>Author</th>
-      </tr>
-      </thead>
-      <tbody>
+    <div>
+      <div>
+
+        <Select value={page} onValueChange={setPage}>
+          <SelectTrigger>
+            <SelectValue placeholder="page" />
+          </SelectTrigger>
+            <SelectContent >
+                <SelectItem value={0} required >1</SelectItem>
+                <SelectItem value={1}>2</SelectItem>
+                <SelectItem value={2}>3</SelectItem>
+            </SelectContent>
+
+        </Select>
+      </div>
+      <table>
+        <thead>
+        <tr>
+          <th>Title</th>
+          <th>Genre</th>
+          <th>Author</th>
+        </tr>
+        </thead>
+        <tbody>
         {data?.songs.map((song) => (
-          <tr>
+          <tr key={song.id} >
             <th><Link href={`/songs/${song.id}`}>{song.name}</Link></th>
             <th>{song.genre.name} </th>
             <th>{song.user.name}</th>
           </tr>
         ))}
-      </tbody>
-     <CreateSongForm refetch={refetch}/>
-    </table>
+        </tbody>
+      </table>
+      <CreateSongForm refetch={refetch}/>
+    </div>
+
   );
 }

@@ -15,6 +15,7 @@ type Query {
   song(id: ID!): Song!
 }
 
+
 input PaginationInput {
   page: Int = 1
   pageSize: Int = 10
