@@ -17,4 +17,10 @@ export interface IApisConnect {
     userAccessToken: string,
     userId: string,
   ) => Promise<Playlist>;
+  removeSongFromPlaylist: (
+    playlistId: string,
+    songId: string,
+    userAccessToken: string,
+    userId: string,
+  ) => Promise<Playlist>;
 }

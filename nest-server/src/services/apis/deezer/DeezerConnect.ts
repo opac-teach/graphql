@@ -41,4 +41,13 @@ export class DeezerConnect implements IApisConnect {
   ): Promise<Playlist> {
     return {} as Playlist;
   }
+
+  public async removeSongFromPlaylist(
+    playlistId: string,
+    songId: string,
+    userAccessToken: string,
+    userId: string,
+  ): Promise<Playlist> {
+    return {} as Playlist;
+  }
 }

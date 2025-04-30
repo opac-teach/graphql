@@ -46,4 +46,18 @@ export class PlaylistsResolver {
       userId,
     );
   }
+
+  @Mutation(() => Playlist, { name: 'removeSongFromPlaylist' })
+  async removeSongFromPlaylist(
+    @Args('playlistId') playlistId: string,
+    @Args('songId') songId: string,
+    @Context() context: { req: { userId: string } },
+  ) {
+    const userId = context.req.userId;
+    return await this.playlistsService.removeSongFromPlaylist(
+      playlistId,
+      songId,
+      userId,
+    );
+  }
 }

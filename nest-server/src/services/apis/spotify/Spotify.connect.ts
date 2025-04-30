@@ -258,4 +258,29 @@ export class SpotifyConnect implements IApisConnect {
     }
     return await this.getUserPlaylistsById(userAccessToken, playlistId);
   }
+
+  public async removeSongFromPlaylist(
+    playlistId: string,
+    songId: string,
+    userAccessToken: string,
+    userId: string,
+  ): Promise<Playlist> {
+    const url = `${this.baseUrl}/playlists/${playlistId}/tracks`;
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${userAccessToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        tracks: [{ uri: `spotify:track:${songId}` }],
+      }),
+    });
+    if (!response.ok) {
+      throw new Error(
+        `Error removing song from playlist on Spotify: ${response.statusText}`,
+      );
+    }
+    return await this.getUserPlaylistsById(userAccessToken, playlistId);
+  }
 }

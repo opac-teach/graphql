@@ -49,4 +49,18 @@ export class ApisConnect implements IApisConnect {
       userId,
     );
   }
+
+  public async removeSongFromPlaylist(
+    playlistId: string,
+    songId: string,
+    userAccessToken: string,
+    userId: string,
+  ): Promise<Playlist> {
+    return await this.api.removeSongFromPlaylist(
+      playlistId,
+      songId,
+      userAccessToken,
+      userId,
+    );
+  }
 }
