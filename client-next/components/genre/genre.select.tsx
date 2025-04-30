@@ -24,8 +24,19 @@ export default function SelectGenre({
 
   if (loading) return <Loading />;
 
+  const hasOneGenre = data?.genres.length === 1;
+
+  if (hasOneGenre) {
+    defaultValue = data.genres[0].id;
+    onChange(data.genres[0].id);
+  }
+
   return (
-    <Select defaultValue={defaultValue} onValueChange={onChange}>
+    <Select
+      defaultValue={defaultValue}
+      onValueChange={onChange}
+      disabled={hasOneGenre}
+    >
       <SelectTrigger>
         <SelectValue placeholder="Select a genre" />
       </SelectTrigger>
