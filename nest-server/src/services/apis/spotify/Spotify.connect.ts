@@ -184,7 +184,6 @@ export class SpotifyConnect implements IApisConnect {
     userId: string,
   ): Promise<Playlist[]> {
     const url = `${this.baseUrl}/me/playlists?limit=10&offset=0`;
-    console.log(userAccessToken);
     const response = await fetch(url, {
       method: 'GET',
       headers: {
@@ -193,18 +192,70 @@ export class SpotifyConnect implements IApisConnect {
       },
     });
     if (!response.ok) {
-      console.log(response);
       throw new Error(
         `Error fetching data from Spotify: ${response.statusText}`,
       );
     }
     const data = await response.json();
-    console.log(data);
     const playlists: Playlist[] = data.items.map((item: any) => ({
       id: item.id,
       name: item.name,
       coverImageUrl: item.images ? item.images[0]?.url : null,
     }));
     return playlists;
+  }
+
+  public async getUserPlaylistsById(
+    userAccessToken: string,
+    playlistId: string,
+  ): Promise<Playlist> {
+    const url = `${this.baseUrl}/playlists/${playlistId}`;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${userAccessToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      throw new Error(
+        `Error fetching data from Spotify: ${response.statusText}`,
+      );
+    }
+    const data = await response.json();
+    const playlist: Playlist = {
+      id: data.id,
+      name: data.name,
+      coverImageUrl: data.images ? data.images[0]?.url : null,
+      description: data.description,
+      songs: [],
+    };
+    return playlist;
+  }
+
+  public async addSongToPlaylist(
+    playlistId: string,
+    songId: string,
+    userAccessToken: string,
+    userId: string,
+  ): Promise<Playlist> {
+    const url = `${this.baseUrl}/playlists/${playlistId}/tracks`;
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${userAccessToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        uris: [`spotify:track:${songId}`],
+        position: 0,
+      }),
+    });
+    if (!response.ok) {
+      throw new Error(
+        `Error adding song to playlist on Spotify: ${response.statusText}`,
+      );
+    }
+    return await this.getUserPlaylistsById(userAccessToken, playlistId);
   }
 }

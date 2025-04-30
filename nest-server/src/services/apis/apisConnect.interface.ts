@@ -11,4 +11,10 @@ export interface IApisConnect {
     userAccessToken: string,
     userId: string,
   ) => Promise<Playlist[]>;
+  addSongToPlaylist: (
+    playlistId: string,
+    songId: string,
+    userAccessToken: string,
+    userId: string,
+  ) => Promise<Playlist>;
 }

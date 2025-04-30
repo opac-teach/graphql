@@ -35,4 +35,18 @@ export class ApisConnect implements IApisConnect {
   ): Promise<Playlist[]> {
     return await this.api.getUserPlaylists(userAccessToken, userId);
   }
+
+  public async addSongToPlaylist(
+    playlistId: string,
+    songId: string,
+    userAccessToken: string,
+    userId: string,
+  ): Promise<Playlist> {
+    return await this.api.addSongToPlaylist(
+      playlistId,
+      songId,
+      userAccessToken,
+      userId,
+    );
+  }
 }

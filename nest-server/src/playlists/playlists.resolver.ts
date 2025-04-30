@@ -1,6 +1,7 @@
 import {
   Args,
   Context,
+  Mutation,
   Parent,
   Query,
   ResolveField,
@@ -30,5 +31,19 @@ export class PlaylistsResolver {
   async findMyPlaylists(@Context() context: { req: { userId: string } }) {
     const userId = context.req.userId;
     return await this.playlistsService.getUserPlaylists(userId);
+  }
+
+  @Mutation(() => Playlist, { name: 'addSongToPlaylist' })
+  async addSongToPlaylist(
+    @Args('playlistId') playlistId: string,
+    @Args('songId') songId: string,
+    @Context() context: { req: { userId: string } },
+  ) {
+    const userId = context.req.userId;
+    return await this.playlistsService.addSongToPlaylist(
+      playlistId,
+      songId,
+      userId,
+    );
   }
 }

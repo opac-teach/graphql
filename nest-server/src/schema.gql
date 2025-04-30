@@ -39,3 +39,7 @@ type Query {
   playlists(query: String!): [Playlist!]!
   myplaylists: [Playlist!]!
 }
+
+type Mutation {
+  addSongToPlaylist(playlistId: String!, songId: String!): Playlist!
+}

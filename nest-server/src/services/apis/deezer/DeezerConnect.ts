@@ -32,4 +32,13 @@ export class DeezerConnect implements IApisConnect {
   ): Promise<Playlist[]> {
     return [];
   }
+
+  public async addSongToPlaylist(
+    playlistId: string,
+    songId: string,
+    userAccessToken: string,
+    userId: string,
+  ): Promise<Playlist> {
+    return {} as Playlist;
+  }
 }

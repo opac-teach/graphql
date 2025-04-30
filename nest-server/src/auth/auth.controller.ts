@@ -60,7 +60,7 @@ export class AuthController {
     // });
     // const userTokenInfos = await response.json();
 
-    console.log(user.refreshToken);
+    // console.log('userTokenInfos', userTokenInfos);
 
     await this.authService.storeSpotifyToken(
       user.profile.id,
