@@ -8,6 +8,11 @@ import { GET_GENRES } from "@/requetes/queries";
 import { getColorByGenre } from "@/utils/genreColor";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import Link from "next/link";
+import { z } from "zod";
+
+const genreSchema = z.object({
+  name: z.string().min(2),
+});
 
 export default function Genres() {
   const { data, loading, error } = useQuery(GET_GENRES);
@@ -37,9 +42,9 @@ export default function Genres() {
     },
   });
 
-  const create = async (name: string) => {
+  const create = async (values: { name: string }) => {
     await mutateFunction({
-      variables: { input: { name } },
+      variables: { input: { name: values.name } },
     });
   };
 
@@ -50,7 +55,12 @@ export default function Genres() {
     <div>
       <div className="flex justify-between">
         <h2>Genres</h2>
-        <ModalCreate title="genre" onConfirm={create} />
+        <ModalCreate
+          title="genre"
+          schema={genreSchema}
+          defaultValues={{ name: "" }}
+          onConfirm={create}
+        />
       </div>
       <div className="max-w-3xl mx-auto">
         <div className="flex gap-2 flex-wrap justify-center mt-4">

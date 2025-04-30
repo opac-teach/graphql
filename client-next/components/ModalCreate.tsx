@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ZodType } from "zod";
+import { DefaultValues, FieldValues, Path, useForm } from "react-hook-form";
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -11,48 +11,50 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
-import { Plus } from "lucide-react";
 import { Button } from "./ui/button";
+import { Plus } from "lucide-react";
 import {
   Form,
+  FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormControl,
   FormMessage,
 } from "./ui/form";
 import { Input } from "./ui/input";
+import SelectGenre from "./genre/genre.select";
 
-interface ModalCreateProps {
-  onConfirm: (name: string) => void;
+interface ModalCreateProps<T extends FieldValues> {
+  onConfirm: (values: T) => void;
   title: string;
+  schema: ZodType<T>;
+  defaultValues: DefaultValues<T>;
+  genres?: { id: string; name: string }[];
 }
 
-const formSchema = z.object({
-  name: z.string().min(2, {
-    message: "Name must be at least 2 characters.",
-  }),
-});
+export default function ModalCreate<T extends FieldValues>({
+  onConfirm,
+  title,
+  schema,
+  defaultValues,
+  genres = [],
+}: ModalCreateProps<T>) {
+  const [isOpen, setIsOpen] = useState(false);
 
-export default function ModalCreate({ onConfirm, title }: ModalCreateProps) {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-    },
+  const form = useForm<T>({
+    resolver: zodResolver(schema),
+    defaultValues,
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  const onSubmit = (values: T) => {
     try {
-      await onConfirm(values.name);
+      onConfirm(values);
       setIsOpen(false);
       form.reset();
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -75,7 +77,7 @@ export default function ModalCreate({ onConfirm, title }: ModalCreateProps) {
               <div className="grid grid-cols-4 items-center gap-4">
                 <FormField
                   control={form.control}
-                  name="name"
+                  name={"name" as Path<T>}
                   render={({ field }) => (
                     <FormItem className="col-span-4">
                       <FormLabel>Name</FormLabel>
@@ -86,6 +88,24 @@ export default function ModalCreate({ onConfirm, title }: ModalCreateProps) {
                     </FormItem>
                   )}
                 />
+                {"genreId" in form.getValues() && genres.length > 0 && (
+                  <FormField
+                    control={form.control}
+                    name={"genreId" as Path<T>}
+                    render={({ field }) => (
+                      <FormItem className="col-span-4">
+                        <FormLabel>Genre</FormLabel>
+                        <FormControl>
+                          <SelectGenre
+                            genres={genres}
+                            onChange={(val) => field.onChange(val)}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
               </div>
             </div>
             <DialogFooter>

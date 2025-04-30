@@ -15,6 +15,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  */
 type Documents = {
     "\n    mutation CreateGenre($input: CreateGenreInput!) {\n        createGenre(input: $input) {\n            success\n            genre {\n                id\n                name\n            }\n        }\n    }    \n": typeof types.CreateGenreDocument,
+    "\n    mutation CreateSong($input: CreateSongInput!) {\n        createSong(input: $input) {\n            success\n            song {\n            id\n            name\n            user {\n                id\n                name\n            }\n            genre {\n                id\n                name\n            }\n            }\n        }\n    } \n": typeof types.CreateSongDocument,
     "\n  mutation CreateUser($input: CreateUserInput!) {\n    createUser(input: $input) {\n      success\n      user {\n        id\n        name\n      }\n    }\n  }\n": typeof types.CreateUserDocument,
     "\n  query Genres {\n  genres {\n    id\n    name\n  }\n}\n": typeof types.GenresDocument,
     "\n  query Genre($id: ID!) {\n  genre(id: $id) {\n    id\n    name\n    songsCount\n    songs {\n      id\n      name\n      user {\n        id\n        name\n      }\n    }\n  }\n}\n": typeof types.GenreDocument,
@@ -26,6 +27,7 @@ type Documents = {
 };
 const documents: Documents = {
     "\n    mutation CreateGenre($input: CreateGenreInput!) {\n        createGenre(input: $input) {\n            success\n            genre {\n                id\n                name\n            }\n        }\n    }    \n": types.CreateGenreDocument,
+    "\n    mutation CreateSong($input: CreateSongInput!) {\n        createSong(input: $input) {\n            success\n            song {\n            id\n            name\n            user {\n                id\n                name\n            }\n            genre {\n                id\n                name\n            }\n            }\n        }\n    } \n": types.CreateSongDocument,
     "\n  mutation CreateUser($input: CreateUserInput!) {\n    createUser(input: $input) {\n      success\n      user {\n        id\n        name\n      }\n    }\n  }\n": types.CreateUserDocument,
     "\n  query Genres {\n  genres {\n    id\n    name\n  }\n}\n": types.GenresDocument,
     "\n  query Genre($id: ID!) {\n  genre(id: $id) {\n    id\n    name\n    songsCount\n    songs {\n      id\n      name\n      user {\n        id\n        name\n      }\n    }\n  }\n}\n": types.GenreDocument,
@@ -54,6 +56,10 @@ export function gql(source: string): unknown;
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n    mutation CreateGenre($input: CreateGenreInput!) {\n        createGenre(input: $input) {\n            success\n            genre {\n                id\n                name\n            }\n        }\n    }    \n"): (typeof documents)["\n    mutation CreateGenre($input: CreateGenreInput!) {\n        createGenre(input: $input) {\n            success\n            genre {\n                id\n                name\n            }\n        }\n    }    \n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n    mutation CreateSong($input: CreateSongInput!) {\n        createSong(input: $input) {\n            success\n            song {\n            id\n            name\n            user {\n                id\n                name\n            }\n            genre {\n                id\n                name\n            }\n            }\n        }\n    } \n"): (typeof documents)["\n    mutation CreateSong($input: CreateSongInput!) {\n        createSong(input: $input) {\n            success\n            song {\n            id\n            name\n            user {\n                id\n                name\n            }\n            genre {\n                id\n                name\n            }\n            }\n        }\n    } \n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

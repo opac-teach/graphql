@@ -6,6 +6,11 @@ import Loading from "@/components/Loading";
 import { GET_USERS } from "@/requetes/queries";
 import { CREATE_USER } from "@/requetes/mutations";
 import ModalCreate from "@/components/ModalCreate";
+import { z } from "zod";
+
+const userSchema = z.object({
+  name: z.string().min(2),
+});
 
 export default function Users() {
   const { data, loading, error } = useQuery(GET_USERS);
@@ -35,9 +40,9 @@ export default function Users() {
     },
   });
 
-  const create = async (name: string) => {
+  const create = async (values: { name: string }) => {
     await mutateFunction({
-      variables: { input: { name } },
+      variables: { input: { name: values.name } },
     });
   };
 
@@ -48,7 +53,12 @@ export default function Users() {
     <div>
       <div className="flex justify-between">
         <h2>Users</h2>
-        <ModalCreate title="user" onConfirm={create} />
+        <ModalCreate
+          title="user"
+          schema={userSchema}
+          onConfirm={create}
+          defaultValues={{ name: "" }}
+        />
       </div>
       <div className="flex gap-2 mt-2">
         {data?.users.map((user) => (
