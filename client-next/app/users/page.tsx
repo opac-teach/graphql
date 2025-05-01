@@ -4,12 +4,14 @@ import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import CreateUserForm from "./CreateUserForm";
 import { gql } from "@/lib/graphql";
+import { Button } from "@/components/ui/button";
 
 const GET_USERS = gql(`
   query Users {
     users {
       id
       name
+      songsCount
     }
   }
 `);
@@ -26,12 +28,14 @@ export default function Users() {
       <div>
         {data?.users.map((user) => (
           <div key={user.id} className="flex gap-2">
-            <Link href={`/users/${user.id}`}>{user.name}</Link>
+            <Link href={`/users/${user.id}`}>{user.name}</Link> 
+            <span>{user.songsCount} songs</span>
           </div>
         ))}
       </div>
 
       <CreateUserForm refetch={refetch} />
+      <Button onClick={() => refetch()}>Actualiser</Button>
     </div>
   );
 }

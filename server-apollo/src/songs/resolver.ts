@@ -38,16 +38,16 @@ export const songResolvers: Resolvers = {
       return { success: true, song: newSong };
     },
   
-    updateSong: (_, { id, input }, { userId, dataSources }) => {
+    updateSong: (_, { id, input }, { userId, role, dataSources }) => {
       const song = dataSources.db.song.findById(id);
-      if (!song || song.userId !== userId) throw new Error("Non authorizé");
+      if (!song || song.userId !== userId && role !== "ADMIN") throw new Error("Non authorizé");
       const updated = dataSources.db.song.update(id, input);
       return { success: true, song: updated };
     },
   
-    deleteSong: (_, { id }, { userId, dataSources }) => {
+    deleteSong: (_, { id }, { userId, role, dataSources }) => {
       const song = dataSources.db.song.findById(id);
-      if (!song || song.userId !== userId) throw new Error("Non authorizé");
+      if (!song || song.userId !== userId && role !== "ADMIN") throw new Error("Non authorizé");
       dataSources.db.song.delete(id);
       return { success: true };
     }

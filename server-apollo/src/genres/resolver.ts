@@ -11,6 +11,14 @@ export const genreResolvers: Resolvers = {
         songs: [] as any[],
       }));
     },
+    genre: (_, { id }, { dataSources }) => {
+      const genre = dataSources.db.genre.findById(id);
+      if (!genre) return null;
+      return {
+        ...genre,
+        songs: dataSources.db.song.findMany({ genreId: genre.id }),
+      };
+    },
   },
   Genre: {
     songs: (parent, { limit, offset }, { dataSources }) => {

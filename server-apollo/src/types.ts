@@ -134,6 +134,8 @@ export type MutationUpdateUserArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  /** get genre par id */
+  genre?: Maybe<Genre>;
   /** Get all genres */
   genres: Array<Genre>;
   /** Get a song by ID */
@@ -146,6 +148,11 @@ export type Query = {
   user: User;
   /** Get all users with pagination */
   users: Array<User>;
+};
+
+
+export type QueryGenreArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
@@ -388,6 +395,7 @@ export type MutationResolvers<ContextType = ResolversContext, ParentType extends
 }>;
 
 export type QueryResolvers<ContextType = ResolversContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
+  genre?: Resolver<Maybe<ResolversTypes['Genre']>, ParentType, ContextType, RequireFields<QueryGenreArgs, 'id'>>;
   genres?: Resolver<Array<ResolversTypes['Genre']>, ParentType, ContextType>;
   song?: Resolver<ResolversTypes['Song'], ParentType, ContextType, RequireFields<QuerySongArgs, 'id'>>;
   songs?: Resolver<Array<ResolversTypes['Song']>, ParentType, ContextType, Partial<QuerySongsArgs>>;

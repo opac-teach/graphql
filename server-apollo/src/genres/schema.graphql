@@ -11,6 +11,8 @@ type Genre {
 type Query {
   "Get all genres"
   genres: [Genre!]!
+  "get genre par id"
+  genre(id: ID!): Genre
 }
 
 type Mutation {
