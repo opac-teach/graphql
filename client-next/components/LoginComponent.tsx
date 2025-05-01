@@ -2,7 +2,6 @@
 
 import useAuth from "@/app/hook/auth.hook";
 import { useState } from "react";
-import { toast } from "sonner";
 import { Button } from "./ui/button";
 import {
   Dialog,
@@ -20,7 +19,7 @@ export default function LoginComponent() {
   const [mode, setMode] = useState<"login" | "register">("login");
   const [form, setForm] = useState({ name: "", email: "", password: "" });
 
-  const { isAuthenticated, login, logout } = useAuth();
+  const { isAuthenticated, login, logout, register } = useAuth();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -30,7 +29,8 @@ export default function LoginComponent() {
     if (mode === "login") {
       await login(form.email, form.password);
     } else {
-      toast("Register flow not implemented yet");
+      await register(form);
+      setMode("login");
     }
   };
 

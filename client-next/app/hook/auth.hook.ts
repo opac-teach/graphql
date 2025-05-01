@@ -1,6 +1,6 @@
-import { LOGIN, LOGOUT } from "@/requetes/mutations"; // Mutation pour login
+import { CREATE_USER, LOGIN, LOGOUT } from "@/requetes/mutations"; // Mutation pour login
 import { ME } from "@/requetes/queries";
-import { useMutation, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -8,6 +8,12 @@ type User = {
   id: string;
   name: string;
   email: string;
+};
+
+type Register = {
+  name: string;
+  email: string;
+  password: string;
 };
 
 const useAuth = () => {
@@ -57,6 +63,34 @@ const useAuth = () => {
     },
   });
 
+  const [mutateFunction] = useMutation(CREATE_USER, {
+    update(cache, { data }) {
+      const newUser = data?.register;
+      if (!newUser) return;
+
+      cache.modify({
+        fields: {
+          users(existingUsers = []) {
+            const newUserRef = cache.writeFragment({
+              data: newUser,
+              fragment: gql`
+                fragment NewUser on User {
+                  id
+                  name
+                }
+              `,
+            });
+
+            return [...existingUsers, newUserRef];
+          },
+        },
+      });
+    },
+    onCompleted: (data) => {
+      toast.success(`User ${data.register.name} created successfully!`);
+    },
+  });
+
   const login = async (email: string, password: string) => {
     await loginMutation({
       variables: { loginInput: { email, password } },
@@ -67,7 +101,19 @@ const useAuth = () => {
     await logoutMutation();
   };
 
-  return { isAuthenticated, user, loading, error, login, logout };
+  const register = async (values: Register) => {
+    await mutateFunction({
+      variables: {
+        registerInput: {
+          name: values.name,
+          email: values.email,
+          password: values.password,
+        },
+      },
+    });
+  };
+
+  return { isAuthenticated, user, loading, error, login, logout, register };
 };
 
 export default useAuth;
