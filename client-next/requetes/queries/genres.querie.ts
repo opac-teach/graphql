@@ -10,19 +10,18 @@ export const GET_GENRES = gql(`
 `);
 
 export const GET_GENRE = gql(`
-  query Genre($id: ID!) {
-  genre(id: $id) {
-    id
-    name
-    songsCount
-    songs {
+  query Genre($id: String!) {
+    genre(id: $id) {
       id
       name
-      user {
+      songs {
         id
         name
+        author {
+          id
+          name
+        }
       }
     }
   }
-}
 `);

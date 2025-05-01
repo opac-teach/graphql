@@ -1,5 +1,6 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Response } from 'express';
 import { User } from 'src/user/model/user.model';
 import { UserService } from 'src/user/user.service';
 import { AuthService } from './auth.service';
@@ -40,5 +41,22 @@ export class AuthResolver {
   async me(@Context() context: GqlContext): Promise<User> {
     const user = context.req.user;
     return await this.userService.findOne(user.sub);
+  }
+
+  @Mutation(() => AuthResponse)
+  async logout(@Context() context): Promise<AuthResponse> {
+    const res: Response = context.res;
+
+    // Supprimer le cookie 'access_token'
+    res.clearCookie('access_token', {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+    });
+
+    return {
+      success: true,
+      message: 'Vous êtes bien déconnecté.',
+    };
   }
 }

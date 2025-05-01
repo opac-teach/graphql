@@ -19,7 +19,7 @@ export default function Genres() {
 
   const [mutateFunction] = useMutation(CREATE_GENRE, {
     update(cache, { data }) {
-      const newGenre = data?.createGenre?.genre;
+      const newGenre = data?.createGenre;
       if (!newGenre) return;
 
       cache.modify({
@@ -42,15 +42,13 @@ export default function Genres() {
       });
     },
     onCompleted: (data) => {
-      toast.success(
-        `Genre ${data.createGenre.genre.name} created successfully!`
-      );
+      toast.success(`Genre ${data.createGenre.name} created successfully!`);
     },
   });
 
   const create = async (values: { name: string }) => {
     await mutateFunction({
-      variables: { input: { name: values.name } },
+      variables: { createGenreInput: { name: values.name } },
     });
   };
 

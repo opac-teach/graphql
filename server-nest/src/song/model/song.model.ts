@@ -1,7 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
+import { Genre } from 'src/genre/model/genre.model';
 import { User } from 'src/user/model/user.model';
 import {
-  BeforeUpdate,
   Column,
   Entity,
   JoinColumn,
@@ -18,7 +18,7 @@ export class Song {
 
   @Field(() => String)
   @Column()
-  title: string;
+  name: string;
 
   @Field(() => String)
   @Column()
@@ -32,16 +32,15 @@ export class Song {
   @JoinColumn({ name: 'authorId' })
   author?: User;
 
-  @Field(() => Date)
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  created: Date;
+  @Field(() => String)
+  @Column()
+  genreId: string;
 
-  @Field(() => Date)
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  updated: Date;
-
-  @BeforeUpdate()
-  updateTimestamp() {
-    this.updated = new Date();
-  }
+  @Field(() => Genre, { nullable: true })
+  @ManyToOne(() => Genre, (genre) => genre.songs, {
+    onDelete: 'CASCADE',
+    cascade: true,
+  })
+  @JoinColumn({ name: 'genreId' })
+  genre?: Genre;
 }

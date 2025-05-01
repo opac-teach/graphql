@@ -13,4 +13,4 @@ export const databaseConfig: TypeOrmModuleOptions = {
   logging: false,
 };
 
-export const port = process.env.PORT || 3000;
+export const port = 4000;

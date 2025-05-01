@@ -1,11 +1,11 @@
 "use client";
 
+import Loading from "@/components/Loading";
 import { Button } from "@/components/ui/button";
+import { GET_USER } from "@/requetes/queries";
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import Loading from "@/components/Loading";
-import { GET_USER } from "@/requetes/queries";
 
 function loginAs(userId: string) {
   localStorage.setItem("user_id", userId);
@@ -26,11 +26,10 @@ export default function User() {
 
   return (
     <div>
-      <h1>User</h1>
-      <h3>{data?.user.name}</h3>
-      <h2>Songs</h2>
+      <h2>{data?.user.name.toLocaleUpperCase()}</h2>
+      <h3>Songs</h3>
       <div>
-        {data?.user.songs.map((song) => (
+        {data?.user.songs?.map((song) => (
           <div key={song.id} className="flex gap-2">
             <Link href={`/songs/${song.id}`}>{song.name}</Link>
           </div>

@@ -1,16 +1,16 @@
 "use client";
 
-import { gql, useMutation, useQuery } from "@apollo/client";
 import Loading from "@/components/Loading";
-import SongCard from "@/components/song/song.card";
-import { useState } from "react";
-import { GET_SONGS } from "@/requetes/queries";
 import ModalCreate from "@/components/ModalCreate";
 import SelectGenre from "@/components/genre/genre.select";
-import { z } from "zod";
+import SongCard from "@/components/song/song.card";
 import { CREATE_SONG } from "@/requetes/mutations";
-import { toast } from "sonner";
+import { GET_SONGS } from "@/requetes/queries";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
+import { z } from "zod";
 
 const songSchema = z.object({
   name: z.string().min(2),
@@ -22,11 +22,7 @@ export default function Songs() {
   const router = useRouter();
 
   const { data, loading, error } = useQuery(GET_SONGS, {
-    variables: {
-      limit: 20,
-      offset: 0,
-      genreId,
-    },
+    variables: { genreId },
   });
 
   const handleGenreChange = (value: string) => {
@@ -35,10 +31,10 @@ export default function Songs() {
 
   const [mutateFunction] = useMutation(CREATE_SONG, {
     update(cache, { data }) {
-      const newSong = data?.createSong?.song;
+      const newSong = data?.createSong;
       if (!newSong) return;
 
-      if (genreId && newSong.genre.id !== genreId) {
+      if (genreId && newSong.genre?.id !== genreId) {
         return;
       }
 
@@ -69,10 +65,10 @@ export default function Songs() {
       });
     },
     onCompleted(data) {
-      toast.success(`Song ${data.createSong.song.name} created successfully`, {
+      toast.success(`Song ${data.createSong.name} created successfully`, {
         action: {
           label: "View",
-          onClick: () => router.push(`/songs/${data.createSong.song.id}`),
+          onClick: () => router.push(`/songs/${data.createSong.id}`),
         },
       });
     },
@@ -80,7 +76,9 @@ export default function Songs() {
 
   const create = async (values: { name: string; genreId: string }) => {
     await mutateFunction({
-      variables: { input: { name: values.name, genreId: values.genreId } },
+      variables: {
+        createSongInput: { name: values.name, genreId: values.genreId },
+      },
     });
   };
 

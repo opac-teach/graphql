@@ -1,5 +1,6 @@
 "use client";
 
+import useAuth from "@/app/hook/auth.hook";
 import GenreBadge from "@/components/genre/genre.badge";
 import Loading from "@/components/Loading";
 import ModalConfirmDelete from "@/components/ModalConfirmDelete";
@@ -10,7 +11,6 @@ import { useMutation, useQuery } from "@apollo/client";
 import { Music2 } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 import { FieldValues } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -24,11 +24,7 @@ export default function SongPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
 
-  const [userId, setUserId] = useState<string | null>(null);
-
-  useEffect(() => {
-    setUserId(localStorage.getItem("user_id"));
-  }, []);
+  const { user } = useAuth();
 
   const { data, loading, error } = useQuery(GET_SONG, {
     variables: {
@@ -40,13 +36,13 @@ export default function SongPage() {
     refetchQueries: [GET_SONG],
     awaitRefetchQueries: true,
     onCompleted: (data) => {
-      toast.success(`Song ${data.updateSong.song.name} updated successfully!`);
+      toast.success(`Song ${data.updateSong.name} updated successfully!`);
     },
   });
 
   const [deleteSongMutation] = useMutation(DELETE_SONG, {
     onCompleted: (data) => {
-      if (data.deleteSong.success) {
+      if (data.removeSong.success) {
         router.push("/songs");
         toast.success("Song deleted successfully!");
       } else {
@@ -54,7 +50,7 @@ export default function SongPage() {
       }
     },
     update(cache, { data }) {
-      const deletedSongId = data?.deleteSong?.id;
+      const deletedSongId = data?.removeSong.id;
       if (!deletedSongId) return;
 
       cache.modify({
@@ -77,17 +73,17 @@ export default function SongPage() {
   if (!song) return <div className="text-center">Song not found</div>;
 
   const update = async (values: FieldValues) => {
-    if (values.name === song.name && values.genreId === song.genre.id) {
+    if (values.name === song.name && values.genreId === song.genre?.id) {
       return;
     }
     try {
       await updateSongMutation({
         variables: {
-          input: {
+          updateSongInput: {
             name: values.name,
             genreId: values.genreId,
+            id,
           },
-          updateSongId: id,
         },
       });
     } catch (error) {
@@ -95,7 +91,7 @@ export default function SongPage() {
     }
   };
 
-  const isOwner = song.user.id === userId;
+  const isOwner = song.author?.id === user?.id;
 
   return (
     <div>
@@ -107,11 +103,14 @@ export default function SongPage() {
               <Music2 />
               {song.name}
             </h3>
-            <GenreBadge name={song.genre.name} />
+            <GenreBadge name={song.genre?.name} />
           </div>
           <div className="flex justify-between items-center mt-2">
-            <Link href={`/users/${song.user.id}`} className="flex justify-end">
-              By {isOwner ? "you" : song.user.name}
+            <Link
+              href={`/users/${song.author?.id}`}
+              className="flex justify-end"
+            >
+              By {isOwner ? "you" : song.author?.name}
             </Link>
             {isOwner && (
               <div className="flex  gap-2">
@@ -120,13 +119,11 @@ export default function SongPage() {
                   isUpdate
                   onConfirm={update}
                   schema={songSchema}
-                  defaultValues={{ name: song.name, genreId: song.genre.id }}
+                  defaultValues={{ name: song.name, genreId: song.genre?.id }}
                 />
                 <ModalConfirmDelete
                   title="song"
-                  onDelete={() =>
-                    deleteSongMutation({ variables: { deleteSongId: id } })
-                  }
+                  onDelete={() => deleteSongMutation({ variables: { id } })}
                 />
               </div>
             )}

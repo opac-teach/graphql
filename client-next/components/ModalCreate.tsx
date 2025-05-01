@@ -1,7 +1,13 @@
+import { GET_GENRES } from "@/requetes/queries";
+import { useQuery } from "@apollo/client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ZodType } from "zod";
-import { DefaultValues, FieldValues, Path, useForm } from "react-hook-form";
+import { Pen, Plus } from "lucide-react";
 import { useState } from "react";
+import { DefaultValues, FieldValues, Path, useForm } from "react-hook-form";
+import { ZodType } from "zod";
+import SelectGenre from "./genre/genre.select";
+import Loading from "./Loading";
+import { Button } from "./ui/button";
 import {
   Dialog,
   DialogContent,
@@ -11,8 +17,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
-import { Button } from "./ui/button";
-import { Pen, Plus } from "lucide-react";
 import {
   Form,
   FormControl,
@@ -22,10 +26,6 @@ import {
   FormMessage,
 } from "./ui/form";
 import { Input } from "./ui/input";
-import SelectGenre from "./genre/genre.select";
-import { useQuery } from "@apollo/client";
-import { GET_GENRES } from "@/requetes/queries";
-import Loading from "./Loading";
 
 interface ModalCreateProps<T extends FieldValues> {
   onConfirm: (values: T) => void;

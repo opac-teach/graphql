@@ -1,22 +1,10 @@
+import { Song } from "@/lib/graphql/graphql";
 import { Music2 } from "lucide-react";
 import Link from "next/link";
 import GenreBadge from "../genre/genre.badge";
 
-type SongCard = {
-  id: string;
-  name: string;
-  user: {
-    id: string;
-    name: string;
-  };
-  genre: {
-    id: string;
-    name: string;
-  };
-};
-
 type SongCardProps = {
-  song: SongCard;
+  song: Partial<Song>;
 };
 
 export default function SongCard({ song }: SongCardProps) {
@@ -28,8 +16,8 @@ export default function SongCard({ song }: SongCardProps) {
           {song.name}
         </h4>
         <div className="flex justify-between items-center">
-          <GenreBadge name={song.genre.name} />
-          <p className="text-sm text-gray-500">{song.user.name}</p>
+          <GenreBadge name={song.genre?.name} />
+          <p className="text-sm text-gray-500">{song.author?.name}</p>
         </div>
       </Link>
     </div>

@@ -14,34 +14,40 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 type Documents = {
-    "\n    mutation CreateGenre($input: CreateGenreInput!) {\n        createGenre(input: $input) {\n            success\n            genre {\n                id\n                name\n            }\n        }\n    }    \n": typeof types.CreateGenreDocument,
-    "\n    mutation DeleteGenre($deleteGenreId: ID!) {\n        deleteGenre(id: $deleteGenreId) {\n            success\n            id\n        }\n}\n": typeof types.DeleteGenreDocument,
-    "\n    mutation CreateSong($input: CreateSongInput!) {\n        createSong(input: $input) {\n            success\n            song {\n            id\n            name\n            user {\n                id\n                name\n            }\n            genre {\n                id\n                name\n            }\n            }\n        }\n    } \n": typeof types.CreateSongDocument,
-    "\n    mutation UpdateSong($input: UpdateSongInput!, $updateSongId: ID!) {\n        updateSong(input: $input, id: $updateSongId) {\n            success\n            song {\n                name\n                user {\n                    name\n                }\n            }\n        }\n}   \n": typeof types.UpdateSongDocument,
-    "\n    mutation DeleteSong($deleteSongId: ID!) {\n        deleteSong(id: $deleteSongId) {\n            success\n            id\n        }\n    }\n": typeof types.DeleteSongDocument,
-    "\n  mutation CreateUser($input: CreateUserInput!) {\n    createUser(input: $input) {\n      success\n      user {\n        id\n        name\n      }\n    }\n  }\n": typeof types.CreateUserDocument,
+    "\n  mutation Login($loginInput: LoginInput!) {\n    login(loginInput: $loginInput) {\n      success\n      message\n    }\n  }\n": typeof types.LoginDocument,
+    "\n  mutation Logout {\n    logout {\n        message\n        success\n    }\n}\n": typeof types.LogoutDocument,
+    "\n  mutation CreateGenre($createGenreInput: CreateGenreInput!) {\n    createGenre(createGenreInput: $createGenreInput) {\n      id\n      name\n    }\n  }\n": typeof types.CreateGenreDocument,
+    "\n  mutation UpdateGenre($updateGenreInput: UpdateGenreInput!) {\n    updateGenre(updateGenreInput: $updateGenreInput) {\n      id\n      name\n    }\n  }\n": typeof types.UpdateGenreDocument,
+    "\n  mutation DeleteGenre($id: String!) {\n    removeGenre(id: $id)\n  }\n": typeof types.DeleteGenreDocument,
+    "\n  mutation CreateSong($createSongInput: CreateSongInput!) {\n    createSong(createSongInput: $createSongInput) {\n      id\n      name\n      author {\n        id\n        name\n      }\n      genre {\n        id\n        name\n      }\n    }\n  }\n": typeof types.CreateSongDocument,
+    "\n  mutation UpdateSong($updateSongInput: UpdateSongInput!) {\n    updateSong(updateSongInput: $updateSongInput) {\n      id\n      name\n      author {\n        id\n        name\n      }\n      genre {\n        id\n        name\n      }\n    }\n  }\n": typeof types.UpdateSongDocument,
+    "\n  mutation DeleteSong($id: String!) {\n    removeSong(id: $id) {\n      success\n      id\n    }\n  }\n": typeof types.DeleteSongDocument,
+    "\n  mutation CreateUser($registerInput: RegisterInput!) {\n    register(registerInput: $registerInput) {\n      id\n      name\n    }\n  }\n": typeof types.CreateUserDocument,
+    "\n  query Me {\n    me {\n      id\n      name\n      email\n    }\n  }\n": typeof types.MeDocument,
     "\n  query Genres {\n  genres {\n    id\n    name\n  }\n}\n": typeof types.GenresDocument,
-    "\n  query Genre($id: ID!) {\n  genre(id: $id) {\n    id\n    name\n    songsCount\n    songs {\n      id\n      name\n      user {\n        id\n        name\n      }\n    }\n  }\n}\n": typeof types.GenreDocument,
-    "\n  query Songs($limit: Int, $offset: Int, $genreId: ID) {\n  songs(limit: $limit, offset: $offset, genreId: $genreId) {\n    id\n    name\n    user {\n      id\n      name\n    }\n    genre {\n      id\n      name\n    }\n  }\n}\n": typeof types.SongsDocument,
-    "\n  query Song($id: ID!) {\n  song(id: $id) {\n    name\n    user {\n      id\n      name \n    }\n    genre {\n      id\n      name\n    }\n  }\n}\n": typeof types.SongDocument,
-    "\n  query Users {\n    users {\n      id  \n      name\n    }\n  }\n": typeof types.UsersDocument,
-    "\n  query User($id: ID!) {\n    user(id: $id) {\n      id  \n    name\n    songsCount\n      songs {\n        id\n        name\n      }\n    }\n  }\n": typeof types.UserDocument,
-    "\n  fragment userFragment on User {\n    id  \n    name\n    songsCount\n  }\n": typeof types.UserFragmentFragmentDoc,
+    "\n  query Genre($id: String!) {\n    genre(id: $id) {\n      id\n      name\n      songs {\n        id\n        name\n        author {\n          id\n          name\n        }\n      }\n    }\n  }\n": typeof types.GenreDocument,
+    "\n  query Songs($genreId: String) {\n    songs(genreId: $genreId) {\n      authorId\n      id\n      name\n      author {\n        email\n        id\n        name\n      }\n      genre {\n        id\n        name\n      }\n    }\n  }\n": typeof types.SongsDocument,
+    "\n  query Song($id: String!) {\n    song(id: $id) {\n      id\n      name\n      author {\n        id\n        name\n      }\n      genre {\n        id\n        name\n      }\n    }\n  }\n": typeof types.SongDocument,
+    "\n  query Users {\n    users {\n      id\n      name\n      email\n    }\n  }\n": typeof types.UsersDocument,
+    "\n  query User($id: String!) {\n    user(id: $id) {\n      id\n      email\n      name\n      songs {\n        id\n        name\n      }\n    }\n  }\n": typeof types.UserDocument,
 };
 const documents: Documents = {
-    "\n    mutation CreateGenre($input: CreateGenreInput!) {\n        createGenre(input: $input) {\n            success\n            genre {\n                id\n                name\n            }\n        }\n    }    \n": types.CreateGenreDocument,
-    "\n    mutation DeleteGenre($deleteGenreId: ID!) {\n        deleteGenre(id: $deleteGenreId) {\n            success\n            id\n        }\n}\n": types.DeleteGenreDocument,
-    "\n    mutation CreateSong($input: CreateSongInput!) {\n        createSong(input: $input) {\n            success\n            song {\n            id\n            name\n            user {\n                id\n                name\n            }\n            genre {\n                id\n                name\n            }\n            }\n        }\n    } \n": types.CreateSongDocument,
-    "\n    mutation UpdateSong($input: UpdateSongInput!, $updateSongId: ID!) {\n        updateSong(input: $input, id: $updateSongId) {\n            success\n            song {\n                name\n                user {\n                    name\n                }\n            }\n        }\n}   \n": types.UpdateSongDocument,
-    "\n    mutation DeleteSong($deleteSongId: ID!) {\n        deleteSong(id: $deleteSongId) {\n            success\n            id\n        }\n    }\n": types.DeleteSongDocument,
-    "\n  mutation CreateUser($input: CreateUserInput!) {\n    createUser(input: $input) {\n      success\n      user {\n        id\n        name\n      }\n    }\n  }\n": types.CreateUserDocument,
+    "\n  mutation Login($loginInput: LoginInput!) {\n    login(loginInput: $loginInput) {\n      success\n      message\n    }\n  }\n": types.LoginDocument,
+    "\n  mutation Logout {\n    logout {\n        message\n        success\n    }\n}\n": types.LogoutDocument,
+    "\n  mutation CreateGenre($createGenreInput: CreateGenreInput!) {\n    createGenre(createGenreInput: $createGenreInput) {\n      id\n      name\n    }\n  }\n": types.CreateGenreDocument,
+    "\n  mutation UpdateGenre($updateGenreInput: UpdateGenreInput!) {\n    updateGenre(updateGenreInput: $updateGenreInput) {\n      id\n      name\n    }\n  }\n": types.UpdateGenreDocument,
+    "\n  mutation DeleteGenre($id: String!) {\n    removeGenre(id: $id)\n  }\n": types.DeleteGenreDocument,
+    "\n  mutation CreateSong($createSongInput: CreateSongInput!) {\n    createSong(createSongInput: $createSongInput) {\n      id\n      name\n      author {\n        id\n        name\n      }\n      genre {\n        id\n        name\n      }\n    }\n  }\n": types.CreateSongDocument,
+    "\n  mutation UpdateSong($updateSongInput: UpdateSongInput!) {\n    updateSong(updateSongInput: $updateSongInput) {\n      id\n      name\n      author {\n        id\n        name\n      }\n      genre {\n        id\n        name\n      }\n    }\n  }\n": types.UpdateSongDocument,
+    "\n  mutation DeleteSong($id: String!) {\n    removeSong(id: $id) {\n      success\n      id\n    }\n  }\n": types.DeleteSongDocument,
+    "\n  mutation CreateUser($registerInput: RegisterInput!) {\n    register(registerInput: $registerInput) {\n      id\n      name\n    }\n  }\n": types.CreateUserDocument,
+    "\n  query Me {\n    me {\n      id\n      name\n      email\n    }\n  }\n": types.MeDocument,
     "\n  query Genres {\n  genres {\n    id\n    name\n  }\n}\n": types.GenresDocument,
-    "\n  query Genre($id: ID!) {\n  genre(id: $id) {\n    id\n    name\n    songsCount\n    songs {\n      id\n      name\n      user {\n        id\n        name\n      }\n    }\n  }\n}\n": types.GenreDocument,
-    "\n  query Songs($limit: Int, $offset: Int, $genreId: ID) {\n  songs(limit: $limit, offset: $offset, genreId: $genreId) {\n    id\n    name\n    user {\n      id\n      name\n    }\n    genre {\n      id\n      name\n    }\n  }\n}\n": types.SongsDocument,
-    "\n  query Song($id: ID!) {\n  song(id: $id) {\n    name\n    user {\n      id\n      name \n    }\n    genre {\n      id\n      name\n    }\n  }\n}\n": types.SongDocument,
-    "\n  query Users {\n    users {\n      id  \n      name\n    }\n  }\n": types.UsersDocument,
-    "\n  query User($id: ID!) {\n    user(id: $id) {\n      id  \n    name\n    songsCount\n      songs {\n        id\n        name\n      }\n    }\n  }\n": types.UserDocument,
-    "\n  fragment userFragment on User {\n    id  \n    name\n    songsCount\n  }\n": types.UserFragmentFragmentDoc,
+    "\n  query Genre($id: String!) {\n    genre(id: $id) {\n      id\n      name\n      songs {\n        id\n        name\n        author {\n          id\n          name\n        }\n      }\n    }\n  }\n": types.GenreDocument,
+    "\n  query Songs($genreId: String) {\n    songs(genreId: $genreId) {\n      authorId\n      id\n      name\n      author {\n        email\n        id\n        name\n      }\n      genre {\n        id\n        name\n      }\n    }\n  }\n": types.SongsDocument,
+    "\n  query Song($id: String!) {\n    song(id: $id) {\n      id\n      name\n      author {\n        id\n        name\n      }\n      genre {\n        id\n        name\n      }\n    }\n  }\n": types.SongDocument,
+    "\n  query Users {\n    users {\n      id\n      name\n      email\n    }\n  }\n": types.UsersDocument,
+    "\n  query User($id: String!) {\n    user(id: $id) {\n      id\n      email\n      name\n      songs {\n        id\n        name\n      }\n    }\n  }\n": types.UserDocument,
 };
 
 /**
@@ -61,27 +67,43 @@ export function gql(source: string): unknown;
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n    mutation CreateGenre($input: CreateGenreInput!) {\n        createGenre(input: $input) {\n            success\n            genre {\n                id\n                name\n            }\n        }\n    }    \n"): (typeof documents)["\n    mutation CreateGenre($input: CreateGenreInput!) {\n        createGenre(input: $input) {\n            success\n            genre {\n                id\n                name\n            }\n        }\n    }    \n"];
+export function gql(source: "\n  mutation Login($loginInput: LoginInput!) {\n    login(loginInput: $loginInput) {\n      success\n      message\n    }\n  }\n"): (typeof documents)["\n  mutation Login($loginInput: LoginInput!) {\n    login(loginInput: $loginInput) {\n      success\n      message\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n    mutation DeleteGenre($deleteGenreId: ID!) {\n        deleteGenre(id: $deleteGenreId) {\n            success\n            id\n        }\n}\n"): (typeof documents)["\n    mutation DeleteGenre($deleteGenreId: ID!) {\n        deleteGenre(id: $deleteGenreId) {\n            success\n            id\n        }\n}\n"];
+export function gql(source: "\n  mutation Logout {\n    logout {\n        message\n        success\n    }\n}\n"): (typeof documents)["\n  mutation Logout {\n    logout {\n        message\n        success\n    }\n}\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n    mutation CreateSong($input: CreateSongInput!) {\n        createSong(input: $input) {\n            success\n            song {\n            id\n            name\n            user {\n                id\n                name\n            }\n            genre {\n                id\n                name\n            }\n            }\n        }\n    } \n"): (typeof documents)["\n    mutation CreateSong($input: CreateSongInput!) {\n        createSong(input: $input) {\n            success\n            song {\n            id\n            name\n            user {\n                id\n                name\n            }\n            genre {\n                id\n                name\n            }\n            }\n        }\n    } \n"];
+export function gql(source: "\n  mutation CreateGenre($createGenreInput: CreateGenreInput!) {\n    createGenre(createGenreInput: $createGenreInput) {\n      id\n      name\n    }\n  }\n"): (typeof documents)["\n  mutation CreateGenre($createGenreInput: CreateGenreInput!) {\n    createGenre(createGenreInput: $createGenreInput) {\n      id\n      name\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n    mutation UpdateSong($input: UpdateSongInput!, $updateSongId: ID!) {\n        updateSong(input: $input, id: $updateSongId) {\n            success\n            song {\n                name\n                user {\n                    name\n                }\n            }\n        }\n}   \n"): (typeof documents)["\n    mutation UpdateSong($input: UpdateSongInput!, $updateSongId: ID!) {\n        updateSong(input: $input, id: $updateSongId) {\n            success\n            song {\n                name\n                user {\n                    name\n                }\n            }\n        }\n}   \n"];
+export function gql(source: "\n  mutation UpdateGenre($updateGenreInput: UpdateGenreInput!) {\n    updateGenre(updateGenreInput: $updateGenreInput) {\n      id\n      name\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateGenre($updateGenreInput: UpdateGenreInput!) {\n    updateGenre(updateGenreInput: $updateGenreInput) {\n      id\n      name\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n    mutation DeleteSong($deleteSongId: ID!) {\n        deleteSong(id: $deleteSongId) {\n            success\n            id\n        }\n    }\n"): (typeof documents)["\n    mutation DeleteSong($deleteSongId: ID!) {\n        deleteSong(id: $deleteSongId) {\n            success\n            id\n        }\n    }\n"];
+export function gql(source: "\n  mutation DeleteGenre($id: String!) {\n    removeGenre(id: $id)\n  }\n"): (typeof documents)["\n  mutation DeleteGenre($id: String!) {\n    removeGenre(id: $id)\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  mutation CreateUser($input: CreateUserInput!) {\n    createUser(input: $input) {\n      success\n      user {\n        id\n        name\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation CreateUser($input: CreateUserInput!) {\n    createUser(input: $input) {\n      success\n      user {\n        id\n        name\n      }\n    }\n  }\n"];
+export function gql(source: "\n  mutation CreateSong($createSongInput: CreateSongInput!) {\n    createSong(createSongInput: $createSongInput) {\n      id\n      name\n      author {\n        id\n        name\n      }\n      genre {\n        id\n        name\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation CreateSong($createSongInput: CreateSongInput!) {\n    createSong(createSongInput: $createSongInput) {\n      id\n      name\n      author {\n        id\n        name\n      }\n      genre {\n        id\n        name\n      }\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation UpdateSong($updateSongInput: UpdateSongInput!) {\n    updateSong(updateSongInput: $updateSongInput) {\n      id\n      name\n      author {\n        id\n        name\n      }\n      genre {\n        id\n        name\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateSong($updateSongInput: UpdateSongInput!) {\n    updateSong(updateSongInput: $updateSongInput) {\n      id\n      name\n      author {\n        id\n        name\n      }\n      genre {\n        id\n        name\n      }\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation DeleteSong($id: String!) {\n    removeSong(id: $id) {\n      success\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation DeleteSong($id: String!) {\n    removeSong(id: $id) {\n      success\n      id\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation CreateUser($registerInput: RegisterInput!) {\n    register(registerInput: $registerInput) {\n      id\n      name\n    }\n  }\n"): (typeof documents)["\n  mutation CreateUser($registerInput: RegisterInput!) {\n    register(registerInput: $registerInput) {\n      id\n      name\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  query Me {\n    me {\n      id\n      name\n      email\n    }\n  }\n"): (typeof documents)["\n  query Me {\n    me {\n      id\n      name\n      email\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -89,27 +111,23 @@ export function gql(source: "\n  query Genres {\n  genres {\n    id\n    name\n 
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query Genre($id: ID!) {\n  genre(id: $id) {\n    id\n    name\n    songsCount\n    songs {\n      id\n      name\n      user {\n        id\n        name\n      }\n    }\n  }\n}\n"): (typeof documents)["\n  query Genre($id: ID!) {\n  genre(id: $id) {\n    id\n    name\n    songsCount\n    songs {\n      id\n      name\n      user {\n        id\n        name\n      }\n    }\n  }\n}\n"];
+export function gql(source: "\n  query Genre($id: String!) {\n    genre(id: $id) {\n      id\n      name\n      songs {\n        id\n        name\n        author {\n          id\n          name\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query Genre($id: String!) {\n    genre(id: $id) {\n      id\n      name\n      songs {\n        id\n        name\n        author {\n          id\n          name\n        }\n      }\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query Songs($limit: Int, $offset: Int, $genreId: ID) {\n  songs(limit: $limit, offset: $offset, genreId: $genreId) {\n    id\n    name\n    user {\n      id\n      name\n    }\n    genre {\n      id\n      name\n    }\n  }\n}\n"): (typeof documents)["\n  query Songs($limit: Int, $offset: Int, $genreId: ID) {\n  songs(limit: $limit, offset: $offset, genreId: $genreId) {\n    id\n    name\n    user {\n      id\n      name\n    }\n    genre {\n      id\n      name\n    }\n  }\n}\n"];
+export function gql(source: "\n  query Songs($genreId: String) {\n    songs(genreId: $genreId) {\n      authorId\n      id\n      name\n      author {\n        email\n        id\n        name\n      }\n      genre {\n        id\n        name\n      }\n    }\n  }\n"): (typeof documents)["\n  query Songs($genreId: String) {\n    songs(genreId: $genreId) {\n      authorId\n      id\n      name\n      author {\n        email\n        id\n        name\n      }\n      genre {\n        id\n        name\n      }\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query Song($id: ID!) {\n  song(id: $id) {\n    name\n    user {\n      id\n      name \n    }\n    genre {\n      id\n      name\n    }\n  }\n}\n"): (typeof documents)["\n  query Song($id: ID!) {\n  song(id: $id) {\n    name\n    user {\n      id\n      name \n    }\n    genre {\n      id\n      name\n    }\n  }\n}\n"];
+export function gql(source: "\n  query Song($id: String!) {\n    song(id: $id) {\n      id\n      name\n      author {\n        id\n        name\n      }\n      genre {\n        id\n        name\n      }\n    }\n  }\n"): (typeof documents)["\n  query Song($id: String!) {\n    song(id: $id) {\n      id\n      name\n      author {\n        id\n        name\n      }\n      genre {\n        id\n        name\n      }\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query Users {\n    users {\n      id  \n      name\n    }\n  }\n"): (typeof documents)["\n  query Users {\n    users {\n      id  \n      name\n    }\n  }\n"];
+export function gql(source: "\n  query Users {\n    users {\n      id\n      name\n      email\n    }\n  }\n"): (typeof documents)["\n  query Users {\n    users {\n      id\n      name\n      email\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query User($id: ID!) {\n    user(id: $id) {\n      id  \n    name\n    songsCount\n      songs {\n        id\n        name\n      }\n    }\n  }\n"): (typeof documents)["\n  query User($id: ID!) {\n    user(id: $id) {\n      id  \n    name\n    songsCount\n      songs {\n        id\n        name\n      }\n    }\n  }\n"];
-/**
- * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function gql(source: "\n  fragment userFragment on User {\n    id  \n    name\n    songsCount\n  }\n"): (typeof documents)["\n  fragment userFragment on User {\n    id  \n    name\n    songsCount\n  }\n"];
+export function gql(source: "\n  query User($id: String!) {\n    user(id: $id) {\n      id\n      email\n      name\n      songs {\n        id\n        name\n      }\n    }\n  }\n"): (typeof documents)["\n  query User($id: String!) {\n    user(id: $id) {\n      id\n      email\n      name\n      songs {\n        id\n        name\n      }\n    }\n  }\n"];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};

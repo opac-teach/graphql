@@ -1,24 +1,32 @@
 "use client";
 
+import Loading from "@/components/Loading";
+import ModalCreate from "@/components/ModalCreate";
+import { CREATE_USER } from "@/requetes/mutations";
+import { GET_USERS } from "@/requetes/queries";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import Link from "next/link";
-import Loading from "@/components/Loading";
-import { GET_USERS } from "@/requetes/queries";
-import { CREATE_USER } from "@/requetes/mutations";
-import ModalCreate from "@/components/ModalCreate";
-import { z } from "zod";
 import { toast } from "sonner";
+import { z } from "zod";
 
 const userSchema = z.object({
   name: z.string().min(2),
+  email: z.string().email(),
+  password: z.string().min(2),
 });
+
+type Register = {
+  name: string;
+  email: string;
+  password: string;
+};
 
 export default function Users() {
   const { data, loading, error } = useQuery(GET_USERS);
 
   const [mutateFunction] = useMutation(CREATE_USER, {
     update(cache, { data }) {
-      const newUser = data?.createUser?.user;
+      const newUser = data?.register;
       if (!newUser) return;
 
       cache.modify({
@@ -40,13 +48,19 @@ export default function Users() {
       });
     },
     onCompleted: (data) => {
-      toast.success(`User ${data.createUser.user.name} created successfully!`);
+      toast.success(`User ${data.register.name} created successfully!`);
     },
   });
 
-  const create = async (values: { name: string }) => {
+  const create = async (values: Register) => {
     await mutateFunction({
-      variables: { input: { name: values.name } },
+      variables: {
+        registerInput: {
+          name: values.name,
+          email: values.email,
+          password: values.password,
+        },
+      },
     });
   };
 
@@ -61,7 +75,7 @@ export default function Users() {
           title="user"
           schema={userSchema}
           onConfirm={create}
-          defaultValues={{ name: "" }}
+          defaultValues={{ name: "", email: "", password: "" }}
         />
       </div>
       <div className="flex gap-2 mt-2">

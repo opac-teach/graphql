@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
 import { AuthModule } from './auth/auth.module';
 import { databaseConfig } from './config';
+import { GenreModule } from './genre/genre.module';
 import { SongModule } from './song/song.module';
 import { UserModule } from './user/user.module';
 
@@ -26,6 +27,7 @@ import { UserModule } from './user/user.module';
     SongModule,
     UserModule,
     AuthModule,
+    GenreModule,
   ],
 })
 export class AppModule {}

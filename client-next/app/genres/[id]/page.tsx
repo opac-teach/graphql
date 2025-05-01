@@ -66,19 +66,17 @@ export default function Page() {
       <div className="flex justify-between items-center">
         <div>
           <h2>{data?.genre.name}</h2>
-          <p>Number of songs: {data?.genre.songsCount}</p>
+          {/* <p>Number of songs: {data?.genre.songsCount}</p> */}
         </div>
         {isAdmin && (
           <ModalConfirmDelete
             title="genre"
-            onDelete={() =>
-              deleteGenreMutation({ variables: { deleteGenreId: id } })
-            }
+            onDelete={() => deleteGenreMutation({ variables: { id } })}
           />
         )}
       </div>
       <div className="flex gap-2 flex-wrap justify-center mt-4">
-        {data?.genre.songs.map((song) => (
+        {data?.genre?.songs.map((song) => (
           <SongCard key={song.id} song={{ ...song, genre: data?.genre }} />
         ))}
       </div>

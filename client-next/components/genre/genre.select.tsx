@@ -1,4 +1,6 @@
+import { GET_GENRES } from "@/requetes/queries";
 import { useQuery } from "@apollo/client";
+import Loading from "../Loading";
 import {
   Select,
   SelectContent,
@@ -8,8 +10,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { GET_GENRES } from "@/requetes/queries";
-import Loading from "../Loading";
 
 export default function SelectGenre({
   onChange,
@@ -43,11 +43,7 @@ export default function SelectGenre({
       <SelectContent>
         <SelectGroup>
           <SelectLabel>Genres</SelectLabel>
-          {withAll && (
-            <SelectItem value="all" className="text-gray-500">
-              All Genres
-            </SelectItem>
-          )}
+          {withAll && <SelectItem value="all">All Genres</SelectItem>}
           {data?.genres?.map((genre) => (
             <SelectItem key={genre.id} value={genre.id}>
               {genre.name}
