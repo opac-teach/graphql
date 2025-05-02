@@ -8,6 +8,7 @@ const config: CodegenConfig = {
       config: {
         contextType: "./index#ResolversContext",
         mappers: {
+          Genre: "./datasource#DBGenre",
           User: "./datasource#DBUser",
           Song: "./datasource#DBSong",
         },
