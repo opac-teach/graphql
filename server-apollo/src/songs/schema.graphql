@@ -3,9 +3,76 @@ type Song {
   id: ID!
   "The name of the song"
   name: String!
+  "The name of the user"
+  user(pagination: PaginationInput): User
+  "The name of the genre"
+  genres: Genre!
 }
 
 type Query {
   "Get all songs"
-  songs: [Song!]!
+  songs(genreId: ID, pagination: PaginationInput): [Song!]!
+  "Get song by Id"
+  song(id: ID!): Song!
+}
+
+type Mutation {
+  "Create a new song"
+  createSong(input: CreateSongInput!): CreateSongResponse!
+  "Update a song"
+  updateSong(input: UpdateSongInput!): UpdateSongResponse!
+  "Delete a song"
+  deleteSong(input: DeleteSongInput!): DeleteSongResponse!
+
+}
+
+"""
+The input for creating a new song
+"""
+input CreateSongInput {
+  "The name of the song"
+  name: String!
+  userId: String!
+  genreId: String!
+}
+
+type CreateSongResponse {
+  "Whether the song was created successfully"
+  success: Boolean!
+  "The created song"
+  song: Song!
+}
+"""
+The input for updating a song
+"""
+input UpdateSongInput {
+  "The name of the Song"
+  name: String!
+}
+
+type UpdateSongResponse {
+  "Whether the Song was updating successfully"
+  success: Boolean!
+  "The updated Song"
+  song: Song!
+}
+
+
+"""
+The input for deleting a Song
+"""
+input DeleteSongInput {
+  "The name of the Song"
+  name: String!
+}
+type DeleteSongResponse {
+  "Whether the Song was delete successfully"
+  success: Boolean!
+  "The deleted Song"
+  song: Song!
+}
+
+input PaginationInput {
+  page: Int = 1
+  pageSize: Int = 10
 }
