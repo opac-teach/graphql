@@ -34,13 +34,13 @@ export const songResolvers: Resolvers = {
       updateSong: (_, {id, input }, { dataSources, userId }) => {
           const song = dataSources.db.song.findById(id)
           if (song.userId !== userId) return {
-              success: false,
-              song: null
+            success: false,
+            song: null
           }
           const updatedSong = dataSources.db.song.update(id, input)
           return {
-              success: true,
-              song: updatedSong
+            success: true,
+            song: updatedSong
           }
       }
   }

@@ -20,7 +20,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { gql } from "@/lib/graphql";
 import { useMutation, useQuery } from "@apollo/client";
+import {createApolloClient} from "@/lib/apollo";
 
+const client = createApolloClient();
 
 const GET_GENRES = gql(`
     query Genres {

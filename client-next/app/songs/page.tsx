@@ -5,6 +5,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { gql } from "@/lib/graphql";
 import CreateSongForm from "./CreateSongForm";
+
 import {
   Select,
   SelectContent,
@@ -12,6 +13,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+
+import {createApolloClient} from "@/lib/apollo";
+
+const client = createApolloClient();
 
 const GET_SONGS = gql(`
   query Songs ($pagination: PaginationInput){
@@ -27,6 +32,11 @@ const GET_SONGS = gql(`
     }
   }
 `);
+
+const cache = client.cache.readQuery({
+  query: GET_SONGS,
+});
+console.log(cache)
 
 export default function Songs() {
   const [page, setPage] = useState(0);
