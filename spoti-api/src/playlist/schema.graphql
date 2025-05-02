@@ -1,0 +1,20 @@
+type Track {
+  name: String!
+  artist: String!
+  album: String!
+  albumImage: String!
+  previewUrl: String
+}
+
+type Playlist {
+  id: String
+  name: String
+  image: String
+  url: String
+  tracks: [Track]
+}
+
+type Query {
+  mePlaylists: [Playlist]
+  playlistTracks(playlistId: String!): [Track]
+}

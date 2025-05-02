@@ -1,0 +1,8 @@
+type Profile {
+  displayName: String!
+  image: String
+}
+
+type Query {
+  meProfil: Profile
+}

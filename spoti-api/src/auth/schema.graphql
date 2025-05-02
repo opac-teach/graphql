@@ -1,0 +1,3 @@
+type Mutation {
+  authenticate(code: String!, codeVerifier: String!): String!
+}

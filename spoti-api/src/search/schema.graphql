@@ -1,0 +1,26 @@
+type SearchResult {
+  tracks: [Track!]!
+  albums: [Album!]!
+  artists: [Artist!]!
+}
+
+type Track {
+  id: ID!
+  name: String!
+  artists: [String!]!
+}
+
+type Album {
+  id: ID!
+  name: String!
+  artists: [String!]!
+}
+
+type Artist {
+  id: ID!
+  name: String!
+}
+
+type Query {
+  searchSpotify(query: String!): SearchResult!
+}

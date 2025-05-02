@@ -1,0 +1,14 @@
+# src/schema.graphql
+
+type Query {
+  searchArtist: String!
+  getAlbum(id: String!): Album!
+}
+
+type Album {
+  name: String!
+  release_date: String!
+  images: [String!]!
+  artists: [String!]!
+  tracks: [String!]!
+}
