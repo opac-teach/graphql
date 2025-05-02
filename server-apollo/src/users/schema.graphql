@@ -4,12 +4,14 @@ type User {
   "The name of the user"
   name: String!
   "The songs of the user"
-  songs: [Song!]!
+  songs(pagination: PaginationInput): [Song!]!
+  "Count song of the user"
+  songsCount: Int
 }
 
 type Query {
   "Get all users"
-  users: [User!]!
+  users(pagination: PaginationInput): [User!]!
   "Get a user by ID"
   user(id: ID!): User!
 }
@@ -17,6 +19,10 @@ type Query {
 type Mutation {
   "Create a new user"
   createUser(input: CreateUserInput!): CreateUserResponse!
+  "Update a user"
+  updateUser(id: ID!, input: CreateUserInput): CreateUserResponse!
+  "Delete a user"
+  deleteUser(id: ID!): DeleteUserResponse!
 }
 
 """
@@ -26,10 +32,22 @@ input CreateUserInput {
   "The name of the user"
   name: String!
 }
+"""
+The input for paginate user
+"""
+input PaginationInput {
+  page: Int = 1
+  pageSize: Int = 5
+}
 
 type CreateUserResponse {
   "Whether the user was created successfully"
   success: Boolean!
   "The created user"
   user: User!
+}
+
+type DeleteUserResponse {
+  "Whether the user was deleted successfully"
+  success: Boolean!
 }
