@@ -18,30 +18,32 @@ export class PlaylistsService {
     return await apisConnect.searchPlaylists(query, StreamingServices.SPOTIFY);
   }
 
-  async getPlaylistTracks(playlistId: string, userId: string) {
-    return await apisConnect.getPlaylistTracks(
-      playlistId,
-      10,
-      0,
-      StreamingServices.SPOTIFY,
-    );
+  async getPlaylistTracks(
+    playlistId: string,
+    userId: string,
+    platform: StreamingServices,
+  ) {
+    return await apisConnect.getPlaylistTracks(playlistId, 10, 0, platform);
   }
 
-  async getUserPlaylists(userId: string) {
+  async getUserPlaylists(userId: string, platform: StreamingServices) {
     const client = this.redisService.getClient();
     const cacheKey = `spotify_token:${userId}`;
     const cachedToken = await client.get(cacheKey);
+    console.log('cacheKey', cacheKey);
+    console.log('cachedToken', cachedToken);
     if (!cachedToken) throw new Error('No token found for user');
     const tokenData = JSON.parse(cachedToken);
     const accessToken = tokenData.token;
-    return await apisConnect.getUserPlaylists(
-      accessToken,
-      userId,
-      StreamingServices.SPOTIFY,
-    );
+    return await apisConnect.getUserPlaylists(accessToken, userId, platform);
   }
 
-  async addSongToPlaylist(playlistId: string, songId: string, userId: string) {
+  async addSongToPlaylist(
+    playlistId: string,
+    songId: string,
+    userId: string,
+    platform: StreamingServices,
+  ) {
     const client = this.redisService.getClient();
     const cacheKey = `spotify_token:${userId}`;
     const cachedToken = await client.get(cacheKey);
@@ -53,7 +55,7 @@ export class PlaylistsService {
       songId,
       accessToken,
       userId,
-      StreamingServices.SPOTIFY,
+      platform,
     );
   }
 
@@ -61,6 +63,7 @@ export class PlaylistsService {
     playlistId: string,
     songId: string,
     userId: string,
+    platform: StreamingServices,
   ) {
     const client = this.redisService.getClient();
     const cacheKey = `spotify_token:${userId}`;
@@ -73,7 +76,7 @@ export class PlaylistsService {
       songId,
       accessToken,
       userId,
-      StreamingServices.SPOTIFY,
+      platform,
     );
   }
 }

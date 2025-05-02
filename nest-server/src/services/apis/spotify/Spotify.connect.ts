@@ -182,6 +182,7 @@ export class SpotifyConnect implements IApisConnect {
     userId: string,
   ): Promise<Playlist[]> {
     const url = `${this.baseUrl}/me/playlists?limit=10&offset=0`;
+    console.log('url', url);
     const response = await fetch(url, {
       method: 'GET',
       headers: {

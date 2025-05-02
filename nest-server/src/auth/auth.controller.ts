@@ -54,6 +54,11 @@ export class AuthController {
       state,
     });
 
+    console.log(
+      'redirecting to: ',
+      `https://accounts.spotify.com/authorize?${params}`,
+    );
+
     return res.redirect(`https://accounts.spotify.com/authorize?${params}`);
   }
 

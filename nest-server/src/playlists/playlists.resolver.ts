@@ -12,6 +12,7 @@ import { Playlist } from './entities/playlist.entity';
 import { Song } from 'src/songs/entities/song.entity';
 import { Req } from '@nestjs/common';
 import { PlaylistsService } from './playlists.service';
+import { StreamingServices } from 'src/enums/streaming-services.enum';
 
 @Resolver(() => Playlist)
 export class PlaylistsResolver {
@@ -20,6 +21,7 @@ export class PlaylistsResolver {
   @Query(() => [Playlist], { name: 'playlists' })
   async findAll(
     @Args('query') query: string,
+    @Args('plateform') platform: StreamingServices,
     @Context() context: { req: { userId: string } },
   ) {
     const userId = context.req.userId;
@@ -29,24 +31,30 @@ export class PlaylistsResolver {
   @ResolveField(() => [Song])
   async songs(
     @Parent() playlist: Playlist,
+    @Args('plateform') platform: StreamingServices,
     @Context() context: { req: { userId: string } },
   ) {
     return await this.playlistsService.getPlaylistTracks(
       playlist.id,
       context.req.userId,
+      platform,
     );
   }
 
   @Query(() => [Playlist], { name: 'myplaylists' })
-  async findMyPlaylists(@Context() context: { req: { userId: string } }) {
+  async findMyPlaylists(
+    @Args('plateform') platform: StreamingServices,
+    @Context() context: { req: { userId: string } },
+  ) {
     const userId = context.req.userId;
-    return await this.playlistsService.getUserPlaylists(userId);
+    return await this.playlistsService.getUserPlaylists(userId, platform);
   }
 
   @Mutation(() => Playlist, { name: 'addSongToPlaylist' })
   async addSongToPlaylist(
     @Args('playlistId') playlistId: string,
     @Args('songId') songId: string,
+    @Args('plateform') platform: StreamingServices,
     @Context() context: { req: { userId: string } },
   ) {
     const userId = context.req.userId;
@@ -54,6 +62,7 @@ export class PlaylistsResolver {
       playlistId,
       songId,
       userId,
+      platform,
     );
   }
 
@@ -61,6 +70,7 @@ export class PlaylistsResolver {
   async removeSongFromPlaylist(
     @Args('playlistId') playlistId: string,
     @Args('songId') songId: string,
+    @Args('plateform') platform: StreamingServices,
     @Context() context: { req: { userId: string } },
   ) {
     const userId = context.req.userId;
@@ -68,6 +78,7 @@ export class PlaylistsResolver {
       playlistId,
       songId,
       userId,
+      platform,
     );
   }
 }

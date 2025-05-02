@@ -25,13 +25,12 @@ export class AuthMiddleware implements NestMiddleware {
         req['userId'] = payload.sub;
         const client = this.redisService.getClient();
         const cacheKey = `token:${payload.sub}`;
+        next();
       } catch (error) {
         res.status(401).json({ message: 'Unauthorized' });
         return;
       }
     }
-
-    next();
   }
 
   private extractTokenFromHeader(request: Request): string | undefined {

@@ -30,17 +30,17 @@ type Playlist {
   name: String!
   description: String
   coverImageUrl: String
-  songs: [Song!]
+  songs(plateform: String!): [Song!]
 }
 
 type Query {
   songs(query: String!): [Song!]!
   artists(query: String!): [Artist!]!
-  playlists(query: String!): [Playlist!]!
-  myplaylists: [Playlist!]!
+  playlists(query: String!, plateform: String!): [Playlist!]!
+  myplaylists(plateform: String!): [Playlist!]!
 }
 
 type Mutation {
-  addSongToPlaylist(playlistId: String!, songId: String!): Playlist!
-  removeSongFromPlaylist(playlistId: String!, songId: String!): Playlist!
+  addSongToPlaylist(playlistId: String!, songId: String!, plateform: String!): Playlist!
+  removeSongFromPlaylist(playlistId: String!, songId: String!, plateform: String!): Playlist!
 }
