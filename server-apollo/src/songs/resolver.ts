@@ -3,8 +3,115 @@ import { Resolvers } from "../types";
 
 export const songResolvers: Resolvers = {
   Query: {
-    songs: (_, __, { dataSources }) => {
-      return dataSources.db.song.findMany();
+    songs: (_, {genreId, pagination}, { dataSources }) => {
+      const genre_id = genreId ? { genreId } : {}
+
+      const {page=1, limit=10} = pagination || {};
+      const offset = (page - 1) * limit;
+
+      return dataSources.db.song.findMany(genre_id, {
+        offset: offset,
+        limit: limit,
+      });
+    },
+
+    song: (_, { id }, { dataSources }) => {
+      return dataSources.db.song.findById(id);
     },
   },
+  Song: {
+    user: async(parent, _, { loaders }) => {
+      const userId = parent.userId;
+      if (!userId) {
+        throw new GraphQLError("Song does not have a userId");
+      }
+      return loaders.users.load(userId);
+    },
+    genre: async(parent, _, { loaders }) => {
+      const genreId = parent.genreId;
+      if (!genreId) {
+        throw new GraphQLError("Song does not have a genreId");
+      }
+      return loaders.genres.load(genreId);
+    },
+  },
+
+  Mutation: {
+    createSong: (_, { input }, { dataSources, userId }) => {
+
+      if (!userId){
+        throw new GraphQLError("Not authenticated");
+      }
+      if (!input.name) {
+        throw new GraphQLError("Song name is required");
+      }
+
+      const {name, genreId} = input;
+      try {
+        const songData = {
+          name,
+          userId,
+          ...(genreId && { genreId }),
+        };
+        const song = dataSources.db.song.create(songData);
+        return {
+          success: true,
+          song,
+        };
+      } catch (e) {
+        console.error(e);
+        throw new GraphQLError("Failed to create song");
+      }
+    },
+
+    deleteSong: (_, { id }, { dataSources, userId }) => {
+      const song = dataSources.db.song.findById(id);
+      if (!song) {
+        return {
+          success: false,
+          message: `Song ${song} not found.`,
+        };
+      }
+      if (song.userId !== userId) {
+        throw new GraphQLError("Unauthorized to delete this song.");
+      }
+      dataSources.db.song.delete(id);
+      return {
+        success: true,
+        message: "Song deleted successfully",
+        song: song
+      };
+    },
+
+    updateSong: (_, { id, input }, { dataSources, userId }) => {
+      const song = dataSources.db.song.findById(id);
+      if (!song) {
+        return {
+          success: false,
+          message: `Song ${song} not found.`,
+        };
+      }
+
+      if (song.userId !== userId) {
+        throw new GraphQLError("Unauthorized to update this song.");
+      }
+
+      try {
+        const updatedSong = dataSources.db.song.update(id, {
+          ...input,
+          userId: input.userId !== undefined ? input.userId : song.userId,
+        });
+        return {
+          success: true,
+          message: "Song updated successfully",
+          song: updatedSong
+        };
+      } catch(e) {
+        console.error(e);
+        throw new GraphQLError("Failed to update song");
+      }
+    },
+  }
+
 };
+
