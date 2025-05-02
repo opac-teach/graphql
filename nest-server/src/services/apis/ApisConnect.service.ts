@@ -21,7 +21,6 @@ export class ApisConnect implements IApisConnect {
   ): SpotifyConnect | DeezerConnect | YoutubeConnect {
     switch (serviceName) {
       case StreamingServices.SPOTIFY:
-        console.log(this.spotityInstance);
         return this.spotityInstance;
       case StreamingServices.DEEZER:
         return this.deezerInstance;
@@ -79,7 +78,6 @@ export class ApisConnect implements IApisConnect {
     userId: string,
     serviceName: StreamingServices,
   ): Promise<Playlist[]> {
-    console.log(serviceName);
     return await this.getInstance(serviceName).getUserPlaylists(
       userAccessToken,
       userId,
@@ -114,5 +112,43 @@ export class ApisConnect implements IApisConnect {
       userAccessToken,
       userId,
     );
+  }
+
+  public async convertSpotifyPlayslitToYoutube(
+    spotifyAccessToken: string,
+    youtubeAccessToken: string,
+    spotifyPlaylistId: string,
+  ): Promise<Playlist> {
+    const spotifyPlaylist = await this.spotityInstance.getUserPlaylistsById(
+      spotifyAccessToken,
+      spotifyPlaylistId,
+      true,
+    );
+    const spotifyPlaylistSongs = spotifyPlaylist.songs;
+    const youtubePlaylist = await this.youtubeInstance.createPlaylist(
+      spotifyPlaylist.name,
+      youtubeAccessToken,
+    );
+
+    for (const song of spotifyPlaylistSongs as any[]) {
+      const query = `${song.name} ${song.artist}`;
+      const youtubeSongs = await this.youtubeInstance.searchSongs(query);
+      const youtubeSong = youtubeSongs[0];
+      await this.youtubeInstance.addSongToPlaylistById(
+        youtubePlaylist.id,
+        youtubeSong.id,
+        youtubeAccessToken,
+      );
+    }
+
+    const updatedYoutubePlaylist =
+      await this.youtubeInstance.getUserPlaylistsById(
+        youtubeAccessToken,
+        youtubePlaylist.id,
+      );
+
+    console.log(updatedYoutubePlaylist);
+
+    return updatedYoutubePlaylist;
   }
 }

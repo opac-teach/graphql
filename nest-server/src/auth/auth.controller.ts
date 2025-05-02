@@ -55,11 +55,6 @@ export class AuthController {
       state,
     });
 
-    console.log(
-      'redirecting to: ',
-      `https://accounts.spotify.com/authorize?${params}`,
-    );
-
     return res.redirect(`https://accounts.spotify.com/authorize?${params}`);
   }
 
@@ -95,8 +90,6 @@ export class AuthController {
     if (!code) {
       return res.status(400).send('No code found in query');
     }
-
-    console.log(user);
 
     await this.authService.storeSpotifyToken(userId, user.accessToken);
 

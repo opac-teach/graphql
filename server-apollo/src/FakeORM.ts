@@ -27,7 +27,6 @@ export class FakeORM<T extends DBModel> {
   }
 
   findById(loader: DataLoader<string, T>, id: string): Promise<T> {
-    console.log("findById", this.modelName, id);
     return loader.load(id);
   }
 

@@ -3,7 +3,7 @@ import { IApisConnect } from '../apisConnect.interface';
 import { Artist } from 'src/types/artist.type';
 import { Playlist } from 'src/types/playlist.type';
 
-export class DeezerConnect implements IApisConnect {
+export class DeezerConnect {
   private readonly clientId: string;
   private readonly clientSecret: string;
 

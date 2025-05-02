@@ -34,6 +34,7 @@ export class PlaylistsResolver {
     @Args('plateform') platform: StreamingServices,
     @Context() context: { req: { userId: string } },
   ) {
+    console.log(platform);
     return await this.playlistsService.getPlaylistTracks(
       playlist.id,
       context.req.userId,
@@ -79,6 +80,17 @@ export class PlaylistsResolver {
       songId,
       userId,
       platform,
+    );
+  }
+
+  @Mutation(() => Playlist, { name: 'convertSpotifyPlaylistToYoutube' })
+  async convertSpotifyPlaylistToYoutube(
+    @Args('spotifyPlaylistId') spotifyPlaylistId: string,
+    @Context() context: { req: { userId: string } },
+  ) {
+    return await this.playlistsService.convertSpotifyPlaylistToYoutube(
+      spotifyPlaylistId,
+      context.req.userId,
     );
   }
 }

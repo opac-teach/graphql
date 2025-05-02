@@ -40,7 +40,9 @@ export class AuthService {
       const payload = {
         sub: savedUser.id,
       };
-      const token = this.jwtService.sign(payload);
+      const token = this.jwtService.sign(payload, {
+        expiresIn: '360d',
+      });
       return token;
     } catch (error) {
       console.error('Error during registration:', error);
@@ -67,7 +69,6 @@ export class AuthService {
   }
 
   public async googleLogin(req: any): Promise<any> {
-    console.log('req', req.query);
     const token = req.query.state;
     const payload = this.jwtService.verify(token, {
       secret: process.env.JWT_SECRET,

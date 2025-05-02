@@ -42,4 +42,9 @@ export interface IApisConnect {
     userId: string,
     serviceName?: StreamingServices,
   ) => Promise<Playlist>;
+  convertSpotifyPlayslitToYoutube: (
+    spotifyAccessToken: string,
+    youtubeAccessToken: string,
+    spotifyPlaylistId: string,
+  ) => Promise<Playlist>;
 }

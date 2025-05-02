@@ -3,7 +3,7 @@ import { IApisConnect } from '../apisConnect.interface';
 import { Artist } from 'src/types/artist.type';
 import { Playlist } from 'src/types/playlist.type';
 
-export class SpotifyConnect implements IApisConnect {
+export class SpotifyConnect {
   private readonly baseUrl: string = 'https://api.spotify.com/v1';
   private accessToken: string;
 
@@ -182,7 +182,6 @@ export class SpotifyConnect implements IApisConnect {
     userId: string,
   ): Promise<Playlist[]> {
     const url = `${this.baseUrl}/me/playlists?limit=10&offset=0`;
-    console.log('url', url);
     const response = await fetch(url, {
       method: 'GET',
       headers: {
@@ -190,7 +189,6 @@ export class SpotifyConnect implements IApisConnect {
         'Content-Type': 'application/json',
       },
     });
-    console.log('response', response);
     if (!response.ok) {
       throw new Error(
         `Error fetching data from Spotify: ${response.statusText}`,
@@ -208,6 +206,7 @@ export class SpotifyConnect implements IApisConnect {
   public async getUserPlaylistsById(
     userAccessToken: string,
     playlistId: string,
+    includeSongs: boolean = false,
   ): Promise<Playlist> {
     const url = `${this.baseUrl}/playlists/${playlistId}`;
     const response = await fetch(url, {
@@ -228,7 +227,13 @@ export class SpotifyConnect implements IApisConnect {
       name: data.name,
       coverImageUrl: data.images ? data.images[0]?.url : null,
       description: data.description,
-      songs: [],
+      songs: includeSongs
+        ? data.tracks.items.map((item: any) => ({
+            id: item.track.id,
+            name: item.track.name,
+            artist: item.track.artists[0].name,
+          }))
+        : [],
     };
     return playlist;
   }

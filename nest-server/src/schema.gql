@@ -35,6 +35,7 @@ type Playlist {
 
 type Query {
   songs(query: String!): [Song!]!
+  getSongsConnectedUser(query: String!, plateform: String!): [Song!]!
   artists(query: String!): [Artist!]!
   playlists(query: String!, plateform: String!): [Playlist!]!
   myplaylists(plateform: String!): [Playlist!]!
@@ -43,4 +44,5 @@ type Query {
 type Mutation {
   addSongToPlaylist(playlistId: String!, songId: String!, plateform: String!): Playlist!
   removeSongFromPlaylist(playlistId: String!, songId: String!, plateform: String!): Playlist!
+  convertSpotifyPlaylistToYoutube(spotifyPlaylistId: String!): Playlist!
 }

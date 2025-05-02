@@ -63,4 +63,26 @@ export class PlaylistsService {
       platform,
     );
   }
+
+  public async convertSpotifyPlaylistToYoutube(
+    spotifyPlaylistId: string,
+    userId: string,
+  ) {
+    const spotifyAccessToken = await GetAccessToken.getToken(
+      userId,
+      StreamingServices.SPOTIFY,
+    );
+    const youtubeAccessToken = await GetAccessToken.getToken(
+      userId,
+      StreamingServices.YOUTUBE,
+    );
+    if (!spotifyAccessToken || !youtubeAccessToken) {
+      throw new Error('No token found for user');
+    }
+    return await apisConnect.convertSpotifyPlayslitToYoutube(
+      spotifyAccessToken,
+      youtubeAccessToken,
+      spotifyPlaylistId,
+    );
+  }
 }
