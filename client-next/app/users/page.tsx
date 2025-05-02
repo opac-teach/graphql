@@ -15,7 +15,7 @@ const GET_USERS = gql(`
 `);
 
 export default function Users() {
-  const { data, loading, error, refetch } = useQuery(GET_USERS);
+  const { data, loading, error, refetch } = useQuery(GET_USERS, {fetchPolicy: 'cache-and-network'});
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;

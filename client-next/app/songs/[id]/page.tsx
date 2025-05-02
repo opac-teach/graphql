@@ -8,7 +8,7 @@ import { useState } from "react";
 import FormSongUpdate from "./UpdateSongForm";
 import { gql } from "@/lib/graphql";
 
-const GET_SONGINFO = gql(`
+export const GET_SONGINFO = gql(`
   query Song($songId: ID!) {
     song(id: $songId) {
       id

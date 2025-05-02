@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { gql } from "@/lib/graphql";
+import { GET_SONGINFO } from "./page";
 
 const DELETE_SONG = gql(`
   mutation DeleteSong($id: ID!) {

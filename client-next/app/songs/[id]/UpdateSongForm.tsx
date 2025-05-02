@@ -114,7 +114,7 @@ export default function FormSongUpdate({ data_name, data_genreId, refetch }: { d
                         </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                        {dataG?.genres.map((genre: any) => (
+                        {dataG?.genres.map((genre: {id: string, name: string}) => (
                             <SelectItem key={genre.id} value={genre.id}>
                             {genre.name}
                             </SelectItem>

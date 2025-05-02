@@ -19,7 +19,7 @@ const GET_SONGS = gql(`
 `);
 
 export default function Songs() {
-  const { data, loading, error, refetch } = useQuery(GET_SONGS);
+  const { data, loading, error, refetch } = useQuery(GET_SONGS, {fetchPolicy: 'cache-and-network'});
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
