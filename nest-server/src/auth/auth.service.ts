@@ -60,20 +60,14 @@ export class AuthService {
   async storeSpotifyToken(userId: string, tokenData: any) {
     try {
       const client = this.redisService.getClient();
-      await client.set(
-        `spotify_token:${userId}`,
-        JSON.stringify({
-          token: tokenData,
-        }),
-        'EX',
-        3600,
-      );
+      await client.set(`spotify_token:${userId}`, tokenData, 'EX', 3600);
     } catch (error) {
       console.error('Error storing Spotify token:', error);
     }
   }
 
   public async googleLogin(req: any): Promise<any> {
+    console.log('req', req.query);
     const token = req.query.state;
     const payload = this.jwtService.verify(token, {
       secret: process.env.JWT_SECRET,
@@ -82,12 +76,8 @@ export class AuthService {
 
     const client = this.redisService.getClient();
     await client.set(
-      `google_token:${userId}`,
-      JSON.stringify({
-        accessToken: req.user.accessToken,
-        refreshToken: req.user.refreshToken,
-        expires_in: req.user.expires_in,
-      }),
+      `youtube_token:${userId}`,
+      req.user.accessToken,
       'EX',
       3600,
     );

@@ -6,23 +6,27 @@ import { SpotifyConnect } from './spotify/Spotify.connect';
 import { DeezerConnect } from './deezer/DeezerConnect';
 import { StreamingServices } from 'src/enums/streaming-services.enum';
 import { Injectable } from '@nestjs/common';
+import { YoutubeConnect } from './youtube/youtube.connect';
 
 @Injectable()
 export class ApisConnect implements IApisConnect {
   private spotityInstance: SpotifyConnect;
   private deezerInstance: DeezerConnect;
+  private youtubeInstance: YoutubeConnect;
 
   constructor() {}
 
   private getInstance(
     serviceName: StreamingServices,
-  ): SpotifyConnect | DeezerConnect {
+  ): SpotifyConnect | DeezerConnect | YoutubeConnect {
     switch (serviceName) {
       case StreamingServices.SPOTIFY:
         console.log(this.spotityInstance);
         return this.spotityInstance;
       case StreamingServices.DEEZER:
         return this.deezerInstance;
+      case StreamingServices.YOUTUBE:
+        return this.youtubeInstance;
       default:
         throw new Error('Invalid service name');
     }
@@ -31,10 +35,12 @@ export class ApisConnect implements IApisConnect {
   public async init(): Promise<void> {
     this.spotityInstance = new SpotifyConnect();
     this.deezerInstance = new DeezerConnect();
+    this.youtubeInstance = new YoutubeConnect();
 
     await Promise.all([
       this.spotityInstance.init(),
       this.deezerInstance.init(),
+      this.youtubeInstance.init(),
     ]);
   }
 
