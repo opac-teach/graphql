@@ -4,9 +4,9 @@ type Genre {
   "The name of the genre"
   name: String!
   "The songs of the genre"
-  songs: [Song!]!
+  songs: [Song!]
   "Count of songs by genre"
-  songCount: Int!
+  songCount: Int
 }
 
 extend type Query {
@@ -16,11 +16,21 @@ extend type Query {
   genre(id: ID!): Genre!
 }
 
+extend type Mutation {
+  "Create a new genre"
+  createGenre(input: CreateGenreInput!): CreateGenreResponse!
+}
+
+########### CREATE GENRE #######
 "The input for creating a new genre"
 input CreateGenreInput {
   "The name of the genre"
   name: String!
+  "The ID of the user"
+  userId: ID
 }
+
+
 type CreateGenreResponse {
   "Whether the genre was created successfully"
   success: Boolean!
@@ -28,7 +38,4 @@ type CreateGenreResponse {
   genre: Genre!
 }
 
-extend type Mutation {
-  "Create a new genre"
-  createGenre(input: CreateGenreInput!): CreateGenreResponse!
-}
+

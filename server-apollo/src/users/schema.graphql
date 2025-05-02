@@ -38,6 +38,8 @@ type Mutation {
 input CreateUserInput {
   "The name of the user"
   name: String!
+  "The role of the user"
+  role: String!
 }
 
 type CreateUserResponse {

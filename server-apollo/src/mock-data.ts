@@ -5,10 +5,12 @@ export const users: DBUser[] = [
   {
     id: "827dcc1f-062e-4c09-97cc-b0743acf16df",
     name: "Alice",
+    role: "admin"
   },
   {
     id: "2fdd9781-ad40-4259-a148-c8952d82110c",
     name: "Bob",
+    role: "user"
   },
 ];
 

@@ -3,6 +3,7 @@ import { FakeORM, DBModel, FakeDataSource } from "./FakeORM";
 
 export interface DBUser extends DBModel {
   name: string;
+  role: string;
 }
 
 export interface DBSong extends DBModel {

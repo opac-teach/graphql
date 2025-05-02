@@ -23,6 +23,8 @@ export type Scalars = {
 export type CreateGenreInput = {
   /** The name of the genre */
   name: Scalars['String']['input'];
+  /** The ID of the user */
+  userId?: InputMaybe<Scalars['ID']['input']>;
 };
 
 export type CreateGenreResponse = {
@@ -53,6 +55,8 @@ export type CreateSongResponse = {
 export type CreateUserInput = {
   /** The name of the user */
   name: Scalars['String']['input'];
+  /** The role of the user */
+  role: Scalars['String']['input'];
 };
 
 export type CreateUserResponse = {
@@ -86,9 +90,9 @@ export type Genre = {
   /** The name of the genre */
   name: Scalars['String']['output'];
   /** Count of songs by genre */
-  songCount: Scalars['Int']['output'];
+  songCount?: Maybe<Scalars['Int']['output']>;
   /** The songs of the genre */
-  songs: Array<Song>;
+  songs?: Maybe<Array<Song>>;
 };
 
 export type Mutation = {
@@ -408,8 +412,8 @@ export type DeleteUserResponseResolvers<ContextType = ResolversContext, ParentTy
 export type GenreResolvers<ContextType = ResolversContext, ParentType extends ResolversParentTypes['Genre'] = ResolversParentTypes['Genre']> = ResolversObject<{
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  songCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  songs?: Resolver<Array<ResolversTypes['Song']>, ParentType, ContextType>;
+  songCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  songs?: Resolver<Maybe<Array<ResolversTypes['Song']>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 

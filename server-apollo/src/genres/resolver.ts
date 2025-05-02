@@ -30,7 +30,15 @@ export const genreResolvers: Resolvers = {
   },
 
   Mutation: {
-    createGenre: (_, { input }, { dataSources }) => {
+    createGenre: (_, { input }, { dataSources, userId, userRole }) => {
+      if (!userId) {
+        throw new Error("Not authenticated");
+      }
+
+      if (userRole !== "admin") {
+        throw new Error("You don't have permission to create a genre");
+      }
+
       const genre = dataSources.db.genre.create(input);
       return {
         success: true,
