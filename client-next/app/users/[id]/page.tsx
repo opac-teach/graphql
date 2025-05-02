@@ -11,9 +11,14 @@ const GET_USER = gql(`
     user(id: $id) {
       id
       name
+      songCount
       songs {
         id
         name
+        genre {
+          id
+          name
+        }
       }
     }
   }
@@ -40,11 +45,13 @@ export default function User() {
     <div>
       <h1>User</h1>
       <h3>{data?.user.name}</h3>
+      <p>Nombre de chansons: {data?.user.songCount}</p>
       <h2>Songs</h2>
       <div>
         {data?.user.songs.map((song) => (
           <div key={song.id} className="flex gap-2">
             <Link href={`/songs/${song.id}`}>{song.name}</Link>
+            <p>musique du type : </p><Link href={`/genres/${song.genre.id}`}>{song.genre.name}</Link>
           </div>
         ))}
       </div>

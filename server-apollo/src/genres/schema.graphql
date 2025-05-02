@@ -1,0 +1,60 @@
+type Genre {
+  "The ID of the genre"
+  id: ID!
+  "The name of the genre"
+  name: String!
+  "The songs of the genre"
+  songs(limit : Int): [Song]
+  "The number of songs of the genre"
+  songCount: Int
+}
+
+type Query {
+  "Get all genres"
+  genres: [Genre!]!
+  "Get a genre by ID"
+  genre(id: ID!): Genre!
+}
+
+type Mutation {
+  "Create a genre"
+  createGenre(input: CreateGenreInput): CreateGenreResponse!
+  "Update a genre"
+  updateGenre(id: ID!, input: UpdateGenreInput): UpdateGenreResponse!
+  "Delete a genre"
+  deleteGenre(id: ID!): DeleteSongResponse!
+}
+
+input CreateGenreInput {
+  "The name of the genre"
+  name: String!
+}
+
+input UpdateGenreInput {
+  "The name of the genre"
+  name: String!
+}
+
+type CreateGenreResponse {
+  "Whether the genre was created successfully"
+  success: Boolean!
+  "The created genre"
+  genre: Genre!
+}
+
+type UpdateGenreResponse {
+  "Whether the genre was updated successfully"
+  success: Boolean!
+  "The updated genre"
+  genre: Genre!
+}
+
+type DeleteGenreResponse {
+  "Whether the genre was deleted successfully"
+  success: Boolean!
+  "The deleted genre"
+  genre: Genre!
+}
+
+
+
