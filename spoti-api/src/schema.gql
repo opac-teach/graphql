@@ -1,0 +1,16 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type AlbumDTO {
+  name: String!
+  release_date: String!
+  images: [String!]!
+  artists: [String!]!
+  tracks: [String!]!
+}
+
+type Query {
+  searchArtist: String!
+  getAlbum(id: String!): AlbumDTO!
+}

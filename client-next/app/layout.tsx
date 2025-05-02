@@ -37,6 +37,7 @@ export default function RootLayout({
                 <Link href="/">Home</Link>
                 <Link href="/songs">Songs</Link>
                 <Link href="/users">Users</Link>
+                <Link href="/genre">Genres</Link>
               </nav>
               <div className="flex flex-1 justify-end">
                 <LoginComponent />
