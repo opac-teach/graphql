@@ -10,6 +10,7 @@ export function createApolloClient() {
 
   const client = new ApolloClient({
     link: httpLink,
+    connectToDevTools: true,
     cache: new InMemoryCache({
       typePolicies: {
         Query: {

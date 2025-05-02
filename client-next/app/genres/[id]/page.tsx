@@ -68,7 +68,7 @@ export default function Page() {
           ))}
         </div>
       ) : (
-        <p className="text-center mt-4">Aucun son pour ce genre.</p>
+        <p className="text-center mt-4">No result</p>
       )}
     </div>
   );

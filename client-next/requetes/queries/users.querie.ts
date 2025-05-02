@@ -19,6 +19,10 @@ export const GET_USER = gql(`
       songs {
         id
         name
+        genre {
+          id
+          name
+        }
       }
     }
   }

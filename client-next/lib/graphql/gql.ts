@@ -29,7 +29,7 @@ type Documents = {
     "\n  query Songs($genreId: String, $cursor: String, $limit: Float) {\n    songs(genreId: $genreId, cursor: $cursor, limit: $limit) {\n      items {\n        id\n        name\n        author {\n          id\n          email\n          name\n        }\n        genre {\n          id\n          name\n        }\n      }\n      nextCursor\n      hasMore\n    }\n  }\n": typeof types.SongsDocument,
     "\n  query Song($id: String!) {\n    song(id: $id) {\n      id\n      name\n      author {\n        id\n        name\n      }\n      genre {\n        id\n        name\n      }\n    }\n  }\n": typeof types.SongDocument,
     "\n  query Users {\n    users {\n      id\n      name\n      email\n    }\n  }\n": typeof types.UsersDocument,
-    "\n  query User($id: String!) {\n    user(id: $id) {\n      id\n      email\n      name\n      songs {\n        id\n        name\n      }\n    }\n  }\n": typeof types.UserDocument,
+    "\n  query User($id: String!) {\n    user(id: $id) {\n      id\n      email\n      name\n      songs {\n        id\n        name\n        genre {\n          id\n          name\n        }\n      }\n    }\n  }\n": typeof types.UserDocument,
 };
 const documents: Documents = {
     "\n  mutation Login($loginInput: LoginInput!) {\n    login(loginInput: $loginInput) {\n      success\n      message\n    }\n  }\n": types.LoginDocument,
@@ -47,7 +47,7 @@ const documents: Documents = {
     "\n  query Songs($genreId: String, $cursor: String, $limit: Float) {\n    songs(genreId: $genreId, cursor: $cursor, limit: $limit) {\n      items {\n        id\n        name\n        author {\n          id\n          email\n          name\n        }\n        genre {\n          id\n          name\n        }\n      }\n      nextCursor\n      hasMore\n    }\n  }\n": types.SongsDocument,
     "\n  query Song($id: String!) {\n    song(id: $id) {\n      id\n      name\n      author {\n        id\n        name\n      }\n      genre {\n        id\n        name\n      }\n    }\n  }\n": types.SongDocument,
     "\n  query Users {\n    users {\n      id\n      name\n      email\n    }\n  }\n": types.UsersDocument,
-    "\n  query User($id: String!) {\n    user(id: $id) {\n      id\n      email\n      name\n      songs {\n        id\n        name\n      }\n    }\n  }\n": types.UserDocument,
+    "\n  query User($id: String!) {\n    user(id: $id) {\n      id\n      email\n      name\n      songs {\n        id\n        name\n        genre {\n          id\n          name\n        }\n      }\n    }\n  }\n": types.UserDocument,
 };
 
 /**
@@ -127,7 +127,7 @@ export function gql(source: "\n  query Users {\n    users {\n      id\n      nam
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query User($id: String!) {\n    user(id: $id) {\n      id\n      email\n      name\n      songs {\n        id\n        name\n      }\n    }\n  }\n"): (typeof documents)["\n  query User($id: String!) {\n    user(id: $id) {\n      id\n      email\n      name\n      songs {\n        id\n        name\n      }\n    }\n  }\n"];
+export function gql(source: "\n  query User($id: String!) {\n    user(id: $id) {\n      id\n      email\n      name\n      songs {\n        id\n        name\n        genre {\n          id\n          name\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query User($id: String!) {\n    user(id: $id) {\n      id\n      email\n      name\n      songs {\n        id\n        name\n        genre {\n          id\n          name\n        }\n      }\n    }\n  }\n"];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};

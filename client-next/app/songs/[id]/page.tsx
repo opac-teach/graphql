@@ -30,6 +30,7 @@ export default function SongPage() {
     variables: {
       id,
     },
+    fetchPolicy: "cache-and-network",
   });
 
   const [updateSongMutation] = useMutation(UPDATE_SONG, {
