@@ -1,0 +1,13 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Blog {
+  id: Int!
+  title: String!
+  body: String!
+}
+
+type Query {
+  getAllBlogs: [Blog!]!
+}
