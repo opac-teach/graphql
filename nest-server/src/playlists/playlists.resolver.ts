@@ -34,7 +34,6 @@ export class PlaylistsResolver {
     @Args('plateform') platform: StreamingServices,
     @Context() context: { req: { userId: string } },
   ) {
-    console.log(platform);
     return await this.playlistsService.getPlaylistTracks(
       playlist.id,
       context.req.userId,

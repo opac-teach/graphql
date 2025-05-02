@@ -147,8 +147,6 @@ export class ApisConnect implements IApisConnect {
         youtubePlaylist.id,
       );
 
-    console.log(updatedYoutubePlaylist);
-
     return updatedYoutubePlaylist;
   }
 }
