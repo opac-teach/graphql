@@ -20,6 +20,9 @@ export const UPDATE_GENRE = gql(`
 
 export const DELETE_GENRE = gql(`
   mutation DeleteGenre($id: String!) {
-    removeGenre(id: $id)
+    removeGenre(id: $id) {
+      success
+      id
+    }
   }
 `);

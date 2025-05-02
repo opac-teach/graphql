@@ -25,6 +25,7 @@ export class GenreService {
   async findOne(id: string): Promise<Genre> {
     return await this.genreRepository.findOne({
       where: { id },
+      relations: ['songs', 'songs.author'],
     });
   }
 

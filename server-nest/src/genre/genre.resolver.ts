@@ -2,6 +2,7 @@ import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GqlAuthGuard } from 'src/auth/guard/auth.guard';
 import { CreateGenreInput } from './dto/create-genre.input';
+import { RemoveGenreOutput } from './dto/remove-genre.output';
 import { UpdateGenreInput } from './dto/update-genre.input';
 import { GenreService } from './genre.service';
 import { Genre } from './model/genre.model';
@@ -32,9 +33,15 @@ export class GenreResolver {
     return this.genreService.update(updateGenreInput.id, updateGenreInput);
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(() => RemoveGenreOutput)
   @UseGuards(GqlAuthGuard)
-  removeGenre(@Args('id', { type: () => String }) id: string) {
-    return this.genreService.remove(id);
+  async removeGenre(
+    @Args('id', { type: () => String }) id: string,
+  ): Promise<RemoveGenreOutput> {
+    await this.genreService.remove(id);
+    return {
+      success: true,
+      id,
+    };
   }
 }

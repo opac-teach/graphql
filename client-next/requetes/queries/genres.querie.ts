@@ -5,6 +5,14 @@ export const GET_GENRES = gql(`
   genres {
     id
     name
+    songs {
+      id
+      name
+      author {
+        id
+        name
+      }
+    }
   }
 }
 `);

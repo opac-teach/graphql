@@ -37,7 +37,7 @@ type Mutation {
   login(loginInput: LoginInput!): AuthResponse!
   logout: AuthResponse!
   register(registerInput: RegisterInput!): User!
-  removeGenre(id: String!): Boolean!
+  removeGenre(id: String!): RemoveGenreOutput!
   removeSong(id: String!): RemoveSongOutput!
   updateGenre(updateGenreInput: UpdateGenreInput!): Genre!
   updateSong(updateSongInput: UpdateSongInput!): Song!
@@ -57,6 +57,11 @@ input RegisterInput {
   email: String!
   name: String!
   password: String!
+}
+
+type RemoveGenreOutput {
+  id: String!
+  success: Boolean!
 }
 
 type RemoveSongOutput {
