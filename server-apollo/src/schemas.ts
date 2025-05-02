@@ -3,8 +3,9 @@ import path from "path";
 import { gql } from "graphql-tag";
 import { userResolvers } from "./users/resolver";
 import { songResolvers } from "./songs/resolver";
+import { genreResolvers } from "./genre/resolver";
 
-const types = ["users", "songs"];
+const types = ["users", "songs","genre"];
 
 export const typeDefs = types.map((type) =>
   gql(
@@ -14,4 +15,4 @@ export const typeDefs = types.map((type) =>
   )
 );
 
-export const resolvers = [userResolvers, songResolvers];
+export const resolvers = [userResolvers, songResolvers,genreResolvers];

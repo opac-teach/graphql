@@ -35,7 +35,10 @@ export default function CreateUserForm({ refetch }: { refetch: () => void }) {
   });
   async function onSubmit(values: { name: string }) {
     try {
-      await mutateFunction({ variables: { input: { name: values.name } } });
+      await mutateFunction({ variables: { input: {
+        name: values.name,
+        role: ""
+      } } });
       refetch();
     } catch (error) {
       console.error(error);
