@@ -72,4 +72,10 @@ export class AuthService {
       console.error('Error storing Spotify token:', error);
     }
   }
+
+  public async googleLogin(req: any): Promise<any> {
+    console.log(req);
+
+    return 'ok';
+  }
 }

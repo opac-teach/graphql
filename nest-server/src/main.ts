@@ -6,6 +6,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ApisConnect } from './services/apis/ApisConnect.service';
 import { RedisService } from 'src/services/redis.service';
 import { ValidationPipe } from '@nestjs/common';
+import * as cookieParser from 'cookie-parser';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import * as session from 'express-session';
 import * as passport from 'passport';

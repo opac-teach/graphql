@@ -20,6 +20,7 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { GoogleOAuthGuard } from './guards/google-oauth.guard';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -102,5 +103,16 @@ export class AuthController {
     return res.json({
       message: 'OK',
     });
+  }
+
+  @Get('google-login')
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(GoogleOAuthGuard)
+  async googleAuth(@Req() req: any, @Res() res: Response) {}
+
+  @Get('google-redirect')
+  @UseGuards(GoogleOAuthGuard)
+  googleAuthRedirect(@Req() req: any) {
+    return this.authService.googleLogin(req);
   }
 }

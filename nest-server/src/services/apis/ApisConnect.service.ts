@@ -32,8 +32,6 @@ export class ApisConnect implements IApisConnect {
     this.spotityInstance = new SpotifyConnect();
     this.deezerInstance = new DeezerConnect();
 
-    console.log(this.spotityInstance);
-
     await Promise.all([
       this.spotityInstance.init(),
       this.deezerInstance.init(),

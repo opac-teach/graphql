@@ -9,6 +9,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { RedisService } from 'src/services/redis.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user';
+import { GoogleStrategy } from './strategies/google.strategy';
 
 @Module({
   imports: [
@@ -23,7 +24,13 @@ import { UserEntity } from './entities/user';
     }),
     TypeOrmModule.forFeature([UserEntity]),
   ],
-  providers: [AuthService, JwtStrategy, SpotifyOauthStrategy, RedisService],
+  providers: [
+    AuthService,
+    JwtStrategy,
+    SpotifyOauthStrategy,
+    RedisService,
+    GoogleStrategy,
+  ],
   controllers: [AuthController],
 })
 export class AuthModule {}
