@@ -1,7 +1,7 @@
 import { CREATE_USER, LOGIN, LOGOUT } from "@/requetes/mutations"; // Mutation pour login
 import { ME } from "@/requetes/queries";
 import { gql, useMutation, useQuery } from "@apollo/client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 type User = {
@@ -20,15 +20,16 @@ const useAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<User | null>(null);
 
-  const { loading, error } = useQuery(ME, {
+  const { data, loading, error } = useQuery(ME, {
     skip: isAuthenticated,
-    onCompleted: (data) => {
-      if (data?.me) {
-        setUser(data.me);
-        setIsAuthenticated(true);
-      }
-    },
   });
+
+  useEffect(() => {
+    if (data?.me) {
+      setUser(data.me);
+      setIsAuthenticated(true);
+    }
+  }, [data]);
 
   // Fonction pour se connecter et stocker le token dans le cookie
   const [loginMutation] = useMutation(LOGIN, {

@@ -34,7 +34,6 @@ export default function SongPage() {
 
   const [updateSongMutation] = useMutation(UPDATE_SONG, {
     refetchQueries: [GET_SONG],
-    awaitRefetchQueries: true,
     onCompleted: (data) => {
       toast.success(`Song ${data.updateSong.name} updated successfully!`);
     },
@@ -55,11 +54,14 @@ export default function SongPage() {
 
       cache.modify({
         fields: {
-          songs(existingSongs = []) {
-            return existingSongs.filter(
-              (songRef: { __ref: string }) =>
-                songRef.__ref !== `Song:${deletedSongId}`
-            );
+          songs(existingSongs = {}) {
+            return {
+              ...existingSongs,
+              items: existingSongs.items.filter(
+                (songRef: { __ref: string }) =>
+                  songRef.__ref !== `Song:${deletedSongId}`
+              ),
+            };
           },
         },
       });

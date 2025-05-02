@@ -16,10 +16,14 @@ export function createApolloClient() {
           fields: {
             songs: {
               keyArgs: ["genreId"],
-              merge(existing = { items: [] }, incoming) {
+              merge(existing = { items: [] }, incoming, { args }) {
+                if (!args?.cursor) {
+                  return incoming;
+                }
+
                 return {
                   ...incoming,
-                  items: [...existing.items, ...incoming.items],
+                  items: [...(existing.items || []), ...incoming.items],
                 };
               },
             },

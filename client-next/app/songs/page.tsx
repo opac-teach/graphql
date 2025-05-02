@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
+import useAuth from "../hook/auth.hook";
 
 const songSchema = z.object({
   name: z.string().min(2),
@@ -22,14 +23,13 @@ export default function Songs() {
   const [genreId, setGenreId] = useState<string | null>(null);
   const [isFetchingMore, setIsFetchingMore] = useState<boolean>(false);
   const router = useRouter();
+  const { isAuthenticated } = useAuth();
 
-  const [limit /*setLimit*/] = useState<number>(2);
+  const [limit /*setLimit*/] = useState<number>(5);
 
   const { data, loading, error, fetchMore } = useQuery(GET_SONGS, {
     variables: { genreId, limit },
   });
-
-  console.log("data", data?.songs);
 
   const loadMore = async () => {
     if (!data?.songs?.hasMore || !data?.songs?.nextCursor) return;
@@ -71,7 +71,7 @@ export default function Songs() {
                 fragment NewSong on Song {
                   id
                   name
-                  user {
+                  author {
                     id
                     name
                   }
@@ -83,7 +83,12 @@ export default function Songs() {
               `,
             });
 
-            return [...existingSongs, newSongRef];
+            const updatedItems = [
+              newSongRef,
+              ...existingSongs.items.slice(0, limit - 1),
+            ];
+
+            return { ...existingSongs, items: updatedItems };
           },
         },
       });
@@ -121,12 +126,14 @@ export default function Songs() {
             defaultValue={genreId || "all"}
             withAll
           />
-          <ModalCreate
-            title="song"
-            onConfirm={create}
-            schema={songSchema}
-            defaultValues={{ name: "", genreId: "" }}
-          />
+          {isAuthenticated && (
+            <ModalCreate
+              title="song"
+              onConfirm={create}
+              schema={songSchema}
+              defaultValues={{ name: "", genreId: "" }}
+            />
+          )}
         </div>
       </div>
 
