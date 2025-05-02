@@ -3,9 +3,52 @@ type Song {
   id: ID!
   "The name of the song"
   name: String!
+  "The id of the genre of the song"
+  genreId: ID!
+  "user who created the song"
+  user: User!
+  "The genre of the song"
+  genre: Genre!
 }
 
 type Query {
   "Get all songs"
-  songs: [Song!]!
+  songs(page: Int!, limit: Int!): [Song!]!
+  "Get a song by ID"
+  song(id: ID!): Song!
+  "Get all songs with users"
+  songsWithUsers: [Song!]!
+}
+
+type Mutation {
+  "Create a new song"
+  createSong(input: CreateSongInput!): CreateSongResponse!
+  "edit a song"
+  editSong(id: ID!, input: EditSongInput!): EditSongResponse!
+}
+
+input CreateSongInput {
+  "The name of the song"
+  name: String!
+  "The id of the genre of the song"
+  genreId: ID!
+}
+input EditSongInput {
+  "The name of the song"
+  name: String
+  "The id of the genre of the song"
+  genreId: ID
+}
+
+type CreateSongResponse {
+  "The created song"
+  song: Song!
+  "The error message if the creation failed"
+  error: String
+}
+type EditSongResponse {
+  "The edited song"
+  song: Song!
+  "The error message if the creation failed"
+  error: String
 }

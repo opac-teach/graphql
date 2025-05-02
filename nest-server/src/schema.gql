@@ -1,0 +1,48 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Song {
+  """
+  The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID.
+  """
+  ID: String!
+  name: String!
+  artist: String!
+  album: String
+  imageUrl: String
+}
+
+type Artist {
+  """
+  The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID.
+  """
+  ID: String!
+  name: String!
+  avatarUrl: String
+}
+
+type Playlist {
+  """
+  The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID.
+  """
+  ID: String!
+  name: String!
+  description: String
+  coverImageUrl: String
+  songs(plateform: String!): [Song!]
+}
+
+type Query {
+  songs(query: String!): [Song!]!
+  getSongsConnectedUser(query: String!, plateform: String!): [Song!]!
+  artists(query: String!): [Artist!]!
+  playlists(query: String!, plateform: String!): [Playlist!]!
+  myplaylists(plateform: String!): [Playlist!]!
+}
+
+type Mutation {
+  addSongToPlaylist(playlistId: String!, songId: String!, plateform: String!): Playlist!
+  removeSongFromPlaylist(playlistId: String!, songId: String!, plateform: String!): Playlist!
+  convertSpotifyPlaylistToYoutube(spotifyPlaylistId: String!): Playlist!
+}

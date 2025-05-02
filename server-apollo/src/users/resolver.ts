@@ -2,16 +2,32 @@ import { Resolvers } from "../types";
 
 export const userResolvers: Resolvers = {
   Query: {
-    users: (_, __, { dataSources }) => {
-      return dataSources.db.user.findMany();
+    users: (_, { limit, page }, { dataSources }) => {
+      const loader = dataSources.db.user.createLoader();
+      return dataSources.db.user.findMany(
+        loader,
+        {},
+        {
+          limit,
+          offset: page,
+        }
+      );
     },
     user: (_, { id }, { dataSources }) => {
-      return dataSources.db.user.findById(id);
+      const loader = dataSources.db.user.createLoader();
+      return dataSources.db.user.findById(loader, id);
     },
   },
   User: {
-    songs: async (parent, _, { dataSources }) => {
-      return dataSources.db.song.findMany({ userId: parent.id });
+    songs: (parent, _, { dataSources }) => {
+      const loader = dataSources.db.song.createLoader();
+      return dataSources.db.song.findMany(loader, { userId: parent.id }, {});
+    },
+    songCount: (parent, _, { dataSources }) => {
+      const loader = dataSources.db.song.createLoader();
+      return dataSources.db.song.count({
+        userId: parent.id,
+      });
     },
   },
   Mutation: {
