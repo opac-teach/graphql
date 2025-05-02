@@ -42,6 +42,10 @@ export const songResolvers: Resolvers = {
       if (!userId){
         throw new GraphQLError("Not authenticated");
       }
+      if (!input.name) {
+        throw new GraphQLError("Song name is required");
+      }
+
       const {name, genreId} = input;
       try {
         const songData = {

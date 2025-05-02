@@ -20,6 +20,8 @@ export type Scalars = {
 export type CreateGenreInput = {
   /** The name of the genre */
   name: Scalars['String']['input'];
+  /** The ID of the user */
+  userId?: InputMaybe<Scalars['ID']['input']>;
 };
 
 export type CreateGenreResponse = {
@@ -50,6 +52,8 @@ export type CreateSongResponse = {
 export type CreateUserInput = {
   /** The name of the user */
   name: Scalars['String']['input'];
+  /** The role of the user */
+  role: Scalars['String']['input'];
 };
 
 export type CreateUserResponse = {
@@ -83,9 +87,9 @@ export type Genre = {
   /** The name of the genre */
   name: Scalars['String']['output'];
   /** Count of songs by genre */
-  songCount: Scalars['Int']['output'];
+  songCount?: Maybe<Scalars['Int']['output']>;
   /** The songs of the genre */
-  songs: Array<Song>;
+  songs?: Maybe<Array<Song>>;
 };
 
 export type Mutation = {
@@ -262,7 +266,7 @@ export type GenreQueryVariables = Exact<{
 }>;
 
 
-export type GenreQuery = { __typename?: 'Query', genre: { __typename?: 'Genre', id: string, name: string, songCount: number, songs: Array<{ __typename?: 'Song', id: string, name: string, user: { __typename?: 'User', id: string, name: string } }> } };
+export type GenreQuery = { __typename?: 'Query', genre: { __typename?: 'Genre', id: string, name: string, songCount?: number | null, songs?: Array<{ __typename?: 'Song', id: string, name: string, user: { __typename?: 'User', id: string, name: string } }> | null } };
 
 export type GenresQueryVariables = Exact<{ [key: string]: never; }>;
 
