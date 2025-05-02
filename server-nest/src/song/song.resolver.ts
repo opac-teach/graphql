@@ -1,8 +1,21 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Context,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { GqlAuthGuard } from 'src/auth/guard/auth.guard';
 import { GqlContext } from 'src/auth/jwt.strategy';
+import { GenreService } from 'src/genre/genre.service';
+import { Genre } from 'src/genre/model/genre.model';
+import { User } from 'src/user/model/user.model';
+import { UserService } from 'src/user/user.service';
 import { CreateSongInput } from './dto/create-song.input';
+import { PaginatedSongsOutput } from './dto/paginated-song.output.dto';
 import { RemoveSongOutput } from './dto/remove-song.output';
 import { UpdateSongInput } from './dto/update-song.input';
 import { Song } from './model/song.model';
@@ -10,7 +23,11 @@ import { SongService } from './song.service';
 
 @Resolver(() => Song)
 export class SongResolver {
-  constructor(private readonly songService: SongService) {}
+  constructor(
+    private readonly songService: SongService,
+    private readonly genreService: GenreService,
+    private readonly userService: UserService,
+  ) {}
 
   @Mutation(() => Song)
   @UseGuards(GqlAuthGuard)
@@ -21,11 +38,13 @@ export class SongResolver {
     return this.songService.create(createSongInput, context.req.user.sub);
   }
 
-  @Query(() => [Song], { name: 'songs' })
-  findAll(
+  @Query(() => PaginatedSongsOutput, { name: 'songs' })
+  async findAll(
     @Args('genreId', { type: () => String, nullable: true }) genreId?: string,
-  ) {
-    return this.songService.findAll(genreId);
+    @Args('cursor', { type: () => String, nullable: true }) cursor?: string,
+    @Args('limit', { type: () => Number, nullable: true }) limit = 10,
+  ): Promise<PaginatedSongsOutput> {
+    return this.songService.findAllPaginated({ genreId, cursor, limit });
   }
 
   @Query(() => Song, { name: 'song' })
@@ -54,5 +73,15 @@ export class SongResolver {
   ): Promise<RemoveSongOutput> {
     await this.songService.remove(id, context.req.user.sub);
     return { success: true, id };
+  }
+
+  @ResolveField(() => Genre)
+  async genre(@Parent() song: Song): Promise<Genre> {
+    return await this.genreService.findOne(song.genreId);
+  }
+
+  @ResolveField(() => User)
+  async author(@Parent() song: Song): Promise<User> {
+    return await this.userService.findOne(song.authorId);
   }
 }

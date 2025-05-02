@@ -1,20 +1,23 @@
 import { gql } from "@/lib/graphql";
 
 export const GET_SONGS = gql(`
-  query Songs($genreId: String) {
-    songs(genreId: $genreId) {
-      authorId
-      id
-      name
-      author {
-        email
+  query Songs($genreId: String, $cursor: String, $limit: Float) {
+    songs(genreId: $genreId, cursor: $cursor, limit: $limit) {
+      items {
         id
         name
+        author {
+          id
+          email
+          name
+        }
+        genre {
+          id
+          name
+        }
       }
-      genre {
-        id
-        name
-      }
+      nextCursor
+      hasMore
     }
   }
 `);

@@ -1,15 +1,27 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { GqlAuthGuard } from 'src/auth/guard/auth.guard';
+import { Song } from 'src/song/model/song.model';
+import { SongService } from 'src/song/song.service';
 import { CreateGenreInput } from './dto/create-genre.input';
 import { RemoveGenreOutput } from './dto/remove-genre.output';
 import { UpdateGenreInput } from './dto/update-genre.input';
 import { GenreService } from './genre.service';
 import { Genre } from './model/genre.model';
 
-@Resolver()
+@Resolver(() => Genre)
 export class GenreResolver {
-  constructor(private readonly genreService: GenreService) {}
+  constructor(
+    private readonly genreService: GenreService,
+    private readonly songService: SongService,
+  ) {}
 
   @Mutation(() => Genre)
   @UseGuards(GqlAuthGuard)
@@ -43,5 +55,10 @@ export class GenreResolver {
       success: true,
       id,
     };
+  }
+
+  @ResolveField(() => [Song])
+  async songs(@Parent() genre: Genre): Promise<Song[]> {
+    return await this.songService.findAll({ genreId: genre.id });
   }
 }

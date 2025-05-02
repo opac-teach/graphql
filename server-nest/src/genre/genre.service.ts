@@ -17,15 +17,12 @@ export class GenreService {
   ) {}
 
   async findAll(): Promise<Genre[]> {
-    return await this.genreRepository.find({
-      relations: ['songs'],
-    });
+    return await this.genreRepository.find();
   }
 
   async findOne(id: string): Promise<Genre> {
     return await this.genreRepository.findOne({
       where: { id },
-      relations: ['songs', 'songs.author'],
     });
   }
 

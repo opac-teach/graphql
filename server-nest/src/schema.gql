@@ -20,6 +20,11 @@ input CreateSongInput {
   name: String!
 }
 
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type Genre {
   id: String!
   name: String!
@@ -43,12 +48,18 @@ type Mutation {
   updateSong(updateSongInput: UpdateSongInput!): Song!
 }
 
+type PaginatedSongsOutput {
+  hasMore: Boolean!
+  items: [Song!]!
+  nextCursor: String
+}
+
 type Query {
   genre(id: String!): Genre!
   genres: [Genre!]!
   me: User!
   song(id: String!): Song!
-  songs(genreId: String): [Song!]!
+  songs(cursor: String, genreId: String, limit: Float): PaginatedSongsOutput!
   user(id: String!): User!
   users: [User!]!
 }
@@ -72,6 +83,7 @@ type RemoveSongOutput {
 type Song {
   author: User
   authorId: String!
+  createdAt: DateTime!
   genre: Genre
   genreId: String!
   id: String!

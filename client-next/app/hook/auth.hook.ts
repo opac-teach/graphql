@@ -32,11 +32,10 @@ const useAuth = () => {
 
   // Fonction pour se connecter et stocker le token dans le cookie
   const [loginMutation] = useMutation(LOGIN, {
-    refetchQueries: [ME], // Réexécuter la requête ME après la connexion
+    refetchQueries: [ME],
     onCompleted: (data) => {
       if (data.login.success) {
-        // document.cookie = `access_token=${data.login.token}; path=/; secure; HttpOnly`; // Stocke le token dans un cookie HttpOnly
-        setIsAuthenticated(true); // L'utilisateur est maintenant authentifié
+        setIsAuthenticated(true);
         toast.success(data.login.message);
       } else {
         toast.error(data.login.message);

@@ -10,7 +10,23 @@ export function createApolloClient() {
 
   const client = new ApolloClient({
     link: httpLink,
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({
+      typePolicies: {
+        Query: {
+          fields: {
+            songs: {
+              keyArgs: ["genreId"],
+              merge(existing = { items: [] }, incoming) {
+                return {
+                  ...incoming,
+                  items: [...existing.items, ...incoming.items],
+                };
+              },
+            },
+          },
+        },
+      },
+    }),
   });
 
   return client;

@@ -43,4 +43,8 @@ export class Song {
   })
   @JoinColumn({ name: 'genreId' })
   genre?: Genre;
+
+  @Field(() => Date)
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
 }

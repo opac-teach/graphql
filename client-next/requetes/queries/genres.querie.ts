@@ -10,6 +10,7 @@ export const GET_GENRES = gql(`
       name
       author {
         id
+        email
         name
       }
     }
