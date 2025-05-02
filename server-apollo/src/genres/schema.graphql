@@ -9,5 +9,15 @@ type Query {
   "Get all genres"
   genres: [Genre!]!
   "Get a Genre by ID"
-  genre(id: ID!): Genre!
+  genre(id: ID!): Genre
+}
+
+input CreateGenreInput {
+  "Name of the genre"
+  name: String!
+}
+
+type Mutation {
+  "Create a new genre"
+  createGenre(input: CreateGenreInput!): Genre!
 }

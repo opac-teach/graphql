@@ -56,14 +56,7 @@ export const songResolvers: Resolvers = {
       return loaders.users.load(parent.userId);
     },
     genre: async (parent, _, { loaders }) => {
-      const genre = await loaders.genres.load(parent.genreId);
-    
-      if (!genre) {
-        throw new GraphQLError(`Genre not found for song with genreId: ${parent.genreId}`, {
-          extensions: { code: "NOT_FOUND" },
-        });
-      }
-    
+      const genre = await loaders.genres.load(parent.genreId); 
       return genre;
     },
   },

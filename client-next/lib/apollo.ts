@@ -26,3 +26,5 @@ export function createApolloClient() {
 
   return client;
 }
+
+export const getClient = createApolloClient;
