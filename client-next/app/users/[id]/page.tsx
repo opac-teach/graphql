@@ -36,10 +36,20 @@ export default function User() {
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
+  const { user: currentUser } = useUser();
+  
+  const canEditOrDelete =
+    currentUser?.role === "ADMIN" || currentUser?.id === id;
   return (
     <div>
       <h1>User</h1>
       <h3>{data?.user.name}</h3>
+      {canEditOrDelete && (
+        <div className="flex gap-2 mt-4">
+          <button className="btn btn-warning">Modifier</button>
+          <button className="btn btn-danger">Supprimer</button>
+        </div>
+      )}
       <h2>Songs</h2>
       <div>
         {data?.user.songs.map((song) => (
@@ -57,3 +67,7 @@ export default function User() {
     </div>
   );
 }
+function useUser(): { user: any; } {
+  throw new Error("Function not implemented.");
+}
+

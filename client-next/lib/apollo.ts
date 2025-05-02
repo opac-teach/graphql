@@ -10,11 +10,13 @@ export function createApolloClient() {
 
   const authLink = setContext((_, { headers }) => {
     const userId = localStorage.getItem("user_id");
+    const role = localStorage.getItem("role");
 
     return {
       headers: {
         ...headers,
         user_id: userId || "",
+        role: role || "",
       },
     };
   });

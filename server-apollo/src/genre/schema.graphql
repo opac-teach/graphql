@@ -1,0 +1,31 @@
+type Genre {
+  "The ID of the genre"
+  id: ID!
+  "The name of the genre"
+  name: String!
+  "The songs associated with this genre"
+  songs(limit: Int = 10, offset: Int = 0): [Song!]!
+  songsCount: Int!
+}
+
+
+type Query {
+  "Get all genres"
+  genres: [Genre!]!
+  genre(id:ID!):Genre
+}
+
+type Mutation {
+  "Create a new genre"
+  createGenre(input: CreateGenreInput!): CreateGenreResponse!
+}
+
+input CreateGenreInput {
+  name: String!
+}
+
+type CreateGenreResponse {
+  success: Boolean!
+  genre: Genre!
+}
+
