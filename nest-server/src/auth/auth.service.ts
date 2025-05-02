@@ -21,13 +21,13 @@ export class AuthService {
   async generateStateFor(userId: string): Promise<string> {
     const state = randomBytes(16).toString('hex');
     const client = this.redisService.getClient();
-    await client.set(`spotify_state:${state}`, userId, 'EX', 300);
+    await client.set(`auth_state:${state}`, userId, 'EX', 300);
     return state;
   }
 
   async getUserIdFromState(state: string): Promise<string | null> {
     const client = this.redisService.getClient();
-    const userId = await client.get(`spotify_state:${state}`);
+    const userId = await client.get(`auth_state:${state}`);
     return userId || null;
   }
 
@@ -74,8 +74,23 @@ export class AuthService {
   }
 
   public async googleLogin(req: any): Promise<any> {
-    console.log(req);
+    const token = req.query.state;
+    const payload = this.jwtService.verify(token, {
+      secret: process.env.JWT_SECRET,
+    });
+    const userId = payload.sub;
 
+    const client = this.redisService.getClient();
+    await client.set(
+      `google_token:${userId}`,
+      JSON.stringify({
+        accessToken: req.user.accessToken,
+        refreshToken: req.user.refreshToken,
+        expires_in: req.user.expires_in,
+      }),
+      'EX',
+      3600,
+    );
     return 'ok';
   }
 }

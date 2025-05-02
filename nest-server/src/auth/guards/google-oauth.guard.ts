@@ -9,4 +9,20 @@ export class GoogleOAuthGuard extends AuthGuard('google') {
       accessType: 'offline',
     });
   }
+
+  handleRequest(err: any, user: any, info: any): any {
+    if (err || !user) {
+      throw err || new Error('User not authenticated');
+    }
+    return user;
+  }
+
+  getAuthenticateOptions(req: any) {
+    return {
+      scope: ['profile', 'email'],
+      state:
+        req.args[0]?.query?.state ||
+        req.args[0].headers.authorization.split(' ')[1],
+    };
+  }
 }

@@ -16,19 +16,18 @@ export class AuthMiddleware implements NestMiddleware {
 
     if (token) {
       try {
-        console.log('Token:', token);
         const payload: { sub: string } = await this.jwtService.verifyAsync(
           token,
           {
             secret: process.env.JWT_SECRET || 'secret',
           },
         );
-        console.log('Payload:', payload);
         req['userId'] = payload.sub;
         const client = this.redisService.getClient();
         const cacheKey = `token:${payload.sub}`;
         next();
       } catch (error) {
+        console.error('Token verification error:', error);
         console.error('JWT verification error:', error);
         next();
       }
