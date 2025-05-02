@@ -3,9 +3,47 @@ type Song {
   id: ID!
   "The name of the song"
   name: String!
+  user: User!
+  genre: Genre!
+
 }
 
 type Query {
   "Get all songs"
-  songs: [Song!]!
+  songs(genreId: ID, pagination: PaginationInput): [Song!]!
+  "Get one song "
+  song(id: ID!): Song!
+}
+
+
+input PaginationInput {
+  page: Int = 1
+  pageSize: Int = 10
+}
+
+type Mutation {
+  "create new song"
+  createSong(input: CreateSongInput!) : SongResponse!
+  "update song"
+  updateSong(id: ID!,input: UpdateSongInput!): SongResponse!
+}
+
+input UpdateSongInput {
+  "id of song you want to update"
+  name: String!
+}
+
+input CreateSongInput {
+  "song name"
+  name: String!
+  "id of gender"
+  genreId: String!
+
+}
+
+type SongResponse {
+  "Whether the user was created successfully"
+  success: Boolean!
+  "The created user"
+  song: Song!
 }

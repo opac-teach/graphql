@@ -5,6 +5,7 @@ type User {
   name: String!
   "The songs of the user"
   songs: [Song!]!
+  songsCount: Int
 }
 
 type Query {
@@ -13,6 +14,7 @@ type Query {
   "Get a user by ID"
   user(id: ID!): User!
 }
+
 
 type Mutation {
   "Create a new user"
