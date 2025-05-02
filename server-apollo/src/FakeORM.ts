@@ -1,4 +1,5 @@
 import DataLoader from "dataloader";
+import { GraphQLError } from "graphql";
 import { v4 as uuidv4 } from "uuid";
 
 export interface DBModel {
@@ -10,7 +11,11 @@ export class FakeORM<T extends DBModel> {
 
   findById(id: string): T | undefined {
     console.log("findById", this.modelName, id);
-    return this.data.find((item) => item.id === id);
+    const d = this.data.find((item) => item.id === id);
+    if (!d) {
+      throw new GraphQLError("Not Found");
+    }
+    return d;
   }
 
   findByIds(ids: string[]): T[] {

@@ -1,13 +1,14 @@
 services:
-  server-apollo:
-    build:
-      context: ./server-apollo
-      dockerfile: Dockerfile
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: nestsong
     ports:
-      - 4000:4000
-  client-next:
-    build:
-      context: ./client-next
-      dockerfile: Dockerfile
-    ports:
-      - 3000:3000
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

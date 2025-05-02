@@ -1,37 +1,29 @@
 "use client";
 
+import Loading from "@/components/Loading";
+import { GET_USERS } from "@/requetes/queries";
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
-import CreateUserForm from "./CreateUserForm";
-import { gql } from "@/lib/graphql";
-
-const GET_USERS = gql(`
-  query Users {
-    users {
-      id
-      name
-    }
-  }
-`);
 
 export default function Users() {
-  const { data, loading, error, refetch } = useQuery(GET_USERS);
+  const { data, loading, error } = useQuery(GET_USERS);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loading />;
   if (error) return <div>Error: {error.message}</div>;
 
   return (
     <div>
-      <h1>Users</h1>
-      <div>
+      <h2>Users</h2>
+
+      <div className="flex gap-2 mt-2">
         {data?.users.map((user) => (
-          <div key={user.id} className="flex gap-2">
-            <Link href={`/users/${user.id}`}>{user.name}</Link>
-          </div>
+          <CardUser key={user.id} user={user} />
         ))}
       </div>
-
-      <CreateUserForm refetch={refetch} />
     </div>
   );
+}
+
+function CardUser({ user }: { user: { id: string; name: string } }) {
+  return <Link href={`/users/${user.id}`}>{user.name}</Link>;
 }

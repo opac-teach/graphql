@@ -5,11 +5,22 @@ type User {
   name: String!
   "The songs of the user"
   songs: [Song!]!
+  "The number of songs"
+  songsCount: Float!
+  "The role of the user"
+  role: EnumRole!
+}
+
+enum EnumRole {
+  "The user is an admin"
+  ADMIN
+  "The user is a regular user"
+  USER
 }
 
 type Query {
   "Get all users"
-  users: [User!]!
+  users(limit: Int, offset: Int): [User!]!
   "Get a user by ID"
   user(id: ID!): User!
 }
@@ -17,6 +28,10 @@ type Query {
 type Mutation {
   "Create a new user"
   createUser(input: CreateUserInput!): CreateUserResponse!
+  "Update a user"
+  updateUser(input: UpdateUserInput!, id: ID!): UpdateUserResponse!
+  "Delete a user"
+  deleteUser(id: ID!): DeleteUserResponse!
 }
 
 """
@@ -27,9 +42,31 @@ input CreateUserInput {
   name: String!
 }
 
+"""
+The input for updating a user
+"""
+input UpdateUserInput {
+  "The name of the user"
+  name: String
+}
+
 type CreateUserResponse {
-  "Whether the user was created successfully"
+  "Whether the user was updated successfully"
   success: Boolean!
-  "The created user"
+  "The updated user"
   user: User!
+}
+
+type UpdateUserResponse {
+  "Whether the user was updated successfully"
+  success: Boolean!
+  "The updated user"
+  user: User!
+}
+
+type DeleteUserResponse {
+  "Whether the user was deleted successfully"
+  success: Boolean!
+  "The deleted userId"
+  id: ID!
 }

@@ -1,28 +1,10 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import Loading from "@/components/Loading";
+import SongCard from "@/components/song/song.card";
+import { GET_USER } from "@/requetes/queries";
 import { useQuery } from "@apollo/client";
-import Link from "next/link";
 import { useParams } from "next/navigation";
-import { gql } from "@/lib/graphql";
-
-const GET_USER = gql(`
-  query User($id: ID!) {
-    user(id: $id) {
-      id
-      name
-      songs {
-        id
-        name
-      }
-    }
-  }
-`);
-
-function loginAs(userId: string) {
-  localStorage.setItem("user_id", userId);
-  window.location.reload();
-}
 
 export default function User() {
   const { id } = useParams<{ id: string }>();
@@ -33,27 +15,30 @@ export default function User() {
     },
   });
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loading />;
   if (error) return <div>Error: {error.message}</div>;
+
+  const allSongs = data?.user.songs;
 
   return (
     <div>
-      <h1>User</h1>
-      <h3>{data?.user.name}</h3>
-      <h2>Songs</h2>
-      <div>
-        {data?.user.songs.map((song) => (
-          <div key={song.id} className="flex gap-2">
-            <Link href={`/songs/${song.id}`}>{song.name}</Link>
-          </div>
-        ))}
+      <div className="flex justify-between items-center">
+        <div>
+          <h2> {data?.user.name}</h2>
+          {allSongs && <p>Number of songs: {allSongs.length}</p>}
+        </div>
       </div>
-
-      <div className="mt-4">
-        <Button onClick={() => loginAs(data?.user.id ?? "")}>
-          Login as {data?.user.name}
-        </Button>
-      </div>
+      {allSongs && allSongs.length > 0 ? (
+        <div className="flex justify-center gap-2 flex-wrap mt-4">
+          {allSongs?.map((song) => (
+            <div key={song.id} className="flex gap-2">
+              <SongCard key={song.id} song={{ ...song, author: data.user }} />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p className="text-center mt-4">No Result</p>
+      )}
     </div>
   );
 }

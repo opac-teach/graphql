@@ -1,0 +1,114 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type AuthResponse {
+  message: String!
+  success: Boolean!
+}
+
+input CreateGenreInput {
+  """Name of genre"""
+  name: String!
+}
+
+input CreateSongInput {
+  """ID of the genre"""
+  genreId: String!
+
+  """Name of song"""
+  name: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Genre {
+  id: String!
+  name: String!
+  songs: [Song!]
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+type Mutation {
+  createGenre(createGenreInput: CreateGenreInput!): Genre!
+  createSong(createSongInput: CreateSongInput!): Song!
+  login(loginInput: LoginInput!): AuthResponse!
+  logout: AuthResponse!
+  register(registerInput: RegisterInput!): User!
+  removeGenre(id: String!): RemoveGenreOutput!
+  removeSong(id: String!): RemoveSongOutput!
+  updateGenre(updateGenreInput: UpdateGenreInput!): Genre!
+  updateSong(updateSongInput: UpdateSongInput!): Song!
+}
+
+type PaginatedSongsOutput {
+  hasMore: Boolean!
+  items: [Song!]!
+  nextCursor: String
+}
+
+type Query {
+  genre(id: String!): Genre!
+  genres: [Genre!]!
+  me: User!
+  song(id: String!): Song!
+  songs(cursor: String, genreId: String, limit: Float): PaginatedSongsOutput!
+  user(id: String!): User!
+  users: [User!]!
+}
+
+input RegisterInput {
+  email: String!
+  name: String!
+  password: String!
+}
+
+type RemoveGenreOutput {
+  id: String!
+  success: Boolean!
+}
+
+type RemoveSongOutput {
+  id: String!
+  success: Boolean!
+}
+
+type Song {
+  author: User
+  authorId: String!
+  createdAt: DateTime!
+  genre: Genre
+  genreId: String!
+  id: String!
+  name: String!
+}
+
+input UpdateGenreInput {
+  id: String!
+
+  """Name of genre"""
+  name: String!
+}
+
+input UpdateSongInput {
+  """ID of the genre"""
+  genreId: String!
+  id: String!
+
+  """Title of song"""
+  name: String!
+}
+
+type User {
+  email: String!
+  id: String!
+  name: String!
+  songs: [Song!]
+}
