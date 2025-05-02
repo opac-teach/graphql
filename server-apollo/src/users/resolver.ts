@@ -16,17 +16,7 @@ export const userResolvers: Resolvers = {
     },
   },
   Mutation: {
-    createUser: (_, { input }, { dataSources, userId }) => {
-      if (!userId) {
-        throw new GraphQLError(
-            "You must be logged in to perform this action.",
-            {
-              extensions: {
-                code: "FORBIDDEN",
-              },
-            }
-        );
-      }
+    createUser: (_, { input }, { dataSources }) => {
       const user = dataSources.db.user.create(input);
       return {
         success: true,

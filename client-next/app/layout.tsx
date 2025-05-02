@@ -5,6 +5,8 @@ import { Providers } from "./providers";
 import Link from "next/link";
 import Image from "next/image";
 import LoginComponent from "@/components/LoginComponent";
+import { Button } from "@/components/ui/button";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -26,45 +28,46 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <Providers>
-      <html lang="en">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          <div className="flex flex-col h-screen">
-            <header className="flex justify-between items-center p-4">
-              <nav className="flex flex-1 gap-4">
-                <Link href="/">Home</Link>
-                <Link href="/songs">Songs</Link>
-                <Link href="/users">Users</Link>
-              </nav>
-              <div className="flex flex-1 justify-end">
+      <Providers>
+        <html lang="fr">
+        <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}>
+        <div className="flex flex-col min-h-screen">
+
+          <header className="border-b border-border">
+            <div className="container mx-auto flex items-center justify-between p-4">
+              <h1 className="text-2xl font-bold">Music App</h1>
+              <nav className="flex space-x-2">
+                <Button variant="ghost" size="sm" asChild>
+                  <Link href="/">Accueil</Link>
+                </Button>
+                <Button variant="ghost" size="sm" asChild>
+                  <Link href="/songs">Chansons</Link>
+                </Button>
+                <Button variant="ghost" size="sm" asChild>
+                  <Link href="/users">Utilisateurs</Link>
+                </Button>
+                <Button variant="ghost" size="sm" asChild>
+                  <Link href="/genres">Genres</Link>
+                </Button>
                 <LoginComponent />
-              </div>
-            </header>
+              </nav>
+            </div>
+          </header>
 
-            <main className="p-4 flex-1">{children}</main>
+          <main className="flex-1 container mx-auto p-4">
+            {children}
+          </main>
 
-            <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center p-4">
-              <a
-                className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-                href="https://github.com/opac-teach/graphql"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Image
-                  aria-hidden
-                  src="/globe.svg"
-                  alt="Globe icon"
-                  width={16}
-                  height={16}
-                />
-                Source code
-              </a>
-            </footer>
-          </div>
+          <footer className="border-t border-border">
+            <div className="container mx-auto p-4 text-center text-sm">
+              <Link href="https://github.com/opac-teach/graphql" target="_blank" rel="noopener noreferrer" className="underline">
+                Code source
+              </Link>
+            </div>
+          </footer>
+        </div>
         </body>
-      </html>
-    </Providers>
+        </html>
+      </Providers>
   );
 }

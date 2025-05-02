@@ -86,9 +86,9 @@ export type Genre = {
   /** The name of the genre */
   name: Scalars['String']['output'];
   /** The songs of the genre */
-  songs: Array<Song>;
+  songs?: Maybe<Array<Song>>;
   /** The number of songs of the genre */
-  songsCount: Scalars['Int']['output'];
+  songsCount?: Maybe<Scalars['Int']['output']>;
 };
 
 export type Mutation = {
@@ -395,8 +395,8 @@ export type DeleteUserResponseResolvers<ContextType = ResolversContext, ParentTy
 export type GenreResolvers<ContextType = ResolversContext, ParentType extends ResolversParentTypes['Genre'] = ResolversParentTypes['Genre']> = ResolversObject<{
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  songs?: Resolver<Array<ResolversTypes['Song']>, ParentType, ContextType>;
-  songsCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  songs?: Resolver<Maybe<Array<ResolversTypes['Song']>>, ParentType, ContextType>;
+  songsCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 

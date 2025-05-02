@@ -16,7 +16,7 @@ export const songResolvers: Resolvers = {
       return loaders.users.load(parent.userId);
     },
     genre: async (parent, _, { loaders }) => {
-      return loaders.users.load(parent.genreId);
+      return loaders.genres.load(parent.genreId);
     },
   },
 
@@ -32,11 +32,12 @@ export const songResolvers: Resolvers = {
             }
         );
       }
+
       const { name, genreId } = input;
       const song = dataSources.db.song.create({ name, genreId, userId });
       return {
-          success: true,
-          song,
+        success: true,
+        song,
       };
     },
     updateSong: (_, { id, input }, { dataSources, userId }) => {
@@ -51,6 +52,16 @@ export const songResolvers: Resolvers = {
         );
       }
       const { name, genreId } = input;
+      if (!name || !genreId) {
+          throw new GraphQLError(
+              "You must provide a name or genreId to update a song.",
+              {
+              extensions: {
+                  code: "BAD_USER_INPUT",
+              },
+              }
+          );
+      }
       const song = dataSources.db.song.update(id, { name, genreId, userId });
       return {
           success: true,
