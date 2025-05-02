@@ -8,3 +8,20 @@ A music app as a demonstration of GraphQL.
 ### Course content
 
 https://teach.opac.me/cours/dev-backend/graphql
+
+
+### Launch the app
+
+```bash
+cd .\client-next\  
+npm install
+npm run dev
+```
+
+Ouvrir un autre terminal
+
+```bash
+cd .\server-apollo\
+npm install
+npm run dev
+```
