@@ -4,20 +4,8 @@ import { Button } from "@/components/ui/button";
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { gql } from "@/lib/graphql";
-
-const GET_USER = gql(`
-  query User($id: ID!) {
-    user(id: $id) {
-      id
-      name
-      songs {
-        id
-        name
-      }
-    }
-  }
-`);
+import { Song } from "@/lib/graphql/graphql";
+import { GET_USER } from "@/app/queries/user.query";
 
 function loginAs(userId: string) {
   localStorage.setItem("user_id", userId);
@@ -40,11 +28,18 @@ export default function User() {
     <div>
       <h1>User</h1>
       <h3>{data?.user.name}</h3>
+      <h2>Number of songs</h2>
+      <div>
+        <span>{ data?.user.songsCount }</span>
+      </div>
       <h2>Songs</h2>
       <div>
-        {data?.user.songs.map((song) => (
+        {data?.user.songs.map((song: Song) => ( 
           <div key={song.id} className="flex gap-2">
             <Link href={`/songs/${song.id}`}>{song.name}</Link>
+            <span>
+              (Genre : <Link href={`/genres/${song.genre.id}`}>{song.genre.name}</Link>)
+            </span>
           </div>
         ))}
       </div>

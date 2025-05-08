@@ -82,22 +82,3 @@ export const getDataLoader = <T extends DBModel>(orm: FakeORM<T>) =>
     }, {} as Record<string, T>);
     return ids.map((id) => itemIdToItem[id]);
   });
-
-export const getForeignDataLoader = <T extends DBModel>(
-  orm: FakeORM<T>,
-  foreignKey: keyof T
-) =>
-  new DataLoader<string, T[]>(async (foreignIds: string[]) => {
-    const items = orm.findMany(
-      foreignIds.map((id) => ({ [foreignKey]: id } as Partial<T>))
-    );
-    const itemIdToItem = items.reduce((mapping, item) => {
-      const key = item[foreignKey] as string;
-      if (!mapping[key]) {
-        mapping[key] = [];
-      }
-      mapping[key].push(item);
-      return mapping;
-    }, {} as Record<string, T[]>);
-    return foreignIds.map((foreignId) => itemIdToItem[foreignId] || []);
-  });
