@@ -1,15 +1,72 @@
 import { GraphQLError } from "graphql";
 import { Resolvers } from "../types";
+import { z } from "zod";
+
+const idParamSchema = z.string().uuid();
+
+const createOrUpdateSongInputSchema = z.object({
+  name: z.string().min(3),
+  userId: z.string().uuid(),
+  genreId: z.string().uuid(),
+});
+
+const songsPaginationSchema = z.object({
+  page: z.number(),
+  pageSize: z.number(),
+})
 
 export const songResolvers: Resolvers = {
   Query: {
     songs: (_, { pagination, genreId }, { dataSources }) => {
+      if (pagination) {
+        try {
+          songsPaginationSchema.parse(pagination);
+        } catch (error) {
+          throw new GraphQLError(
+            `${error}`,
+            {
+              extensions: {
+                code: "BAD_USER_INPUT",
+              }
+            }
+          )
+        }
+      }
+
+      if (genreId) {
+        try {
+          idParamSchema.parse(genreId);
+        } catch (error) {
+          throw new GraphQLError(
+            `${error}`,
+            {
+              extensions: {
+                code: "BAD_USER_INPUT",
+              }
+            }
+          )
+        }
+      }
+
       return dataSources.db.song.findMany(genreId ? { genreId } : {}, pagination ? {
         limit: pagination.pageSize,
         offset: pagination.page * pagination.pageSize
       } : {});
     },
     song: (_, { id }, { dataSources }) => {
+      try {
+        idParamSchema.parse(id);
+      } catch (error) {
+        throw new GraphQLError(
+          `${error}`,
+          {
+            extensions: {
+              code: "BAD_USER_INPUT",
+            }
+          }
+        )
+      }
+
       return dataSources.db.song.findById(id);
     },
   },
@@ -32,6 +89,19 @@ export const songResolvers: Resolvers = {
             },
           }
         );
+      }
+
+      try {
+        createOrUpdateSongInputSchema.parse(input);
+      } catch (error) {
+        throw new GraphQLError(
+          `${error}`,
+          {
+            extensions: {
+              code: "BAD_USER_INPUT",
+            }
+          }
+        )
       }
 
       if (userId !== input.userId) {
@@ -72,6 +142,19 @@ export const songResolvers: Resolvers = {
             },
           }
         );
+      }
+
+      try {
+        idParamSchema.parse(id);
+      } catch (error) {
+        throw new GraphQLError(
+          `${error}`,
+          {
+            extensions: {
+              code: "BAD_USER_INPUT",
+            }
+          }
+        )
       }
 
       const songToDelete = dataSources.db.song.findById(id);
@@ -124,6 +207,20 @@ export const songResolvers: Resolvers = {
             },
           }
         );
+      }
+
+      try {
+        idParamSchema.parse(id);
+        createOrUpdateSongInputSchema.parse(input);
+      } catch (error) {
+        throw new GraphQLError(
+          `${error}`,
+          {
+            extensions: {
+              code: "BAD_USER_INPUT",
+            }
+          }
+        )
       }
 
       const songToUpdate = dataSources.db.song.findById(id);

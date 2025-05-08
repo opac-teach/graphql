@@ -1,15 +1,59 @@
 import { GraphQLError } from "graphql";
 import { Resolvers } from "../types";
+import { z } from "zod";
+
+const createUserInputSchema = z.object({
+  name: z.string().min(3),
+});
+
+const updateUserInputSchema = z.object({
+  name: z.string().min(3),
+});
+
+const userIdParamSchema = z.string().uuid();
+
+const usersPaginationSchema = z.object({
+  page: z.number(),
+  pageSize: z.number(),
+})
 
 export const userResolvers: Resolvers = {
   Query: {
     users: (_, { pagination }, { dataSources }) => {
+      if (pagination) {
+        try {
+          usersPaginationSchema.parse(pagination);
+        } catch (error) {
+          throw new GraphQLError(
+            `${error}`,
+            {
+              extensions: {
+                code: "BAD_USER_INPUT",
+              }
+            }
+          )
+        }
+      }
+
       return dataSources.db.user.findMany(_, pagination ? {
         limit: pagination.pageSize,
         offset: pagination.page * pagination.pageSize
       } : {});
     },
     user: (_, { id }, { dataSources }) => {
+      try {
+        userIdParamSchema.parse(id);
+      } catch (error) {
+        throw new GraphQLError(
+          `${error}`,
+          {
+            extensions: {
+              code: "BAD_USER_INPUT",
+            }
+          }
+        )
+      }
+      
       return dataSources.db.user.findById(id);
     },
   },
@@ -26,6 +70,19 @@ export const userResolvers: Resolvers = {
   },
   Mutation: {
     createUser: (_, { input }, { dataSources }) => {
+      try {
+        createUserInputSchema.parse(input);
+      } catch (error) {
+        throw new GraphQLError(
+          `${error}`,
+          {
+            extensions: {
+              code: "BAD_USER_INPUT",
+            }
+          }
+        )
+      }
+
       try {
         const user = dataSources.db.user.create(input);
         return {
@@ -53,6 +110,19 @@ export const userResolvers: Resolvers = {
             },
           }
         );
+      }
+
+      try {
+        userIdParamSchema.parse(id);
+      } catch (error) {
+        throw new GraphQLError(
+          `${error}`,
+          {
+            extensions: {
+              code: "BAD_USER_INPUT",
+            }
+          }
+        )
       }
 
       if (userId !== id) {
@@ -97,6 +167,20 @@ export const userResolvers: Resolvers = {
             },
           }
         );
+      }
+
+      try {
+        userIdParamSchema.parse(id);
+        updateUserInputSchema.parse(input);
+      } catch (error) {
+        throw new GraphQLError(
+          `${error}`,
+          {
+            extensions: {
+              code: "BAD_USER_INPUT",
+            }
+          }
+        )
       }
 
       const userToUpdate = dataSources.db.user.findById(id);

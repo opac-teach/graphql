@@ -18,7 +18,7 @@ export const genres: DBGenre[] = [
     name: "Adventure",
   },
   {
-    id: "2fdd9781-ad40-4259-a148-c8952d82110x",
+    id: "d03811a1-3516-46c7-a09d-c4b2d03e0258",
     name: "Fantastic",
   },
 ];
