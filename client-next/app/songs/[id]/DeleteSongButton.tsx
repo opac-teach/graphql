@@ -34,12 +34,36 @@ export default function DeleteSongButton() {
   const { id } = useParams<{ id: string }>();
 	const router = useRouter();
 
-  const { loading: songLoading, error: songError } = useQuery(GET_SONG, {
+  const { data: songData, loading: songLoading, error: songError } = useQuery(GET_SONG, {
     variables: {
       id,
     },
   });
-  const [mutateFunction, { data: deletedSongData, loading: deletedSongLoading, error: deletedSongError }] = useMutation(DELETE_SONG);
+  const [mutateFunction, { data: deletedSongData, loading: deletedSongLoading, error: deletedSongError }] = useMutation(DELETE_SONG, {
+    update(cache, { data }) {
+      if (data?.deleteSong.success) {
+        cache.evict({
+          id: cache.identify({ __typename: "Song", id }),
+        });
+
+        const typenames = [
+          { __typename: "Genre", id: songData?.song.genre.id },
+          { __typename: "User", id: songData?.song.user.id }
+        ]
+
+        typenames.forEach((typename) => {
+          cache.modify({
+            id: cache.identify(typename),
+            fields: {
+              songsCount(existingSongsCount: number = 0) {
+                return existingSongsCount - 1;
+              }
+            },
+          })
+        });
+      }
+    },
+  });
 	
   async function handleClick() {
     try {

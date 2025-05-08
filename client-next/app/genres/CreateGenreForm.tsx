@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { gql } from "@/lib/graphql";
-import { useMutation } from "@apollo/client";
+import { Reference, useMutation } from "@apollo/client";
 
 const CREATE_GENRE = gql(`
   mutation CreateGenre($input: CreateGenreInput!) {
@@ -27,8 +27,35 @@ const CREATE_GENRE = gql(`
   }
 `);
 
-export default function CreateGenreForm({ refetch }: { refetch: () => void }) {
-  const [mutateFunction, { data, loading, error }] = useMutation(CREATE_GENRE);
+export default function CreateGenreForm() {
+  const [mutateFunction, { data: genreData, loading: genreLoading, error: genreError }] = useMutation(CREATE_GENRE, {
+    update(cache, { data }) {
+      if (data?.createGenre.success) {
+        const newGenreRef = cache.writeFragment({
+          id: `${data?.createGenre.genre.__typename}:${data?.createGenre.genre.id}`,
+          fragment: gql(`
+            fragment NewGenre on Genre {
+              __typename
+              id
+              name
+            }
+          `),
+          data: data?.createGenre.genre
+        });
+
+        if (newGenreRef) {
+          cache.modify({
+            id: 'ROOT_QUERY',
+            fields: {
+              genres(existingGenres: readonly Reference[] = []) {
+                return [...existingGenres, newGenreRef];
+              }
+            },
+          });
+        }
+      }
+    },
+  });
 
   const form = useForm<{ name: string }>({
     defaultValues: {
@@ -39,7 +66,6 @@ export default function CreateGenreForm({ refetch }: { refetch: () => void }) {
   async function onSubmit(values: { name: string }) {
     try {
       await mutateFunction({ variables: { input: { name: values.name } } });
-      refetch();
     } catch (error) {
       console.error(error);
     }
@@ -65,19 +91,19 @@ export default function CreateGenreForm({ refetch }: { refetch: () => void }) {
           <div>
 						<span className="text-xs italic">(*) : Champ requis</span>
 					</div>
-          <Button type="submit" disabled={loading}>
+          <Button type="submit" disabled={genreLoading}>
             Create
           </Button>
         </form>
       </Form>
-      {error && <div className="text-red-500">{error.message}</div>}
-      {data && (
+      {genreError && <div className="text-red-500">{genreError.message}</div>}
+      {genreData && (
         <div
           className={
-            data.createGenre.success ? "text-green-500" : "text-red-500"
+            genreData.createGenre.success ? "text-green-500" : "text-red-500"
           }
         >
-          {data.createGenre.success ? "Genre created" : "Genre not created"}
+          {genreData.createGenre.success ? "Genre created" : "Genre not created"}
         </div>
       )}
     </div>

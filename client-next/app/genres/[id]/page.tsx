@@ -14,7 +14,7 @@ const GET_GENRE = gql(`
         id
         name
       }
-    songsCount
+      songsCount
     }
   }
 `);
