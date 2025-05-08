@@ -3,26 +3,9 @@
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { gql } from "@/lib/graphql";
 import UpdateSongForm from "./UpdateSongForm";
 import DeleteSongButton from "./DeleteSongButton";
-
-const GET_SONG = gql(`
-  query Song($id: ID!) {
-    song(id: $id) {
-      id
-      name
-      user {
-        id
-        name
-      }
-      genre {
-        id
-        name
-      }
-    }
-  }
-`);
+import { GET_SONG } from "@/app/queries/song.query";
 
 export default function Song() {
   const { id } = useParams<{ id: string }>();

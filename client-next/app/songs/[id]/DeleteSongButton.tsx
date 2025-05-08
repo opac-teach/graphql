@@ -1,34 +1,9 @@
 "use client";
 
+import { GET_SONG, DELETE_SONG } from "@/app/queries/song.query";
 import { Button } from "@/components/ui/button";
-import { gql } from "@/lib/graphql";
 import { useMutation, useQuery } from "@apollo/client";
 import { useParams, useRouter } from "next/navigation";
-
-const GET_SONG = gql(`
-  query Song($id: ID!) {
-    song(id: $id) {
-      id
-      name
-      user {
-        id
-        name
-      }
-      genre {
-        id
-        name
-      }
-    }
-  }
-`);
-
-const DELETE_SONG = gql(`
-  mutation DeleteSong($deleteSongId: ID!) {
-    deleteSong(id: $deleteSongId) {
-      success
-    }
-  }
-`);
 
 export default function DeleteSongButton() {
   const { id } = useParams<{ id: string }>();

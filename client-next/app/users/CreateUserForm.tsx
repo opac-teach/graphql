@@ -1,7 +1,6 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -12,20 +11,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { gql } from "@/lib/graphql";
 import { Reference, useMutation } from "@apollo/client";
-
-const CREATE_USER = gql(`
-  mutation CreateUser($input: CreateUserInput!) {
-    createUser(input: $input) {
-      success
-      user {
-        id
-        name
-      }
-    }
-  }
-`);
+import { USER_CREATION_FRAGMENT } from "../fragments/user.fragment";
+import { CREATE_USER } from "../queries/user.query";
 
 export default function CreateUserForm() {
   const [mutateFunction, { data, loading, error }] = useMutation(CREATE_USER, {
@@ -33,13 +21,8 @@ export default function CreateUserForm() {
         if (data?.createUser.success) {
           const newUserRef = cache.writeFragment({
             id: `${data?.createUser.user.__typename}:${data?.createUser.user.id}`,
-            fragment: gql(`
-              fragment NewUser on User {
-                __typename
-                id
-                name
-              }
-            `),
+            fragment: USER_CREATION_FRAGMENT,
+            fragmentName: 'UserCreationFragment',
             data: data?.createUser.user
           });
   

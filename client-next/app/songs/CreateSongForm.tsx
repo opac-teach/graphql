@@ -1,7 +1,6 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -13,50 +12,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { gql } from "@/lib/graphql";
 import { useMutation, useQuery } from "@apollo/client";
-import { GET_SONGS } from "./page";
-import { GET_USER } from "../users/[id]/page";
-
-const GET_USERS = gql(`
-  query Users {
-    users {
-      id
-      name
-      songsCount
-    }
-  }
-`);
-
-const GET_GENRES = gql(`
-  query Genres {
-    genres {
-      id
-      name
-      songsCount
-    }
-  }
-`);
-
-const CREATE_SONG = gql(`
-  mutation CreateSong($input: CreateSongInput!) {
-    createSong(input: $input) {
-      success
-      song {
-				id
-				name
-				user {
-					id
-					name
-				}
-        genre {
-					id
-					name
-        }
-      }
-    }
-  }
-`);
+import { Genre, Song, User } from "@/lib/graphql/graphql";
+import { GET_USER, GET_USERS } from "../queries/user.query";
+import { CREATE_SONG, GET_SONGS } from "../queries/song.query";
+import { GET_GENRE, GET_GENRES } from "../queries/genre.query";
+import { SONG_CREATION_FRAGMENT } from "../fragments/song.fragment";
 
 export default function CreateSongForm() {
 	const { data: usersData, loading: usersLoading, error: usersError } = useQuery(GET_USERS);
@@ -66,26 +27,13 @@ export default function CreateSongForm() {
       if (data && data.createSong.success) {
         const newSongRef = cache.writeFragment({
           id: `${data.createSong.song.__typename}:${data.createSong.song.id}`,
-          fragment: gql(`
-            fragment NewSong on Song {
-              __typename
-              id
-              name
-              genre {
-                id
-                name
-              }
-              user {
-                id
-                name
-              }
-            }
-          `),
+          fragment: SONG_CREATION_FRAGMENT,
+          fragmentName: 'SongCreationFragment',
           data: data.createSong.song
         });
 
         if (newSongRef) {
-          const existingSongs = cache.readQuery({ query: GET_SONGS })?.songs;
+          const existingSongs = cache.readQuery<{ songs: Song[] }>({ query: GET_SONGS })?.songs;
 
           if (existingSongs) {
             cache.writeQuery({
@@ -97,7 +45,7 @@ export default function CreateSongForm() {
             });
           }
 
-          const existingUser = cache.readQuery({ query: GET_USER, variables: { id: data.createSong.song.user.id }})?.user;
+          const existingUser = cache.readQuery<{ user: User }>({ query: GET_USER, variables: { id: data.createSong.song.user.id }})?.user;
                     
           if (existingUser) {
             cache.writeQuery({
@@ -109,6 +57,23 @@ export default function CreateSongForm() {
                   ...existingUser,
                   songs: [...(existingUser.songs || []), data.createSong.song],
                   __typename: existingUser.__typename
+                }
+              }
+            });
+          }
+
+          const existingGenre = cache.readQuery<{ genre: Genre }>({ query: GET_GENRE, variables: { id: data.createSong.song.genre.id }})?.genre;
+                    
+          if (existingGenre) {
+            cache.writeQuery({
+              id: 'ROOT_QUERY',
+              query: GET_GENRE,
+              variables: { id: existingGenre.id },
+              data: {
+                genre: {
+                  ...existingGenre,
+                  songs: [...(existingGenre.songs || []), data.createSong.song],
+                  __typename: existingGenre.__typename
                 }
               }
             });
@@ -207,7 +172,7 @@ export default function CreateSongForm() {
 										</SelectTrigger>
 										<SelectContent>
 											<SelectGroup>
-												{usersData?.users.map((user) => (
+												{usersData?.users.map((user: User) => (
 													<SelectItem key={user.id} value={user.id}>{ user.name }</SelectItem>
 												))}
 											</SelectGroup>
@@ -231,7 +196,7 @@ export default function CreateSongForm() {
 										</SelectTrigger>
 										<SelectContent>
 											<SelectGroup>
-												{genresData?.genres.map((genre) => (
+												{genresData?.genres.map((genre: Genre) => (
 													<SelectItem key={genre.id} value={genre.id}>{ genre.name }</SelectItem>
 												))}
 											</SelectGroup>

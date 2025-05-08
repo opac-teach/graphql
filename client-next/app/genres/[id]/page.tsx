@@ -3,21 +3,8 @@
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { gql } from "@/lib/graphql";
-
-const GET_GENRE = gql(`
-  query Genre($id: ID!) {
-    genre(id: $id) {
-      id
-      name
-      songs {
-        id
-        name
-      }
-      songsCount
-    }
-  }
-`);
+import { Song } from "@/lib/graphql/graphql";
+import { GET_GENRE } from "@/app/queries/genre.query";
 
 export default function Genre() {
   const { id } = useParams<{ id: string }>();
@@ -43,7 +30,7 @@ export default function Genre() {
       </div>
       <h2>Songs</h2>
       <div>
-        {data?.genre.songs.map((song) => (
+        {data?.genre.songs.map((song: Song) => (
           <div key={song.id} className="flex gap-2">
             <Link href={`/songs/${song.id}`}>{song.name}</Link>
           </div>

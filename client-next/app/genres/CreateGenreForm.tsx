@@ -1,7 +1,6 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -12,20 +11,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { gql } from "@/lib/graphql";
 import { Reference, useMutation } from "@apollo/client";
-
-const CREATE_GENRE = gql(`
-  mutation CreateGenre($input: CreateGenreInput!) {
-    createGenre(input: $input) {
-      success
-      genre {
-        id
-        name
-      }
-    }
-  }
-`);
+import { CREATE_GENRE } from "../queries/genre.query";
+import { GENRE_CREATION_FRAGMENT } from "../fragments/genre.fragment";
 
 export default function CreateGenreForm() {
   const [mutateFunction, { data: genreData, loading: genreLoading, error: genreError }] = useMutation(CREATE_GENRE, {
@@ -33,13 +21,8 @@ export default function CreateGenreForm() {
       if (data?.createGenre.success) {
         const newGenreRef = cache.writeFragment({
           id: `${data?.createGenre.genre.__typename}:${data?.createGenre.genre.id}`,
-          fragment: gql(`
-            fragment NewGenre on Genre {
-              __typename
-              id
-              name
-            }
-          `),
+          fragment: GENRE_CREATION_FRAGMENT,
+          fragmentName: 'GenreCreationFragment',
           data: data?.createGenre.genre
         });
 

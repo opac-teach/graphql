@@ -2,25 +2,9 @@
 
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
-import { gql } from "@/lib/graphql";
 import CreateSongForm from "./CreateSongForm";
-
-export const GET_SONGS = gql(`
-  query Songs {
-    songs {
-      id
-      name
-      user {
-        id
-        name
-      }
-      genre {
-        id
-        name
-      }
-    }
-  }
-`);
+import { Song } from "@/lib/graphql/graphql";
+import { GET_SONGS } from "../queries/song.query";
 
 export default function Songs() {
   const { data, loading, error } = useQuery(GET_SONGS);
@@ -32,7 +16,7 @@ export default function Songs() {
     <div>
       <h1>Songs</h1>
       <div>
-        {data?.songs.map((song) => (
+        {data?.songs.map((song: Song) => (
           <div key={song.id} className="flex gap-2">
             <div className="flex gap-1">
               <Link href={`/songs/${song.id}`}>{song.name}</Link>

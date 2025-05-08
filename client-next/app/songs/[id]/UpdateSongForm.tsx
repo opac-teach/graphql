@@ -1,7 +1,6 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -13,66 +12,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { gql } from "@/lib/graphql";
 import { Reference, useMutation, useQuery } from "@apollo/client";
 import { useParams } from "next/navigation";
-
-const GET_SONG = gql(`
-  query Song($id: ID!) {
-    song(id: $id) {
-      id
-      name
-      user {
-        id
-        name
-      }
-      genre {
-        id
-        name
-      }
-    }
-  }
-`);
-
-const GET_USERS = gql(`
-  query Users {
-    users {
-      id
-      name
-      songsCount
-    }
-  }
-`);
-
-const GET_GENRES = gql(`
-  query Genres {
-    genres {
-      id
-      name
-      songsCount
-    }
-  }
-`);
-
-const UPDATE_SONG = gql(`
-  mutation UpdateSong($updateSongId: ID!, $input: UpdateSongInput!) {
-    updateSong(id: $updateSongId, input: $input) {
-      success
-      song {
-				id
-				name
-				user {
-					id
-					name
-				}
-        genre {
-					id
-					name
-        }
-      }
-    }
-  }
-`);
+import { Genre, User } from "@/lib/graphql/graphql";
+import { GET_GENRES } from "@/app/queries/genre.query";
+import { GET_USERS } from "@/app/queries/user.query";
+import { GET_SONG, UPDATE_SONG } from "@/app/queries/song.query";
 
 export default function UpdateSongForm() {
   const { id } = useParams<{ id: string }>();
@@ -234,7 +179,7 @@ export default function UpdateSongForm() {
 										</SelectTrigger>
 										<SelectContent>
 											<SelectGroup>
-												{usersData?.users.map((user) => (
+												{usersData?.users.map((user: User) => (
 													<SelectItem key={user.id} value={user.id}>{ user.name }</SelectItem>
 												))}
 											</SelectGroup>
@@ -258,7 +203,7 @@ export default function UpdateSongForm() {
 										</SelectTrigger>
 										<SelectContent>
 											<SelectGroup>
-												{genresData?.genres.map((genre) => (
+												{genresData?.genres.map((genre: Genre) => (
 													<SelectItem key={genre.id} value={genre.id}>{ genre.name }</SelectItem>
 												))}
 											</SelectGroup>
