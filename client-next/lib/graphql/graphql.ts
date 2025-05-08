@@ -291,6 +291,8 @@ export type CreateGenreMutationVariables = Exact<{
 
 export type CreateGenreMutation = { __typename?: 'Mutation', createGenre: { __typename?: 'CreateGenreResponse', success: boolean, genre: { __typename?: 'Genre', id: string, name: string } } };
 
+export type NewGenreFragment = { __typename: 'Genre', id: string, name: string } & { ' $fragmentName'?: 'NewGenreFragment' };
+
 export type GenreQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
@@ -314,6 +316,8 @@ export type CreateSongMutationVariables = Exact<{
 
 
 export type CreateSongMutation = { __typename?: 'Mutation', createSong: { __typename?: 'CreateSongResponse', success: boolean, song: { __typename?: 'Song', id: string, name: string, user: { __typename?: 'User', id: string, name: string }, genre: { __typename?: 'Genre', id: string, name: string } } } };
+
+export type NewSongFragment = { __typename: 'Song', id: string, name: string, genre: { __typename?: 'Genre', id: string, name: string }, user: { __typename?: 'User', id: string, name: string } } & { ' $fragmentName'?: 'NewSongFragment' };
 
 export type SongQueryVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -349,6 +353,8 @@ export type CreateUserMutationVariables = Exact<{
 
 export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'CreateUserResponse', success: boolean, user: { __typename?: 'User', id: string, name: string } } };
 
+export type NewUserFragment = { __typename: 'User', id: string, name: string } & { ' $fragmentName'?: 'NewUserFragment' };
+
 export type UserQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
@@ -356,7 +362,9 @@ export type UserQueryVariables = Exact<{
 
 export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, name: string, songsCount: number, songs: Array<{ __typename?: 'Song', id: string, name: string, genre: { __typename?: 'Genre', id: string, name: string } }> } };
 
-
+export const NewGenreFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"NewGenre"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Genre"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]} as unknown as DocumentNode<NewGenreFragment, unknown>;
+export const NewSongFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"NewSong"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Song"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"genre"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<NewSongFragment, unknown>;
+export const NewUserFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"NewUser"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]} as unknown as DocumentNode<NewUserFragment, unknown>;
 export const CreateGenreDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateGenre"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateGenreInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createGenre"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"genre"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<CreateGenreMutation, CreateGenreMutationVariables>;
 export const GenreDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Genre"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"genre"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"songs"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"songsCount"}}]}}]}}]} as unknown as DocumentNode<GenreQuery, GenreQueryVariables>;
 export const GenresDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Genres"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"genres"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"songsCount"}}]}}]}}]} as unknown as DocumentNode<GenresQuery, GenresQueryVariables>;

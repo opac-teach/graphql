@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { gql } from "@/lib/graphql";
-import { useMutation } from "@apollo/client";
+import { Reference, useMutation } from "@apollo/client";
 
 const CREATE_USER = gql(`
   mutation CreateUser($input: CreateUserInput!) {
@@ -27,8 +27,35 @@ const CREATE_USER = gql(`
   }
 `);
 
-export default function CreateUserForm({ refetch }: { refetch: () => void }) {
-  const [mutateFunction, { data, loading, error }] = useMutation(CREATE_USER);
+export default function CreateUserForm() {
+  const [mutateFunction, { data, loading, error }] = useMutation(CREATE_USER, {
+      update(cache, { data }) {
+        if (data?.createUser.success) {
+          const newUserRef = cache.writeFragment({
+            id: `${data?.createUser.user.__typename}:${data?.createUser.user.id}`,
+            fragment: gql(`
+              fragment NewUser on User {
+                __typename
+                id
+                name
+              }
+            `),
+            data: data?.createUser.user
+          });
+  
+          if (newUserRef) {
+            cache.modify({
+              id: 'ROOT_QUERY',
+              fields: {
+                users(existingUsers: readonly Reference[] = []) {
+                  return [...existingUsers, newUserRef];
+                }
+              },
+            });
+          }
+        }
+      },
+    });
 
   const form = useForm<{ name: string }>({
     defaultValues: {
@@ -38,7 +65,6 @@ export default function CreateUserForm({ refetch }: { refetch: () => void }) {
   async function onSubmit(values: { name: string }) {
     try {
       await mutateFunction({ variables: { input: { name: values.name } } });
-      refetch();
     } catch (error) {
       console.error(error);
     }

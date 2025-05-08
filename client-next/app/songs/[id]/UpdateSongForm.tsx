@@ -14,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { gql } from "@/lib/graphql";
-import { useMutation, useQuery } from "@apollo/client";
+import { Reference, useMutation, useQuery } from "@apollo/client";
 import { useParams } from "next/navigation";
 
 const GET_SONG = gql(`
@@ -74,7 +74,7 @@ const UPDATE_SONG = gql(`
   }
 `);
 
-export default function UpdateSongForm({ refetch }: { refetch: () => void }) {
+export default function UpdateSongForm() {
   const { id } = useParams<{ id: string }>();
 
   const { data: songData, loading: songLoading, error: songError } = useQuery(GET_SONG, {
@@ -84,7 +84,99 @@ export default function UpdateSongForm({ refetch }: { refetch: () => void }) {
   });
 	const { data: usersData, loading: usersLoading, error: usersError } = useQuery(GET_USERS);
 	const { data: genresData, loading: genresLoading, error: genresError } = useQuery(GET_GENRES);
-  const [mutateFunction, { data: updatedSongData, loading: updatedSongLoading, error: updatedSongError }] = useMutation(UPDATE_SONG);
+  const [mutateFunction, { data: updatedSongData, loading: updatedSongLoading, error: updatedSongError }] = useMutation(UPDATE_SONG, {
+      update(cache, { data }) {
+        if (data && data.updateSong.success) {
+          cache.modify({
+            id: cache.identify({__typename: data.updateSong.song.__typename, id: data.updateSong.song.id}),
+            fields: {
+              name() {
+                return data.updateSong.song.name;
+              },
+              user() {
+                return {
+                  __ref: cache.identify({__typename: data.updateSong.song.user.__typename, id: data.updateSong.song.user.id})
+                }
+              },
+              genre() {
+                return {
+                  __ref: cache.identify({__typename: data.updateSong.song.genre.__typename, id: data.updateSong.song.genre.id})
+                }
+              }
+            },
+          });
+
+          if (songData) {
+            cache.modify({
+              id: cache.identify({ __typename: songData.song.genre.__typename, id: songData.song.genre.id }),
+              fields: {
+                songs(existingSongs: readonly Reference[] = [], { readField }) {
+                  return existingSongs.filter(
+                    (songRef) => readField('id', songRef) !== id
+                  );
+                },
+                songsCount(existingSongsCount: number = 0) {
+                  return existingSongsCount - 1;
+                }
+              }
+            });
+
+            cache.modify({
+              id: cache.identify({ __typename: songData.song.user.__typename, id: songData.song.user.id }),
+              fields: {
+                songs(existingSongs: readonly Reference[] = [], { readField }) {
+                  return existingSongs.filter(
+                    (songRef) => readField('id', songRef) !== id
+                  );
+                },
+                songsCount(existingSongsCount: number = 0) {
+                  return existingSongsCount - 1;
+                }
+              }
+            });
+
+            const songRef = cache.identify({ __typename: data.updateSong.song.__typename, id })
+          
+            if (songRef) {
+              cache.modify({
+                id: cache.identify({ __typename: data.updateSong.song.genre.__typename, id: data.updateSong.song.genre.id }),
+                fields: {
+                  songs(existingSongs: readonly Reference[] = []) {
+                    return [
+                      ...existingSongs, 
+                      {
+                        __ref: songRef
+                      }
+                    ];
+                  },
+                  songsCount(existingSongsCount: number = 0) {
+                    return existingSongsCount + 1;
+                  }
+                }
+              });
+
+              cache.modify({
+                id: cache.identify({ __typename: data.updateSong.song.user.__typename, id: data.updateSong.song.user.id }),
+                fields: {
+                  songs(existingSongs: readonly Reference[] = []) {
+                    return [
+                      ...existingSongs, 
+                      {
+                        __ref: songRef
+                      }
+                    ];
+                  },
+                  songsCount(existingSongsCount: number = 0) {
+                    return existingSongsCount + 1;
+                  }
+                }
+              });
+            }
+          }
+          
+        }
+      },
+    });
 
   const form = useForm<{ name: string, userId: string, genreId: string }>({
     defaultValues: {
@@ -97,7 +189,6 @@ export default function UpdateSongForm({ refetch }: { refetch: () => void }) {
   async function onSubmit(values: { name: string, userId: string, genreId: string }) {
     try {
       await mutateFunction({ variables: { updateSongId: id, input: { name: values.name, userId: values.userId, genreId: values.genreId } } });
-      refetch();
     } catch (error) {
       console.error(error);
     }

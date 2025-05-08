@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { gql } from "@/lib/graphql";
 
-const GET_USER = gql(`
+export const GET_USER = gql(`
   query User($id: ID!) {
     user(id: $id) {
       id

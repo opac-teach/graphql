@@ -5,7 +5,7 @@ import Link from "next/link";
 import CreateUserForm from "./CreateUserForm";
 import { gql } from "@/lib/graphql";
 
-const GET_USERS = gql(`
+export const GET_USERS = gql(`
   query Users {
     users {
       id
@@ -16,7 +16,7 @@ const GET_USERS = gql(`
 `);
 
 export default function Users() {
-  const { data, loading, error, refetch } = useQuery(GET_USERS);
+  const { data, loading, error } = useQuery(GET_USERS);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
@@ -35,7 +35,7 @@ export default function Users() {
         ))}
       </div>
 
-      <CreateUserForm refetch={refetch} />
+      <CreateUserForm />
     </div>
   );
 }

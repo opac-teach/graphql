@@ -16,7 +16,7 @@ const GET_GENRES = gql(`
 `);
 
 export default function Genres() {
-  const { data, loading, error, refetch } = useQuery(GET_GENRES);
+  const { data, loading, error } = useQuery(GET_GENRES);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
@@ -36,7 +36,7 @@ export default function Genres() {
           </div>
         ))}
       </div>
-      <CreateGenreForm refetch={refetch} />
+      <CreateGenreForm />
     </div>
   );
 }

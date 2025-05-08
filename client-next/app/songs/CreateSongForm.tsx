@@ -15,6 +15,8 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { gql } from "@/lib/graphql";
 import { useMutation, useQuery } from "@apollo/client";
+import { GET_SONGS } from "./page";
+import { GET_USER } from "../users/[id]/page";
 
 const GET_USERS = gql(`
   query Users {
@@ -56,10 +58,81 @@ const CREATE_SONG = gql(`
   }
 `);
 
-export default function CreateSongForm({ refetch }: { refetch: () => void }) {
+export default function CreateSongForm() {
 	const { data: usersData, loading: usersLoading, error: usersError } = useQuery(GET_USERS);
 	const { data: genresData, loading: genresLoading, error: genresError } = useQuery(GET_GENRES);
-  const [mutateFunction, { data: createdSongData, loading: createdSongLoading, error: createdSongError }] = useMutation(CREATE_SONG);
+  const [mutateFunction, { data: createdSongData, loading: createdSongLoading, error: createdSongError }] = useMutation(CREATE_SONG, {
+    update(cache, { data }) {
+      if (data && data.createSong.success) {
+        const newSongRef = cache.writeFragment({
+          id: `${data.createSong.song.__typename}:${data.createSong.song.id}`,
+          fragment: gql(`
+            fragment NewSong on Song {
+              __typename
+              id
+              name
+              genre {
+                id
+                name
+              }
+              user {
+                id
+                name
+              }
+            }
+          `),
+          data: data.createSong.song
+        });
+
+        if (newSongRef) {
+          const existingSongs = cache.readQuery({ query: GET_SONGS })?.songs;
+
+          if (existingSongs) {
+            cache.writeQuery({
+              id: 'ROOT_QUERY',
+              query: GET_SONGS,
+              data: {
+                songs: [...(existingSongs || []), data.createSong.song]
+              }
+            });
+          }
+
+          const existingUser = cache.readQuery({ query: GET_USER, variables: { id: data.createSong.song.user.id }})?.user;
+                    
+          if (existingUser) {
+            cache.writeQuery({
+              id: 'ROOT_QUERY',
+              query: GET_USER,
+              variables: { id: existingUser.id },
+              data: {
+                user: {
+                  ...existingUser,
+                  songs: [...(existingUser.songs || []), data.createSong.song],
+                  __typename: existingUser.__typename
+                }
+              }
+            });
+          }
+
+          const typenames = [
+            { __typename: "User", id: data.createSong.song.user.id },
+            { __typename: "Genre", id: data.createSong.song.genre.id },
+          ];
+
+          typenames.forEach((typename) => {
+            cache.modify({
+              id: cache.identify(typename),
+              fields: {
+                songsCount(existingSongsCount: number = 0) {
+                  return existingSongsCount + 1;
+                }
+              },
+            });
+          });
+        }
+      }
+    },
+  });
 
   const form = useForm<{ name: string, userId: string, genreId: string }>({
     defaultValues: {
@@ -72,7 +145,6 @@ export default function CreateSongForm({ refetch }: { refetch: () => void }) {
   async function onSubmit(values: { name: string, userId: string, genreId: string }) {
     try {
       await mutateFunction({ variables: { input: { name: values.name, userId: values.userId, genreId: values.genreId } } });
-      refetch();
     } catch (error) {
       console.error(error);
     }
