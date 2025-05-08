@@ -10,6 +10,7 @@ const config: CodegenConfig = {
         mappers: {
           User: "./datasource#DBUser",
           Song: "./datasource#DBSong",
+          Genre: "./datasource#DBGenre",
         },
         useIndexSignature: true,
       },
