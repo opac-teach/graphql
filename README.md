@@ -44,7 +44,6 @@ To test the requests, you can use the playground that you will find on the url: 
 
 #### Pagination
 - Add a paging system to the list of users and songs, which will limit the number of data returned by the query.
-
 - Also add pagination on the resolvers chains.
 
 #### Loaders
@@ -54,13 +53,8 @@ To test the requests, you can use the playground that you will find on the url: 
 
 #### Bonus
 
-##### Roles
-- Add a role system, and only allow users with the "ADMIN" role to use mutations on genders.
-
-You can either use a "role" header in the HTTP request to simulate a user with a specific role or switch on a real authentication with JWT for example.
-
-##### Subscription
-- Change the server to support subscriptions and notify clients when adding new songs.
+##### Data Validation
+- Use zod to validate mutation entries.
 
 ### Frontend
 
@@ -80,18 +74,17 @@ Add forms for:
 
 - Add a song
 - Add a gender
-- Option: edit/delete songs, users or genres ...
+- Option: edit/delete songs
 
 #### Bonus
 - Use fragments in the frontend to factor queries
-- Use pagination
 - Update cache during mutations to avoid refetch
-- Use subscriptions to receive new songs in real time
-- Create unit and integration tests
 
-##### Next
-- Switch to server side rendering (SSR) for all pages
-- Integrate the GraphQL server directly into the Next.js application
+### NestJS
+- Implement the GraphQL API code-first
+- Store data in a database with TypeORM
+- Validate mutation inputs
+- Have an authentication system and protect the routes that need it (e.g. a user should only be able to edit their own songs)
 
 ## Development
 
